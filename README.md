@@ -14,6 +14,11 @@ el curso de manera no-presencial.
 que se utiliza debido a su discreta sintaxis que permite leer el contenido antes y después de
 renderear fácilmente. En este repositorio se brinda un *cheatsheet* de [referencia](markdown.pdf).  
 
+### Compilar a LaTeX
+
+En caso de hacer el seminario en `Markdown`, pueden contactar con el profesor del **Grupo 2**
+para compilar a `LaTeX` el documento y mantener los estilos de las orientaciones de los seminarios. 
+
 ## Git
 
 **GIT** es un [sistema de control de versiones distribuido](https://en.wikipedia.org/wiki/Git).
