@@ -50,6 +50,8 @@ cuando no recuerde bien qué hace algún comando básico, no para aprender dicho
 refiérase a la documentación. Todos los comandos de `git` permiten el argumento `--help` que muestra una
 ayuda completa sobre el comando.
 
+* `git clone [repo]` - Este comando *clona* el repositorio localmente, en el directorio actual.
+
 * `git status` - Este comando muestra el estado actual del repositorio de `git`. Es el comando más básico
                 y a donde deben referirse cuando tengan dudas, puesto que siempre muestra ayuda básica.
 
@@ -69,8 +71,96 @@ ayuda completa sobre el comando.
 
 ### *Workflow* básico
 
+El flujo para contribuir al repositorio es el siguiente:
 
+1. Ser colaborador del repositorio. Esto implica que algún colaborador
+le da acceso antes. Contactar con los profesores para pedir acceso.
 
+2. Clonar el repo si no lo ha clonado: 
+
+```bash
+$ git clone https://github.com/alexfertel/reports.git
+```
+
+3. Crear una nueva rama y posicionar `HEAD` en ella:
+
+```bash
+$ git checkout -b [nombre de la rama]
+```
  
+4. Hacer los cambios, añadirlos y hacer commit.
+
+```bash
+$ echo "Hello, World!" > test.txt
+$ git add test.txt
+$ git commit -m "Add `test.txt` with the text 'Hello, World!'"
+```
+
+5. Subir la nueva rama con cambios.
+
+```bash
+$ git push origin [nombre de la rama]
+```
+
+6. Crear un *Pull Request* a `master`. Un *PR* es un feature muy útil
+que permite mezclar 2 ramas del repositorio remoto. **NO** se puede pushear
+a la rama `master`, de hecho, aunque lo intente, no podrá hacerlo. Siempre
+debe crear un PR para mezclar sus cambios con `master` en el repositorio
+remoto. En los PR se forman hilos de discusión, que se utilizarán para hacer
+comentarios sobre los cambios y de esta forma los profesores podrán
+revisar dichos cambios en conjunto con los estudiantes.
+
+## Organización y nomenclatura
+
+### Directorios y seminarios
+
+El repositorio está organizado de la siguiente forma:
+
+    ├── src/
+    │   ├── grupo_1/
+    │   │   └── ...
+    │   └── grupo_2/
+    │       └── ...
+    ├── .gitignore
+    └── README.md
+
+En la carpeta `grupo_#` deberán ir los seminarios del grupo número `#`.
+Los seminarios irán dentro de un directorio con el siguiente formato de nombre
+`equipo_#_seminario_#`, donde `#` es el número del equipo.
+
+Dentro de la carpeta del seminario el seminario deberá nombrarse
+`Seminario [Tema del Seminario].[pdf, md, docx]`. Un ejemplo del
+directorio resultante sería el siguiente:
+
+    ├── src/
+    │   ├── grupo_1/
+    │   │   ├── equipo_1_seminario_1/
+    │   │   │    ├── Seminario C++98.pdf
+    │   │   │    └── Code
+    │   │   ├── equipo_2_seminario_2/
+    │   │   │    ├── Seminario C++11.pdf
+    │   │   │    └── Code
+    │   │   ├── equipo_3_seminario_3/
+    │   │   │    └── ...
+    │   └── grupo_2/
+    │       └── ...
+    ├── .gitignore
+    └── README.md
+
+### Ramas
+
+Los nombres de las ramas deben definir bien qué seminario y de qué equipo viene,
+manteniendo el siguiente formato: `equipo-X/seminario-Y`, donde `X` es el número
+del equipo y `Y` es el número del seminario para ese equipo, dado que cada equipo
+hace al menos 3 seminarios, un posible ejemplo de rama sería `equipo-3/seminario-1`.
+
+
+## Ejemplos
+
+Ahora mismo además de los ejemplos que están en este *README*, pueden referirse al repo
+para la estructura del directorio y los PRs.
+
+Cualquier duda contactar con los profesores.
+
 
 
