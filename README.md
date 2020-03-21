@@ -8,6 +8,12 @@ En las siguientes secciones de este *README* se especifica las reglas,
 recomendaciones y requisitos para contribuir al repo y lograr mantener
 el curso de manera no-presencial.
 
+## Markdown
+
+[Markdown](https://en.wikipedia.org/wiki/Markdown) es un *markup language* (como *HTML*) ligero
+que se utiliza debido a su discreta sintaxis que permite leer el contenido antes y después de
+renderear fácilmente. En este repositorio se brinda un *cheatsheet* de [referencia](markdown.pdf).  
+
 ## Git
 
 **GIT** es un [sistema de control de versiones distribuido](https://en.wikipedia.org/wiki/Git).
