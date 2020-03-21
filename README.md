@@ -140,8 +140,8 @@ directorio resultante sería el siguiente:
     │   │   ├── equipo_2_seminario_2/
     │   │   │    ├── Seminario C++11.pdf
     │   │   │    └── Code
-    │   │   ├── equipo_3_seminario_3/
-    │   │   │    └── ...
+    │   │   └── equipo_3_seminario_3/
+    │   │        └── ...
     │   └── grupo_2/
     │       └── ...
     ├── .gitignore
