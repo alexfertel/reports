@@ -124,9 +124,9 @@ El repositorio está organizado de la siguiente forma:
     ├── .gitignore
     └── README.md
 
-En la carpeta `grupo_#` deberán ir los seminarios del grupo número `#`.
+En la carpeta `grupo_X` deberán ir los seminarios del grupo número `X`.
 Los seminarios irán dentro de un directorio con el siguiente formato de nombre
-`equipo_#_seminario_#`, donde `#` es el número del equipo.
+`equipo_X_seminario_Y`, donde `X` es el número del equipo y `Y` es el número del seminario.
 
 Dentro de la carpeta del seminario el seminario deberá nombrarse
 `Seminario [Tema del Seminario].[pdf, md, docx]`. Un ejemplo del
