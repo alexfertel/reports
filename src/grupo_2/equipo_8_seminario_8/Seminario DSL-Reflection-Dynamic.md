@@ -2,8 +2,6 @@
 
 ## Lenguajes de Dominio Específico (DSL)
 
-<!-- TODO: Cambiar los ejemplos a DSL de Persona -->
-
 Supongamos la siguiente situación. Se quiere implementar un mecanismo
 para crear objetos de tipo _persona_. A estas _personas_ debe ser
 posible modificarles su _nombre_ y _apellido_. Una posible implementación
