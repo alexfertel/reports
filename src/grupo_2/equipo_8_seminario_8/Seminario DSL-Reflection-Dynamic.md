@@ -13,7 +13,7 @@ class Person
     public string FirstName { get; set; }
     public string LastName { get; set; }
 
-    public StateMachine(string firstName, string lastName)
+    public Person(string firstName, string lastName)
     {
         this.FirstName = firstName;
         this.LastName = lastName;
@@ -168,33 +168,18 @@ por un ser humano, sino de ser editables.
 ### Modelo Semántico
 
 Observese que en el caso del _DSL_ externo es posible construir luego del proceso
-de **_parsing_** una instancia de `StateMachine` con el primer modelo, es decir:
+de **_parsing_** una instancia de `Person` con el primer modelo, es decir:
 
 ```csharp
-class StateMachine
+class Person
 {
-    private List<Transition> transitions;
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 
-    public StateMachine()
+    public Person(string firstName, string lastName)
     {
-        this.transitions = new List<Transition>();
-    }
-
-    public AddTransition(Transition transition)
-    {
-        this.transitions.Add(transition);
-    }
-}
-
-class Transition
-{
-    public string Origin { get; private set; }
-    public string Dest { get; private set; }
-
-    public Transition(string origin, string dest)
-    {
-        this.Origin = origin;
-        this.Dest = dest;
+        this.FirstName = firstName;
+        this.LastName = lastName;
     }
 }
 ```
