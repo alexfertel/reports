@@ -743,7 +743,7 @@ La palabra clave `dynamic` es utilizada para indicar que una instancia esta
 involucrada en un _**enlace tardío** (Late Binding)_ y que el **_DLR_** o
 _Dynamic Language Runtime_ se encargue del manejo de este objeto. El
 comportamiento de este objeto durante el _enlace tardío_ puede ser controlado y
-sobreescrito a traves de la implementación de la interfaz
+sobreescrito a traves de la implementación de la *interface*
 `IDynamicMetaObjectProvider`, el **_DLR_** se encargará de llamar a los métodos
 provenientes de `IDynamicMetaObjectProvider`, los cuales describen el comportamiento
 de la clase en el momento de enlace.
@@ -828,17 +828,17 @@ Este comportamiento es consecuencia directa del desarrollo del _DLR_ el cual fue
 concebido para admitir las implementaciones _"Iron"_ de los lenguajes de programación
 _Python_ y _Ruby_ en _.NET_.
 
-En en centro del entorno de ejecución _DLR_ se posiciona la clase
-llamada DynamicMetaObject. Dicha clase implemeta los siguientes métodos para dar
-respuesta a como actuar en todos los posibles esenarios en los que se puede
+En el centro del entorno de ejecución _DLR_ se posiciona la clase
+llamada `DynamicMetaObject`. Dicha clase implemeta los siguientes métodos para dar
+respuesta a como actuar en todos los posibles escenarios en los que se puede
 encontrar una instancia de un objecto en un momento dado:
 
 - `BindCreateInstance`: crea o activa un objeto.
-- `BindInvokeMember`: llamar a un método encapsulado.
+- `BindInvokeMember`: llama a un método encapsulado.
 - `BindInvoke`: ejecuta el objeto (como una función).
 - `BindGetMember`: obtenga un valor de propiedad.
 - `BindSetMember`: establece un valor de propiedad.
-- `BindDeleteMember`: eliminar un miembro.
+- `BindDeleteMember`: elimina un miembro.
 - `BindGetIndex`: obtener el valor en un índice específico.
 - `BindSetIndex`: establece el valor en un índice específico.
 - `BindDeleteIndex`: elimina el valor en un índice específico.
@@ -848,17 +848,17 @@ encontrar una instancia de un objecto en un momento dado:
 
 De manera general las clases definidas de manera ordinaria (estática) saben como
 reaccionar en dichos esenarios. Pero las clases _dinámicas_ no tienen estas
-reacciones predefinidas por lo cual es necesario predefinir para estas clases su
+reacciones predefinidas por lo cual es necesario redefinir para estas clases su
 propio `DynamicMetaObject`, el cual en tiempo de ejecución sepa que tiene que
 ejecutar en cada esenario. Para definir una clase _dinámica_, `System.Dynamic`
-proveé la interfaz `IDynamicMetaObjectProvider`, la cual contiene el metodo:
+provee la *interface* `IDynamicMetaObjectProvider`, la cual contiene el metodo:
 
 ```csharp
 DynamicMetaObject GetMetaObject(Expression parameter)
 ```
 
 El cual debe encargarse de retornar el `DynamicMetaObject` que describa el
-comportamiento de la clase _dinamica_ que implemeta la interfaz
+comportamiento de la clase _dinamica_ que implemeta la *interface*
 `IDynamicMetaObjectProvider` según el árbol de expresiones que dicho método recibe
 como parámetro
 
@@ -867,7 +867,7 @@ como parámetro
 Como se puede observar, en principio lograr un comportamieto dinámico en **C#** pasa
 por crear estos `DynamicMetaObject` y tener conocimientos para trabajar sobre el
 árbol de expresiones de **C#**. Para evitar todo este proceso `System.Dynamic`
-provée la clase `DynamicObject`, pensada para poder definir comportamietos dinámicos
+provee la clase `DynamicObject`, pensada para poder definir comportamietos dinámicos
 abstraídos de todo el proceso anteriormente descrito pues ya cuenta con una
 implemetacion del metodo `GetMetaObject` de `IDynamicMetaObjectProvider`. Dicha
 imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
@@ -879,7 +879,7 @@ imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
   Proporciona implementación para operaciones binarias. Las clases derivadas de la
   clase `DynamicObject` pueden sobreescribir este método para especificar el
   comportamiento dinámico para operaciones como la suma, multiplicación, etc. La
-  clase BinaryOperationBinder contiene una `ExpressionType` con información de la
+  clase `BinaryOperationBinder` contiene una `ExpressionType` con información de la
   operación que se realiza en el momento de llamado de esta función. Este método
   considera que la instancia de la clase derivada de `DynamicObject` es el operador
   de la derecha y _arg_ es el de la izq.
@@ -939,18 +939,18 @@ imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
 
 ### `System.Dynamic.ExpandoObject`
 
-Aunque la clase DynamicObject es una gran abstración del proceso base, para su
+Aunque la clase `DynamicObject` es una gran abstración del proceso base, para su
 utilización es necesario implementar una clase que herede de esta y realice los
 override necesarios, lo cual es demasiado verboso en los casos más sencillos.
 Suponiendo que solo se necesita de un objeto dinámico que permita un control
 dinámico de propiedades, mediante `DynamicObject` necesitamos implementar los
-metodos `TryGetMember` y `TrySetMember`. Para evitar esto `System.Dynamic` proveé la
+metodos `TryGetMember` y `TrySetMember`. Para evitar esto `System.Dynamic` provee la
 clase `ExpandoOject`, la misma es una clase `sealed` y por tanto no se puede
 extender.
 
-`ExpandoObject` implementa las interfaces
+`ExpandoObject` implementa las *interfaces*:
 `IDictionary<KeyValuePair<string, object>>` y `IDynamicMetaObjectProvider` entre
-otras. Mediante las dos interfaces antes mencionadas dicha clase logra el manejo
+otras. Mediante las dos *interfaces* antes mencionadas dicha clase logra el manejo
 dinámico de las propiedades. El proceso es realmente sencillo puesto que en su
 interior contiene algún tipo de implementación de diccionario, al momento de asignar
 una propiedad guarda el nombre de la propiedad como llave y el objeto que se le esta
@@ -962,7 +962,7 @@ excepción.
 ## Reflection
 
 _Reflection_ es la capacidad de un proceso de examinar, introspectar y modificar su
-propia estructura y comportamiento. Reflection ayuda a los programadores a crear
+propia estructura y comportamiento. _Reflection_ ayuda a los programadores a crear
 bibliotecas de software genéricas para mostrar datos, procesar diferentes formatos
 de datos, realizar la serialización o deserialización de datos para la
 comunicación, o agrupar y desagrupar datos para contenedores o ráfagas de
@@ -972,13 +972,13 @@ orientado a la red.
 Tambien se puede utilizar para observar y modificar la ejecución del programa en
 tiempo de ejecución. Esto generalmente se logra mediante la asignación dinámica de
 código de programa en tiempo de ejecución. En lenguajes de programación orientados
-a objetos, esta técnica permite la inspección de clases, interfaces, campos y
-métodos en tiempo de ejecución sin conocer los nombres de las interfaces, campos y
+a objetos, esta técnica permite la inspección de clases, *interfaces*, campos y
+métodos en tiempo de ejecución sin conocer los nombres de las *interfaces*, campos y
 métodos en tiempo de compilación. También permite la creación de instancias de
 nuevos objetos y la invocación de métodos. Por lo antes dicho es claro que es
 también una estrategia clave para la metaprogramación .
 
-### Reflection en C
+### Reflection en C#
 
 _Reflection_ en C# tiene como clase principal `System.Type`; clase abstracta que
 representa un tipo en el _Common Type System (CTS)_ lo cual representa una de las
@@ -986,14 +986,14 @@ principales componentes de _CLR_. Cuando utiliza esta clase, puede encontrar los
 tipos utilizados en un módulo y un espacio de nombres y también determinar si un
 tipo dado es una referencia o un tipo de valor. Puede analizar las tablas de
 metadatos (Campos, Propiedades, Métodos, Eventos) correspondientes para ver estos
-elementos
+elementos.
 
 El enlace tardío también se pueden lograr a través de _Reflection_. Un ejemplo
-claro: es posible que no se sepa qué assembly cargar durante el tiempo de
+claro: es posible que no se sepa qué *assembly* cargar durante el tiempo de
 compilación. En este caso, puede pedirle al usuario que ingrese el nombre y el tipo
 del ensamblado durante el tiempo de ejecución para que la aplicación pueda cargar
-el assembly apropiado. Con el tipo `System.Reflection.Assembly`, tiene algunos
-metodos estáticos que le permiten cargar un assembly directamente: `LoadFrom`,
+el *assembly* apropiado. Con el tipo `System.Reflection.Assembly`, tiene algunos
+metodos estáticos que le permiten cargar un *assembly* directamente: `LoadFrom`,
 `LoadWithPartialName`
 
 Dentro del archivo PE (ejecutable portátil) hay principalmente metadatos, que
@@ -1003,7 +1003,7 @@ contienen una variedad de tablas diferentes, como:
 - Tabla de definición de tipo
 - Tabla de definición de método
 
-### Api se `System.Reflection`
+### *API* de `System.Reflection`
 
 Para realizar la manipulación de una instacia de un objeto en _C#_ mediante
 _Reflection_ se necesita comenzar obteniendo la clase `System.Type` que describe
@@ -1083,10 +1083,11 @@ ejemplificamos el caso de `PropertyInfo`:
     var person = new Person();
     person.LastName = "Name"
     PropertyInfo info = .GetProperty("LastName");
-    info.GetType(); //System.Reflection.PropertyInfo
-    a.GetValue(person); //Name
-    a.SetValue(person,"NewName");//person.LastName = "NewName"
-    a.Name;//LastName
-    a.PropertyType; //string
+    info.GetType();  // System.Reflection.PropertyInfo
+    a.GetValue(person);  // Name
+    // person.LastName = "NewName"
+    a.SetValue(person,"NewName");  
+    a.Name;  // LastName
+    a.PropertyType;  // string
     ...
 ```
