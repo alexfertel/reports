@@ -288,3 +288,11 @@ static class Methods {
 - Una de las desventajas es que hay que cargar el namespace completo que lo contiene, aunque sea lo único que se utilice.
 - La colisión de estructura puede provocar que un método extensor nunca pueda ser utilizado. Esto sucede si la signatura (nombre y argumentos) del método extensor coincide con alguno de la clase o interfaz.
 - Los métodos extensores solo pueden ser eso, métodos. No se pueden declarar operadores, indexadores o propiedades.
+
+## Mixin en C# 8.0
+
+Hasta el momento antes de C# 8.0 la manera de lograr el patrón de diseño mixin era a través de métodos extensores e interfaces. Con la llegada en C# 8.0 de la implementación de métodos en interfáces ya no hace falta el uso de métodos extensores, podemos declarar la funcionalidad nueva directamente dentro de la interfaz.
+
+```c#
+
+```
