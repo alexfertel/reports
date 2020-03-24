@@ -18,6 +18,8 @@ En la imagen anterior observamos lo siguiente:
 - Ahora **`Bar`** no hereda directamente de **`Foo`**, o sea, **`Bar`** no es subclase de **`Foo`**, sino una combinación entre **`Foo`** y **`M1`**.
 - **`Foo`** no es la superclase de **`Bar`**, sino que en su lugar, lo es el **mixin** (la combinación) de **`Foo-with-M1`**.
 
+Los Mixin son muy útiles cuando se quiere compartir un comportamiento a través de múltiples clases que no compartan la misma jerarquía de clases, o cuando no tiene sentido implementar tal comportamiento en una superclase.
+
 ## Pseudo-Mixin en C# 3.0
 
 Como en C# no existe la herencia múltiple, una forma de recrear este patrón es crear interfaces con diferentes funcionalidades. Utilizaremos como ejemplo ilustrativo una estructura de árbol binario. Veamos dicha estructura:
@@ -291,8 +293,95 @@ static class Methods {
 
 ## Mixin en C# 8.0
 
-Hasta el momento antes de C# 8.0 la manera de lograr el patrón de diseño mixin era a través de métodos extensores e interfaces. Con la llegada en C# 8.0 de la implementación de métodos en interfáces ya no hace falta el uso de métodos extensores, podemos declarar la funcionalidad nueva directamente dentro de la interfaz.
+A partir de C# 8 es posible que las interfaces incluyan una implementación por defecto para sus miembros, por lo que pudiéramos definir las interfaces IA e IB de la siguiente forma:
 
 ```c#
+public interface IA
+{ 
+    int A { get; set; }
+    void M1()
+    {
+        Console.WriteLine(A);
+    }
+}
 
+public interface IB
+{ 
+    int B { get; set; }
+    void M2()
+    {
+        Console.WriteLine(B);
+    }
+}    
 ```
+
+Las clases que incluyan su propia version de M1() o M2(), utilizarán estos métodos en lugar de la implementación por defecto, en otros casos, se ejecutará la implementación por defecto proporcionada desde la interfaz.
+
+Pero es importante tener en cuenta un detalle: **`las implementaciones por defecto solo serán accesibles a través de las interfaces que las definen, y no desde las clases que las usan`**. Esto se ilustra en el siguiente bloque de código:
+
+```c#
+public interface ID 
+{
+    void M3() => Console.WriteLine("Soy M3 de ID");
+}
+
+public class D : ID { }
+
+static void Main(string[] args)
+{
+    D d = new D();
+    d.M3(); // Compilation error: 
+    ID id = new D();
+    id.M3(); // "Soy M3 de ID"
+}
+```
+
+El método M3() no está implementado en la clase D, por lo que no podemos acceder a él. Si queremos hacerlo, debemos informar al compilador de que se trata del M3() definido en la interfaz ID.
+
+Luego de analizar un poco cómo funcionan las interfaces a partir de C# 8, podemos simular la herencia múltiple de la siguiente manera:
+
+```c#
+public interface IA
+{ 
+    int A { get; }
+    void M1()
+    {
+        Console.WriteLine(A);
+    }
+}
+
+public interface IB
+{ 
+    int B { get; }
+    void M2()
+    {
+        Console.WriteLine(B);
+    }
+}
+
+public interface IC : IA, IB { }
+```
+```c#
+public class C : IC
+{
+    public int A { get; }
+    public int B { get; }
+
+    public C(int a, int b)
+    {
+        A = a;
+        B = b;
+    }
+}
+```
+```c#
+static void Main(string[] args)
+{
+    IC c = new C(5, 10);
+    c.M1(); // 5
+    c.M2(); // 10
+}
+```
+
+Podemos decir que a partir de C# 8 se proporciona soporte para implementar de forma más natural el patrón de diseño Mixin.
+
