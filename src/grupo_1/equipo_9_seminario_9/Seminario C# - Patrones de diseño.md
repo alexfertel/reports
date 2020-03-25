@@ -69,7 +69,7 @@ public class BinaryTree<T> : IBinaryTreeIterator<T>, IBinaryTreeHeigth<T> where 
     }
 ```
 
-### Iterar sobre los nodos del árbol de modo ***lazy*** y calcular su altura
+## Iterar sobre los nodos del árbol de modo ***lazy*** y calcular su altura
 
 Uno de los objetivos de la implementación de una funcionalidad es poder decidir su uso o no, por ello planteamos la siguiente solución:
 
@@ -384,4 +384,247 @@ static void Main(string[] args)
 ```
 
 Podemos decir que a partir de C# 8 se proporciona soporte para implementar de forma más natural el patrón de diseño Mixin.
+
+## Loosely Coupled
+
+Coupling: Describe cómo las personas o las cosas se conectan unas con otras, en el caso de la programación cómo los programas, o los fragmentos de estos se relacionan entre sí.
+En este sentido los podemos dividir entre **tight coupled** (fuertemente acoplado) y **loosely coupled** (débilmente acoplado).
+
+Tight Coupled:
+En el diseño fuertemente acoplado los componentes del sistema dependen unos de otros, de manera que si uno falla lleva al fallo de los demás, por otro lado, realizar cambios en en una componente conlleva a realizar cambios generales en el sistema.
+Veamos el siguiente ejemplo:
+
+```c#
+class ConsoleLogger
+{
+    public void Log(string message)
+    {
+        Console.WriteLine(message);
+    }
+}
+```
+
+```c#
+ConsoleLogger logger = newConsoleLogger();
+logger.Log("Hello");
+```
+
+En el ejemplo anterior, si queremos modificar la forma de loggear el sistema, por file, por ejemplo, tenemos que crear un nuevo logger y modificar la creación del logger y la llamada del sistema a la función encargada de loggear de este nuevo logger que puede ya no llamarse **`.Log()`**.
+
+Loosely Coupled:
+Las partes del sistema están conectadas, pero las dependencias son débiles, y no tan esenciales como comparadas con tight coupled. El flujo del trabajo está diseñado para ser flexible, podemos de esta forma cambiar una componente sin necesidad de realizar cambios en otra.
+Veamos el siguiente ejemplo:
+
+```c#
+interface ILogger
+{
+	void Log(string message);
+}
+
+class ConsoleLogger: ILogger
+{
+	public void Log(string message)
+	{
+		Console.WriteLine(message);
+	}
+}
+```
+
+```c#
+ILogger logger = new ConsoleLogger();
+logger.Log("Hello");
+```
+
+En este ejemplo, si queremos agregar un nuevo logger lo hacemos implementar la interface ILogger y cambiar la creación, pero este tendrá la función **`.Log()`** que puede seguir siendo llamada en todas las ocurrencias del sistema.
+
+## Inyección de Dependencias
+
+Imaginemos por un momento que tenemos deseos de comer pizza, ñam ñam ñam. Si fuéramos un programa que para alimentarse no usa inyección de dependencias necesitamos saber la receta para hacer una pizza y ponernos manos a la obra; sin embargo, si la usáramos sería tan sencillo como ir a algún sitio a comer la pizza.
+
+Ahora bien, imaginemos que mañana ya no queremos pizza, sino hamburguesa, en el primer caso tendríamos que aprender la receta para las hamburguesas, pero en el segundo bastaría con pedirla en un nuevo sitio.
+Más formalmente: una inyección de dependencias consiste en un objeto (o método estático) que depende de otro objeto. Una dependencia es un objeto que puede ser usado (llamado usualmente servicio). Una inyección es el pasar una dependencia a un objeto dependiente (llamado usualmente cliente) el cual lo usará. Pasar un servicio a un cliente en lugar de que el cliente cree o busque por su cuenta el servicio es en lo que consiste este patrón de diseño.
+
+Veamos entonces el ejemplo propuesto en el ejercicio:
+```c#
+class Dog {
+	public void Action() {
+	ILogger logger = new ConsoleLogger();
+	logger.Log("Bark");
+	}
+}
+
+int Main(string[] args) {
+	var pluto = new Dog();
+	pluto.Action();
+}
+```
+
+## Desventajas del ejemplo:
+
+- Es indispensable conocer cómo se construye un objeto de tipo **`ConsoleLogger`**.
+- Las acciones de cualquier **`Dog`** siempre se anotarán en la Consola.
+- Imposible utilizar **`FileLogger`** para anotar las acciones de un **`Dog`**.
+- Múltiples llamados al constructor de **`ConsoleLogger`**, cada vez que se realiza un llamado a **`Action`**, este pudiera ser costoso.
+- La variable **`logger`** se crea para ser usada una única vez y para un único propósito.
+
+
+### Usando Inyección de Dependencias:
+```c#
+class Dog {
+	private ILogger _logger;
+	public Dog(ILogger logger) {
+		_logger = logger;
+	}
+	public void Action() {
+		_logger.Log("Bark");
+	}
+}
+
+int Main(string[] args) {
+	var pluto = new Dog(new ConsoleLogger());
+	pluto.Action();
+}
+```
+
+En este segundo caso podemos apreciar que:
+- Nuestro **`Dog`** es independiente de cómo se construye un objeto de tipo **`ILogger`**.
+- Tenemos la posibilidad de usar cualquier clase que implemente **`ILogger`** para anotar las acciones de un **`Dog`**.
+- Para obtener **`_logger`** se copia una referencia, operación O(1).
+- La variable **`logger`** proviene de fuera de la clase, pudiera estar recién creada o no, y su uso no es exclusivo para anotar acciones de un **`Dog`**.
+
+Hasta el momento hemos estado analizando la Inyección de Dependecias por construcción pero existen otras variantes como la Inyección de Dependecias por propiedad y por parámetro. Veamos los siguientes ejemplos:
+
+### Por propiedad:
+```c#
+class Dog {
+	public ILogger _logger { get; set; }
+	public void Action() {
+		_logger.Log("Bark");
+	}
+}
+int Main(string[] args) {
+	var pluto = new Dog();
+	pluto._logger = new FileLogger();
+	pluto.Action();
+}
+```
+
+### Por parámetro:
+```c#
+class Dog {
+	public void Action(ILogger logger) {
+		logger.Log("Bark");
+	}
+}
+int Main(string[] args) {
+	var pluto = new Dog();
+	pluto.Action(new FileLogger());
+}
+```
+
+## IoC Containers
+Contenedores con Inversión del control (IoC containers): Según Martin Fowler, es un estilo de programación donde la creación de los objetos es responsabilidad de una “entidad” que se le llama “Contenedor”. Al contenedor se le registran las dependencias y es él quien realiza todas las instanciaciones.
+
+Ejemplo:
+```c#
+interface IContainer {
+    void Register<T>(Type implementation);
+    T Resolve<T>();
+}
+
+class Container: IContainer {...}
+```
+```c#
+interface IAnimal{ 
+    void Action(); 
+}
+
+class Dog: IAnimal {
+    private ILogger _logger;
+    public Dog(ILogger logger){ 
+        _logger = logger; 
+    }
+    public void Action(){    
+        _logger.Log("Bark");
+    }
+}
+
+class Cat: IAnimal {
+    private ILogger _logger;    
+    public Dog(ILogger logger){
+         _logger = logger;
+    }
+    public void Action(){
+        _logger.Log("Miau");
+    }
+}
+
+class Cow: IAnimal { ... } // Muu
+```
+```c#
+var container = new Container();
+container.Register<ILogger>(typeof(ConsoleLogger));
+container.Register<IAnimal>(typeof(Dog));
+var animal = container.Resolve<IAnimal>();
+animal.Action();
+```
+
+### ¿De qué tipo es la variable **`animal`**?
+
+**`animal`** es del tipo **`Dog`**, ya que el tipo de retorno de **`Resolve`** es **`IAnimal`** y como **`Dog`** implementa esa interfaz mediante el polimorfismo y un casteo se puede devolver un **`Dog`**. De igual manera pasaría si se registra **`Cat`** en vez de **`Dog`**, pues en este caso la variable **`animal`** sería del tipo **`Cat`**.
+
+### ¿Qué imprime la **`animal.Action()`**?
+
+**`animal.Action()`** imprime "Bark", como la variable **`animal`** implementa **`Action`** pero sobre la base de **`Dog`**, se llama al método **`Action`** de **`Dog`**.
+
+### ¿Qué cambio haría falta para que aparezca por pantalla “Muu”?
+
+Es necesario implementar **`Cow`** igual que (**`Dog`**, **`Cat`**) y cambiar **`Dog`** por **`Cow`** en las siguientes líneas de código:
+
+```c#
+container.Register<IAnimal>(typeof(Cow));
+var animal = container.Resolve<IAnimal>();
+animal.Action();
+```
+
+### Proponga la implementación de **`Container`** (utilizando Reflection) para que el código anterior compile.
+
+Usando un diccionario de **`<Type, Type>`** para guardar las implementaciones.
+Mediante reflection se aprovecha la posibilidad de tratar a las instrucciones como datos y así obtener información de estas, podemos hacer recorridos por los constructores del tipo que almacenamos en el diccionario cuya llave es T, y usando recursión obtenemos cada uno de los parámetros para finalmente poder hacer la invocación al constructor.
+
+### ¿Qué se debe hacer en **`Container`** para que las siguientes líneas (por separado) lancen excepción:
+```c#
+container.Register<ILogger>(typeof(Dog));
+container.Register<Dog>(typeof(Wolf)); // Wolf hereda de Dog
+```
+
+Se  deben realizar en el **`Container`** una serie de checkeos como son:
+ - Checkeamos de que T se interfaz.
+ - Que implemetation implemente a T(interfaz).
+
+### Explique el funcionamiento de las características de C# utilizadas: reflection, typeof, genericidad, herencia y polimorfismo, etc.
+
+
+Reflection:
+Reflection es el proceso mediante el cual un programa puede observar y cambiar su propia estructura y comportamiento en runtime.
+En nuestro código usamos funciones de reflection entre las que se encuentra **`GetParameters()`** para conocer las características de las clases dentro de nuestro contenedor.
+
+Typeof:
+El operador **`typeof`** de C# permite obtener una instancia de **`System.Type`** para un tipo específico, a diferencia de **`GetType()`** no es necesario crear una instancia del tipo.  
+En la implementación de **`Container`** anterior se aprecia el uso del **`typeof`** para conocer el tipo sin necesidad de tener una instancia.
+
+Genericidad:
+En el caso de la genericidad, estudiada ya en clases, la podemos ver en la implementación de **`Container`** para lograr un cdigo que funcionara sin importar el tipo de datos de los parámetros que recibimos.
+
+Herencia:
+Se usa para lograr las características de un **`IContainer`** en el **`Container`** implementado por nosotros, así como las características de **`Animal`** en cada uno de los animales.
+
+Polimorfismo:
+El polimorfismo se evidencia en la clase **`Program`** al hacer las pruebas con las diferentes clases que implementan **`IAnimal`**.
+
+
+### Bibliografía:
+
+
+
 
