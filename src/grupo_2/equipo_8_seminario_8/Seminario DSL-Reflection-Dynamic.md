@@ -535,7 +535,8 @@ estructura de la lista que el intérprete recorre al ejecutarla. Sin embargo, la
 distribuciones de Lisp mas importantes (Clojure, Common Lisp, etc.)
 también incluyen un compilador. El compilador traduce la estructura de lista a
 _código de máquina_ o _bytecode_ para su ejecución. Este código puede ejecutarse
-tan rápido como el código compilado en lenguajes convencionales como _C_.
+tan rápido como el código compilado en lenguajes convencionales como _C_. Profundizar
+en lo anterior esta lejos del alcance de este seminario.
 
 ##### Macros de Lisp y DSL
 
