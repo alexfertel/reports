@@ -383,6 +383,16 @@ sintaxis de las expresiones _S_ también es responsable de gran parte del poder 
 Lisp: la sintaxis es extremadamente regular, lo que facilita la manipulación por
 computadora.
 
+El elemento fundamental en Lisp es la lista, en el sentido más amplio del término,
+pues tanto los datos como los programas son listas. De ahí viene su nombre, pues
+Lisp es un acrónimo de _ListProcessing_.Las listas en _LISP_ están delimitadas por
+paréntesis. Estas listas son listas enlazadas implementadas sobre la base de los
+pares _car_ (Content of Address part of Register) y _cdr_
+(Content of Decremental part of Register). Una de las caracteristicas mas reconocibles
+del lenguaje Lisp es su _estructura de lista_, pues sus programas se componen de
+secuencias de expresiones donde cada expresión tiene el formato de lista antes
+mencionado y son interpretadas como tal.
+
 Las funciones de Lisp se escriben como listas, se pueden procesar exactamente como
 los datos. Esto permite escribir fácilmente programas que manipulan otros programas
 (metaprogramación). Muchos dialectos de Lisp explotan esta característica utilizando
