@@ -292,9 +292,26 @@ class PersonBuilder
 
 Otro enfoque para la implementación de interfaces fluidas son las
 _progressive interfaces_. Esta idea consiste en que cada metodo en la fluent
-interface retorna que implementa un interface de solo un metodo, de manera tal que
+interface tiene como tipo de retorno una interface de solo un metodo, de manera tal que
 el orden en que pueden encadenarse los metodos es determinado por el creador del
-_DSL_.
+_DSL_. Vease el siguiente ejemplo:
+
+```csharp
+interface IPersonBuilderFirstName
+{
+  IPersonBuilderLastName FirstName(string firstName);
+}
+
+interface IPersonBuilderLastName
+{
+  Person LastName(string lastName);
+}
+```
+
+Observese que en el ejemplo anterior, para crear una instancia de `Person`, es necesario
+primero indicar el `FirstName` y luego el `LastName`. De esta manera las _progressive interfaces_
+nos permiten controlar el orden en que se construye nuestra instancia; estas como puede observarse
+en el ejemplo anterior pueden resolver el _problema de la finalizacion_.
 
 ### Ventajas y Desventajas de los DSL:
 
