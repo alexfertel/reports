@@ -274,7 +274,19 @@ instancia que se quiere construir. Este problema se puede resolver añadiendo un
 metodo `End()` al builder, que al ser llamado retornara la instancia construida
 hasta el momento; este enfoque puede parecer un poco _verbose_. Otra forma puede
 ser en lenguajes como _C#_ establecer un casteo implicito entre un builder y el tipo
-de objetos que este construye.
+de objetos que este construye, lo cual es posible hacer de la siguiente manera.
+
+```csharp
+class PersonBuilder
+{
+  // ...
+  public static implicit operator Person(PersonBuilder builder)
+  {
+    return builder.currentPerson;
+  }
+  // ...
+}
+```
 
 Otro enfoque para la implementación de interfaces fluidas son las
 _progressive interfaces_. Esta idea consiste en que cada metodo en la fluent
