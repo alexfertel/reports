@@ -553,8 +553,8 @@ en el ejemplo `[x for x in range(10) if x % 2 == 0]`,
 ```lisp
     (defmacro lcomp (expression for var in list conditional conditional-test)
       (let ((result (gensym))) ;; crear un nombre de variable unico para el resultado
-        ;; the arguments are really code so we can substitute them
-        ;; store nil in the unique variable name generated above
+        ;; los argumentos son en realidad codigo, por lo que podemos sustituirlos
+        ;; guardar `nil` en el nombre de variable unico generado anteriormente
         ` (let ((,result nil))
            ;; var es un nombre de variable
            ;; list es la lista literal por la que iteraremos
