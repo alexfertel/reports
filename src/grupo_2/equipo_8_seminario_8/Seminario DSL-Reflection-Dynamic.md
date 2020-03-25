@@ -146,7 +146,8 @@ listar los metodos que esta contiene y documentarlos uno a uno, estos metodos
 tienen que tener sentido por si solos, ser _autocontenidos_; por otro lado en
 un **DSL interno** podria pensarse en los metodos como palabras de un
 lenguaje que no expresan una idea hasta que no son compuestas en oraciones.
-Por ejemplo metodos `transition(event)` o `to(dest)` - correspondientes a la creación de una maquina de estado - no tendrian sentido por
+Por ejemplo metodos `transition(event)` o `to(dest)` - correspondientes a la
+creación de una maquina de estado - no tendrian sentido por
 si solo en una _api clasica_, pero pueden ser utilizados en un **DSL interno**
 de la siguiente manera `.transition(event).to(dest)`. Es común
 tambien destinguir los **DSLs internos** por la no utilizacion de
@@ -279,6 +280,7 @@ de objetos que este construye, lo cual es posible hacer de la siguiente manera.
 ```csharp
 class PersonBuilder
 {
+  private Person currentPerson = null;
   // ...
   public static implicit operator Person(PersonBuilder builder)
   {
