@@ -521,11 +521,11 @@ implementación del lenguaje y el programador no puede manipularla.
 
 En implementaciones simplistas de Lisp, esta estructura de lista se interpreta
 directamente para ejecutar el programa. Una función es literalmente una parte de la
-estructura de la lista que el intérprete recorre al ejecutarla. Sin embargo, los
-sistemas Lisp más importantes también incluyen un compilador. El compilador traduce
-la estructura de la lista a _código de máquina_ o _bytecode_ para su ejecución. Este
-código puede ejecutarse tan rápido como el código compilado en lenguajes
-convencionales como _C_.
+estructura de la lista que el intérprete recorre al ejecutarla. Sin embargo, las
+distribuciones de Lisp mas importantes (Clojure, Common Lisp, etc.)
+también incluyen un compilador. El compilador traduce la estructura de la lista a
+_código de máquina_ o _bytecode_ para su ejecución. Este código puede ejecutarse
+tan rápido como el código compilado en lenguajes convencionales como _C_.
 
 ##### Macros de Lisp y DSL
 
