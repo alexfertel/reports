@@ -526,21 +526,21 @@ Además, debido a que el código Lisp tiene la misma estructura que las listas, 
 macros se pueden construir con cualquiera de las funciones de procesamiento de
 listas en el lenguaje. En resumen, cualquier cosa que Lisp pueda hacer a una
 estructura de datos, las macros de Lisp pueden hacer al código. En contraste, en la
-mayoría de los otros idiomas, la salida del analizador es puramente interna a la
+mayoría de los otros lenguajes, la salida del analizador es puramente interna a la
 implementación del lenguaje y el programador no puede manipularla.
 
 En implementaciones simplistas de Lisp, esta estructura de lista se interpreta
 directamente para ejecutar el programa. Una función es literalmente una parte de la
 estructura de la lista que el intérprete recorre al ejecutarla. Sin embargo, las
 distribuciones de Lisp mas importantes (Clojure, Common Lisp, etc.)
-también incluyen un compilador. El compilador traduce la estructura de la lista a
+también incluyen un compilador. El compilador traduce la estructura de lista a
 _código de máquina_ o _bytecode_ para su ejecución. Este código puede ejecutarse
 tan rápido como el código compilado en lenguajes convencionales como _C_.
 
 ##### Macros de Lisp y DSL
 
 Las macros se utilizan para definir extensiones de sintaxis de lenguaje para
-_Common Lisp_ o _Lenguajes de Dominio Específico_ _(DSL)_. Estos idiomas están
+_Common Lisp_ o _Lenguajes de Dominio Específico_ _(DSL)_. Estos lenguajes están
 integrados directamente en el código Lisp existente. Ahora, los DSL pueden tener una
 sintaxis similar a Lisp o completamente diferente.
 
