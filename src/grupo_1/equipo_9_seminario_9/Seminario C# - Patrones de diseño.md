@@ -525,6 +525,12 @@ int Main(string[] args) {
 ## IoC Containers
 Contenedores con Inversión del control (IoC containers): Según Martin Fowler, es un estilo de programación donde la creación de los objetos es responsabilidad de una “entidad” que se le llama “Contenedor”. Al contenedor se le registran las dependencias y es él quien realiza todas las instanciaciones.
 
+## ¿Qué es **IoC**?
+Inversión de control (IoC) es un método de programación en el que el flujo de ejecución de un programa se invierte respecto a los métodos de programación tradicionales, en los que la interacción se expresa de forma imperativa haciendo llamadas a procedimientos (procedure calls) o funciones. Tradicionalmente el programador especifica la secuencia de decisiones y procedimientos que pueden darse durante el ciclo de vida de un programa mediante llamadas a funciones. En su lugar, en la inversión de control se especifican respuestas deseadas a sucesos o solicitudes de datos concretas, dejando que algún tipo de entidad o arquitectura externa lleve a cabo las acciones de control que se requieran en el orden necesario y para el conjunto de sucesos que tengan que ocurrir.
+El flujo habitual se da cuando es el código del usuario quien invoca a un procedimiento de una biblioteca.
+La inversión de control sucede cuando es la biblioteca la que invoca el código del usuario.
+Típicamente sucede cuando la biblioteca es la que implementa las estructuras de alto nivel y es el código del usuario el que implementa las tareas de bajo nivel.
+
 Ejemplo:
 ```c#
 interface IContainer {
@@ -579,8 +585,20 @@ animal.Action();
 
 ### ¿Qué cambio haría falta para que aparezca por pantalla “Muu”?
 
-Es necesario implementar **`Cow`** igual que (**`Dog`**, **`Cat`**) y cambiar **`Dog`** por **`Cow`** en las siguientes líneas de código:
+Es necesario implementar **`Cow`** igual que **`Dog`** y **`Cat`** 
+```c#
+public class Cow : IAnimal
+{
+    private ILogger _logger;
+    public Cow(ILogger logger) { _logger = logger; }
+    public void Action()
+    {
+        _logger.Log("Muu");
+    }
+}
+```
 
+Cambiar **`Dog`** por **`Cow`** en las siguientes líneas de código:
 ```c#
 container.Register<IAnimal>(typeof(Cow));
 var animal = container.Resolve<IAnimal>();
@@ -589,8 +607,57 @@ animal.Action();
 
 ### Proponga la implementación de **`Container`** (utilizando Reflection) para que el código anterior compile.
 
-Usando un diccionario de **`<Type, Type>`** para guardar las implementaciones.
-Mediante reflection se aprovecha la posibilidad de tratar a las instrucciones como datos y así obtener información de estas, podemos hacer recorridos por los constructores del tipo que almacenamos en el diccionario cuya llave es T, y usando recursión obtenemos cada uno de los parámetros para finalmente poder hacer la invocación al constructor.
+Usando un diccionario de **`<Type, Type>`** para guardar las implementaciones y mediante reflection se aprovecha la posibilidad de tratar a las instrucciones como datos y así obtener información de estas, podemos hacer recorridos por los constructores del tipo que almacenamos en el diccionario cuya llave es T, y usando recursión obtenemos cada uno de los parámetros para finalmente poder hacer la invocación al constructor.
+
+```c#
+public class Container: IContainer
+{
+    private Dictionary<Type, Type> registers;
+    public Container()
+    {
+        registers = new Dictionary<Type, Type>();
+    }
+
+    public void Register<T>(Type implementation)
+    {
+        Type key = typeof(T);
+        
+        if (!registers.ContainsKey(key))
+            registers.Add(key, implementation);
+        else
+            registers[key] = implementation;
+    }
+
+    public T Resolve<T>()
+    {
+        return (T)Resolve(typeof(T));
+    }
+
+    private object Resolve(Type key)
+    {
+        Type reflect = registers[key];
+        foreach (var m in reflect.GetConstructors())
+        {
+            var parameters = m.GetParameters();
+            List<Type> types = new List<Type>();
+            List<object> par = new List<object>();
+            foreach (var param in parameters)
+            {
+                if (param.ParameterType.IsInterface)
+                {
+                    object dependency = Resolve(param.ParameterType);
+                    par.Add(dependency);
+                }
+                types.Add(param.ParameterType);
+            }
+            var constructor = reflect.GetConstructor(types.ToArray());
+            var instance = constructor.Invoke(par.ToArray());
+            return instance;
+        }
+        throw new Exception("Imposible construir la instacia");
+    }
+}
+```
 
 ### ¿Qué se debe hacer en **`Container`** para que las siguientes líneas (por separado) lancen excepción:
 ```c#
@@ -598,9 +665,36 @@ container.Register<ILogger>(typeof(Dog));
 container.Register<Dog>(typeof(Wolf)); // Wolf hereda de Dog
 ```
 
-Se  deben realizar en el **`Container`** una serie de checkeos como son:
- - Checkeamos de que T se interfaz.
- - Que implemetation implemente a T(interfaz).
+Se  deben realizar en el **`Container`** una serie de verificaciones como son:
+ - Que **`T`** sea de tipo interfaz.
+ - Que **`implemetation`** implemente a T(interfaz).
+ 
+ ```c#
+ public class Container: IContainer
+{
+    //...
+    public void CheckException(Type key, Type implementation)
+    {
+        if (key.IsInterface)
+        {
+            List<Type> interfaces = new List<Type(implementation.GetInterfaces());
+            if (!interfaces.Contains(key))
+                throw new ArgumentException("La clase de entrada noimplementa la interface especificada.");
+        }
+        else if (key.IsAbstract && !implementation.IsSubclassOf(key))
+            throw new ArgumentException("La clase de entrada no essubclase de la clase especificada.");
+        else if (!key.IsInterface && !key.IsAbstract)
+            throw new Exception("El tipo llave no puede ser unaimplementación específica.");
+    }
+    public void Register<T>(Type implementation)
+    {
+        Type key = typeof(T);
+        CheckException(key, implementation);
+        //...
+    }
+    //...
+}
+ ```
 
 ### Explique el funcionamiento de las características de C# utilizadas: reflection, typeof, genericidad, herencia y polimorfismo, etc.
 
