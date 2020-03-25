@@ -1,6 +1,6 @@
 # Seminario DSL-Reflection-Dynamic
 
-## Lenguajes de Dominio Específico (DSL)
+## DSL
 
 Supongamos la siguiente situación. Se quiere implementar un mecanismo
 para crear objetos de tipo _persona_. A estas _personas_ debe ser
@@ -86,7 +86,7 @@ Analicemos la definicion anterior:
   pueden ser muy útiles, pero esto convierte al lenguaje en algo complejo de
   aprender, utilizar y entender. Un **_DSL_** por otro lado es facil de comprender,
   es legible, soporta solo lo necesario para ser utilizado en su dominio. No
-  es posible contruir toda una aplicación con un **_DSL_**, se construyen
+  es posible construir toda una aplicación con un **_DSL_**, se construyen
   componentes de la misma. No es turing-completo en la mayoría de los casos.
 
 - **Enfocado a un dominio específico:**  
@@ -207,9 +207,9 @@ la separación entre _lógica_ y _visualización_ en cualquier otra aplicación.
 Si estamos usando un _DSL externo_ y parseamos texto, obtendremos como sabemos
 un _AST_ - En un _DSL interno_ la jerarquia del _AST_ la darian los llamados a
 funciones -, la idea es convertir este _AST_ a nuestro **_Semantic Model_**, dado
-que ejecutar sobre el **_AST_**, a pesar de ser posible, complijazaría mucho la
+que ejecutar sobre el **_AST_**, a pesar de ser posible, haría muy compleja la
 situación, debido a la atadura tan grande que se crearía entre la sintaxis del
-**_DSL_** y la capacidad de procesamiento del mismo
+**_DSL_** y la capacidad de procesamiento del mismo.
 
 **El _modelo semántico_ no se restringe solo a los _DSLs externos_:**
 
@@ -537,13 +537,14 @@ Lisp define un par de formas de sintaxis especiales.
 
 - **`'`**: indica que el siguiente token es literal.
 - **`` ` ``**: indica que el siguiente token es un literal con excepciones.
-  Las excepciones estan precedidas por el operador de coma. El literal `'(1 2 3)` es
-  el equivalente de _Python_ `[1, 2, 3]`. Puede asignarlo a otra variable o usarlo
-  en su lugar. Puede pensar `(1 2 ,x)` como el equivalente de _Python_
-  `[1, 2, x]`donde `x` es una variable previamente definida. Esta notación de la
-  lista es parte de la magia que entra en las macros. La segunda parte es el lector
-  Lisp que sustituye inteligentemente las macros por el código, pero que se ilustra
-  mejor a continuación:
+
+Las excepciones estan precedidas por el operador de coma. El literal `'(1 2 3)` es
+el equivalente de _Python_ `[1, 2, 3]`. Puede asignarlo a otra variable o usarlo
+en su lugar. Puede pensar en `(1 2, x)` como el equivalente de _Python_
+`[1, 2, x]`donde `x` es una variable previamente definida. Esta notación de la
+lista es parte de la magia que entra en las macros. La segunda parte es el lector
+Lisp que sustituye inteligentemente las macros por el código, pero que se ilustra
+mejor a continuación:
 
 Entonces podemos definir una macro llamada `lcomp`(abreviatura para
 _list comprehension_). Su sintaxis será exactamente como la de python que utilizamos
@@ -589,12 +590,12 @@ lambdas y cierres en _Ruby_.
 
 Sin embargo, quizás la característica más apreciada de _Ruby_ es la
 metaprogramación, con la cual se puede manipular el lenguaje para satisfacer las
-necesidades, en lugar de adaptarse al lenguaje cómo es, es por ello que la
+necesidades del programador, en lugar de hacer a este adaptarse al lenguaje, es por ello que la
 metaprogramación y los DSLs tienen una estrecha relación en el mundo _Ruby_. _Ruby_
 es un lenguaje altamente dinámico; puede insertar nuevos métodos en las clases en
 tiempo de ejecución (incluso una clase principal como Array), crear alias para los
 métodos existentes, e incluso definir métodos en objetos individuales (métodos
-Singleton). Además, tiene una rica API para la _reflection_. Un programa de _Ruby_
+Singleton). Además, tiene una rica API para _reflection_. Un programa de _Ruby_
 puede configurar dinámicamente nombres de variables, invocar nombres de métodos e
 incluso definir nuevas clases y nuevos métodos.
 
@@ -606,7 +607,7 @@ expresiones más simples son las expresiones primarias, las cuales representan
 directamente los valores, ejemplo de esto son los números y las cadenas. El lenguaje
 tiene muchas similitudes con _Python_, aunque con diferencia en pequeños detalles.
 Mientras que _Python_ intenta a la vez ser lo mas legible y sencillo posible, _Ruby_
-intenta ser lo mas explesivo posible dentro de la sencillez y el tipado dinámico.
+intenta ser lo mas expresivo posible dentro de la sencillez y el tipado dinámico.
 Luego siguiendo esa idea los _scope_ en _Ruby_ estan delimitados por las palabras
 predefinidas del lenguage (`if`, `def`, etc.) y la palabra clave `end`. A
 continuacion se enumeraran algunas diferencias.
@@ -673,13 +674,13 @@ themethod do |foo|
 end
 ```
 
-6. En Ruby, cuando se importa un archivo con **require**, todas las cosas definidas
+6. En Ruby, cuando se importa un archivo con **require**, todo lo definido
    en ese archivo terminarán en su espacio de nombres global. Esto causa la
    contaminación del espacio de nombres. La solución a eso son los módulos Rubys. Pero
    si crea un espacio de nombres con un módulo, debe usar ese espacio de nombres para
    acceder a las clases contenidas.
 
-7. Ruby no tiene herencia multipli, sino que reutiliza el concepto de módulo como un
+7. Ruby no tiene herencia multiple, sino que reutiliza el concepto de módulo como un
    tipo de clases abstractas.
 
 8. Ruby simula las _list comprehensions_ de _Python_ de la siguiente manera:
@@ -772,7 +773,7 @@ La palabra clave `dynamic` es utilizada para indicar que una instancia esta
 involucrada en un _**enlace tardío** (Late Binding)_ y que el **_DLR_** o
 _Dynamic Language Runtime_ se encargue del manejo de este objeto. El
 comportamiento de este objeto durante el _enlace tardío_ puede ser controlado y
-sobreescrito a traves de la implementación de la interfaz
+sobreescrito a traves de la implementación de la _interface_
 `IDynamicMetaObjectProvider`, el **_DLR_** se encargará de llamar a los métodos
 provenientes de `IDynamicMetaObjectProvider`, los cuales describen el comportamiento
 de la clase en el momento de enlace.
@@ -805,8 +806,8 @@ un mejor soporte de lenguajes dinámicos. Estos servicios incluyen lo siguiente:
   Para este propósito, el _DLR_ ha ampliado los árboles de expresión _LINQ_ para
   incluir el control de flujo, la asignación y otros nodos para modelar el lenguaje.
 - **Interaccion y almacenamiento en caché:**  
-  Mediante el dynamic call site, en un lugar en el código donde realiza una
-  operación como `a + b` o `a.B()` en objetos dinámicos. El DLR almacena en caché
+  Mediante el _dynamic call site_, en un lugar en el código donde realiza una
+  operación como `a + b` o `a.B()` en objetos dinámicos. El _DLR_ almacena en caché
   las características `a` y `b` (generalmente los tipos de estos objetos) e
   información sobre la operación. Si dicha operación se ha realizado previamente, el
   DLR recupera toda la información necesaria de la memoria caché para un envío
@@ -820,13 +821,13 @@ un mejor soporte de lenguajes dinámicos. Estos servicios incluyen lo siguiente:
 
 ### Enlace Tardío (Late binding)
 
-**_Enlace:_** se le denomina a la asociación de una función con su objeto
+**_Enlace (Binding):_** se le denomina a la asociación de una función con su objeto
 correspondiente al momento de llamado de la misma.
 
-**_Enlace de tiempo de compilación, estático o temprano:_** es el de una función
+**_Enlace en tiempo de compilación, estático o temprano:_** es el de una función
 miembro, que se llama dentro de un objeto, dicho enlace se resuelve en tiempo de
 compilación. Todos los métodos que pertenecen a un objeto o nombre de una clase
-(estáticos) son a los que se pueden realizar enlaze de tiempo de compilación.
+(estáticos) son a los que se pueden realizar enlace de tiempo de compilación.
 
 **_Enlace tardío o dinámico:_** es cuando solo se puede saber a que objeto pertenece
 una función, en tiempo de ejecución. Uno de los ejemplos más comunes de este tipo
@@ -835,10 +836,10 @@ enlace son los metodos virtuales.
 #### Enlace tardío con métodos dinámicos vs. métodos virtuales en CSharp
 
 Los métodos virtuales todavía están "_vinculados_" en tiempo de compilación.
-El compilador verifica la existencia real del método y su tipo de retorno, y el
+El compilador verifica la existencia real del método y su tipo de retorno, y
 fallará en compilar si el método no existe o existe alguna inconsistencia de tipos.
 
-El método virtual permite el polimorfismo y una forma de enlace tardío, ya que el
+El método virtual permite el polimorfismo y es una forma de enlace tardío, ya que el
 método se enlaza al tipo adecuado en tiempo de ejecución, a través de la tabla de
 métodos virtuales.
 
@@ -853,21 +854,21 @@ todavía tiene algún "_enlace temprano_" en su interior.
 
 ### Como se logra el comportamiento dinámico en CSharp
 
-Este comportamiento es concecuencia directa del desarrolo del _DLR_ el cual fue
+Este comportamiento es consecuencia directa del desarrollo del _DLR_ el cual fue
 concebido para admitir las implementaciones _"Iron"_ de los lenguajes de programación
 _Python_ y _Ruby_ en _.NET_.
 
-En en centro del entorno de ejecución _DLR_ se posiciona la clase
-llamada DynamicMetaObject. Dicha clase implemeta los siguientes métodos para dar
-respuesta a como actuar en todos los posibles esenarios en los que se puede
+En el centro del entorno de ejecución _DLR_ se posiciona la clase
+llamada `DynamicMetaObject`. Dicha clase implemeta los siguientes métodos para dar
+respuesta a como actuar en todos los posibles escenarios en los que se puede
 encontrar una instancia de un objecto en un momento dado:
 
 - `BindCreateInstance`: crea o activa un objeto.
-- `BindInvokeMember`: llamar a un método encapsulado.
+- `BindInvokeMember`: llama a un método encapsulado.
 - `BindInvoke`: ejecuta el objeto (como una función).
 - `BindGetMember`: obtenga un valor de propiedad.
 - `BindSetMember`: establece un valor de propiedad.
-- `BindDeleteMember`: eliminar un miembro.
+- `BindDeleteMember`: elimina un miembro.
 - `BindGetIndex`: obtener el valor en un índice específico.
 - `BindSetIndex`: establece el valor en un índice específico.
 - `BindDeleteIndex`: elimina el valor en un índice específico.
@@ -877,17 +878,17 @@ encontrar una instancia de un objecto en un momento dado:
 
 De manera general las clases definidas de manera ordinaria (estática) saben como
 reaccionar en dichos esenarios. Pero las clases _dinámicas_ no tienen estas
-reacciones predefinidas por lo cual es necesario predefinir para estas clases su
+reacciones predefinidas por lo cual es necesario redefinir para estas clases su
 propio `DynamicMetaObject`, el cual en tiempo de ejecución sepa que tiene que
 ejecutar en cada esenario. Para definir una clase _dinámica_, `System.Dynamic`
-proveé la interfaz `IDynamicMetaObjectProvider`, la cual contiene el metodo:
+provee la _interface_ `IDynamicMetaObjectProvider`, la cual contiene el metodo:
 
 ```csharp
 DynamicMetaObject GetMetaObject(Expression parameter)
 ```
 
 El cual debe encargarse de retornar el `DynamicMetaObject` que describa el
-comportamiento de la clase _dinamica_ que implemeta la interfaz
+comportamiento de la clase _dinamica_ que implemeta la _interface_
 `IDynamicMetaObjectProvider` según el árbol de expresiones que dicho método recibe
 como parámetro
 
@@ -896,7 +897,7 @@ como parámetro
 Como se puede observar, en principio lograr un comportamieto dinámico en **C#** pasa
 por crear estos `DynamicMetaObject` y tener conocimientos para trabajar sobre el
 árbol de expresiones de **C#**. Para evitar todo este proceso `System.Dynamic`
-provée la clase `DynamicObject`, pensada para poder definir comportamietos dinámicos
+provee la clase `DynamicObject`, pensada para poder definir comportamietos dinámicos
 abstraídos de todo el proceso anteriormente descrito pues ya cuenta con una
 implemetacion del metodo `GetMetaObject` de `IDynamicMetaObjectProvider`. Dicha
 imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
@@ -908,7 +909,7 @@ imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
   Proporciona implementación para operaciones binarias. Las clases derivadas de la
   clase `DynamicObject` pueden sobreescribir este método para especificar el
   comportamiento dinámico para operaciones como la suma, multiplicación, etc. La
-  clase BinaryOperationBinder contiene una `ExpressionType` con información de la
+  clase `BinaryOperationBinder` contiene una `ExpressionType` con información de la
   operación que se realiza en el momento de llamado de esta función. Este método
   considera que la instancia de la clase derivada de `DynamicObject` es el operador
   de la derecha y _arg_ es el de la izq.
@@ -968,18 +969,18 @@ imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
 
 ### `System.Dynamic.ExpandoObject`
 
-Aunque la clase DynamicObject es una gran abstración del proceso base, para su
+Aunque la clase `DynamicObject` es una gran abstración del proceso base, para su
 utilización es necesario implementar una clase que herede de esta y realice los
 override necesarios, lo cual es demasiado verboso en los casos más sencillos.
 Suponiendo que solo se necesita de un objeto dinámico que permita un control
 dinámico de propiedades, mediante `DynamicObject` necesitamos implementar los
-metodos `TryGetMember` y `TrySetMember`. Para evitar esto `System.Dynamic` proveé la
+metodos `TryGetMember` y `TrySetMember`. Para evitar esto `System.Dynamic` provee la
 clase `ExpandoOject`, la misma es una clase `sealed` y por tanto no se puede
 extender.
 
-`ExpandoObject` implementa las interfaces
+`ExpandoObject` implementa las _interfaces_:
 `IDictionary<KeyValuePair<string, object>>` y `IDynamicMetaObjectProvider` entre
-otras. Mediante las dos interfaces antes mencionadas dicha clase logra el manejo
+otras. Mediante las dos _interfaces_ antes mencionadas dicha clase logra el manejo
 dinámico de las propiedades. El proceso es realmente sencillo puesto que en su
 interior contiene algún tipo de implementación de diccionario, al momento de asignar
 una propiedad guarda el nombre de la propiedad como llave y el objeto que se le esta
@@ -991,7 +992,7 @@ excepción.
 ## Reflection
 
 _Reflection_ es la capacidad de un proceso de examinar, introspectar y modificar su
-propia estructura y comportamiento. Reflection ayuda a los programadores a crear
+propia estructura y comportamiento. _Reflection_ ayuda a los programadores a crear
 bibliotecas de software genéricas para mostrar datos, procesar diferentes formatos
 de datos, realizar la serialización o deserialización de datos para la
 comunicación, o agrupar y desagrupar datos para contenedores o ráfagas de
@@ -1001,8 +1002,8 @@ orientado a la red.
 Tambien se puede utilizar para observar y modificar la ejecución del programa en
 tiempo de ejecución. Esto generalmente se logra mediante la asignación dinámica de
 código de programa en tiempo de ejecución. En lenguajes de programación orientados
-a objetos, esta técnica permite la inspección de clases, interfaces, campos y
-métodos en tiempo de ejecución sin conocer los nombres de las interfaces, campos y
+a objetos, esta técnica permite la inspección de clases, _interfaces_, campos y
+métodos en tiempo de ejecución sin conocer los nombres de las _interfaces_, campos y
 métodos en tiempo de compilación. También permite la creación de instancias de
 nuevos objetos y la invocación de métodos. Por lo antes dicho es claro que es
 también una estrategia clave para la metaprogramación .
@@ -1015,14 +1016,14 @@ principales componentes de _CLR_. Cuando utiliza esta clase, puede encontrar los
 tipos utilizados en un módulo y un espacio de nombres y también determinar si un
 tipo dado es una referencia o un tipo de valor. Puede analizar las tablas de
 metadatos (Campos, Propiedades, Métodos, Eventos) correspondientes para ver estos
-elementos
+elementos.
 
 El enlace tardío también se pueden lograr a través de _Reflection_. Un ejemplo
-claro: es posible que no se sepa qué assembly cargar durante el tiempo de
+claro: es posible que no se sepa qué _assembly_ cargar durante el tiempo de
 compilación. En este caso, puede pedirle al usuario que ingrese el nombre y el tipo
 del ensamblado durante el tiempo de ejecución para que la aplicación pueda cargar
-el assembly apropiado. Con el tipo `System.Reflection.Assembly`, tiene algunos
-metodos estáticos que le permiten cargar un assembly directamente: `LoadFrom`,
+el _assembly_ apropiado. Con el tipo `System.Reflection.Assembly`, tiene algunos
+metodos estáticos que le permiten cargar un _assembly_ directamente: `LoadFrom`,
 `LoadWithPartialName`
 
 Dentro del archivo PE (ejecutable portátil) hay principalmente metadatos, que
@@ -1032,7 +1033,7 @@ contienen una variedad de tablas diferentes, como:
 - Tabla de definición de tipo
 - Tabla de definición de método
 
-### Api se `System.Reflection`
+### _API_ de `System.Reflection`
 
 Para realizar la manipulación de una instacia de un objeto en _C#_ mediante
 _Reflection_ se necesita comenzar obteniendo la clase `System.Type` que describe
@@ -1112,10 +1113,11 @@ ejemplificamos el caso de `PropertyInfo`:
     var person = new Person();
     person.LastName = "Name"
     PropertyInfo info = .GetProperty("LastName");
-    info.GetType(); //System.Reflection.PropertyInfo
-    a.GetValue(person); //Name
-    a.SetValue(person,"NewName");//person.LastName = "NewName"
-    a.Name;//LastName
-    a.PropertyType; //string
+    info.GetType();  // System.Reflection.PropertyInfo
+    a.GetValue(person);  // Name
+    // person.LastName = "NewName"
+    a.SetValue(person,"NewName");
+    a.Name;  // LastName
+    a.PropertyType;  // string
     ...
 ```
