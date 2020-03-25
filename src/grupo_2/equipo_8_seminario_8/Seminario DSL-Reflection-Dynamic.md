@@ -353,8 +353,16 @@ Lisp fue creado originalmente como una práctica notación matemática para los
 programas de ordenador. Como uno de los primeros lenguajes de programación, Lisp fue
 pionera en muchas ideas en ciencias de la computación, incluyendo estructuras de
 árbol de datos, gestión de almacenamiento automático, tipado dinámico,
-condicionales, funciones de orden superior, la recursividad, la autoalojamiento
-compilador, y el ciclo de lectura – evaluación – impresión .
+condicionales, funciones de orden superior, la recursividad, compilador autocontenido,
+y el ciclo de lectura – evaluación – impresión .
+
+> **compilador autocontenido**: Desde 1970 se ha convertido en una practica muy comun
+> escribir el compilador en el mismo lenguaje que este compila. Y aunque parece antinatural
+> tiene una explicacion muy sencilla. Generalmente, la primera versión del compilador se
+> escribe en un lenguaje diferente, y luego cada versión posterior se escribe en ese lenguaje
+> y se compila con la versión anterior. Una vez que haya compilado la versión $x$ con la versión $x_1$,
+> puede usarse la versión recién creada $x$ para recompilarse, aprovechando las nuevas optimizaciones
+> que la versión presenta. _GCC_ hace sus lanzamientos de esa manera.
 
 Las listas enlazadas son una de las principales estructuras de datos de Lisp, y el
 código fuente de Lisp está hecho de listas. Por lo tanto, los programas Lisp pueden
