@@ -713,21 +713,47 @@ res = (0..9).map { |x| x * x }
 
 ##### Ruby y los DSL
 
-En los lenguajes compilados como _C++_ los métodos y variables tienen valor en un
-espacio de memoria solo en tiempo de compilación, una vez finaliza el período de
-compilación los espacios de memoria se liberan y se pierde la información
-relacionada con el programa, por esa razón no se pueden solicitar a una clase sus
-métodos de instancia, ya que, en el momento de hacer la solicitud, la clase se ha
-desvanecido. Por otra parte, en los lenguajes interpretados como Ruby la
-metaprogramación es posible, ya que en tiempo de ejecución la mayoría de las
-construcciones del lenguaje todavía están ahí, de esa forma, se pueden consultar
-valores y construcciones del programa en ejecución.
-
+Quizás la característica más apreciada de Ruby es la metaprogramación,
+con la cual se puede manipular el lenguaje para así lograr disímiles
+objetivos, en lugar de adaptarse al lenguaje cómo es, es por ello
+que la metaprogramación y los DSLs están tan relacionados en Ruby.
 Para la metaprogramacion _Ruby_ se vale de las clases `Kernel`, `Object` y `Module`
 que definen métodos con el mismo objetivo que `System.Reflection` en _C#_, trabajar
-con los metadatos del programa en ejecución. Pero gracias al tipado dinámico de Ruby
-y que sus tipos principales no son inmutables, este trabajo con los metadatos del
-programa aporta una gran flexibilidad al lenguaje. A continuación algunos ejemplos:
+con los metadatos del programa en ejecución.
+
+Otra de la características que hacen de Ruby un lenguage tan flexible e ideal
+para el desarrollo de DSLs es la posibilidad de continuar la implementacion de
+sus clases base, en un momento dado se puede escribir el codigo del ejemplo
+siguiente logrando asi sumar la propiedad `factorial` al tipo basico de Ruby
+`Integer`.
+
+```ruby
+class Integer
+     def factorial
+        if self < 0
+            return 'You can\'t take the factorial of a negative number!'
+        end
+        if self <= 1
+            1
+        else
+            self * (self - 1).factorial
+        end
+    end
+end
+
+puts 5.factorial ;; 120
+```
+
+Y aunque este objetivo tambien se puede lograr con la metaprogramacion, es una
+caracteristica muy util cuando se quiere agregar una cantidad considerable de
+metodos y propiedades. Este feature se puede lograr en C# con los metodos
+extensores. En _Python_ esto se puede lograr pero no con los tipos _built-in_
+del lenguaje.
+
+Pero gracias al tipado dinámico de Ruby, la posibilidad de extender sus tipos
+de manera facil y elegante (incluido los tipos principales) y este trabajo con
+los metadatos Ruby es uno de los lenguajes referencia al momento de hablar sobre
+DSLs. A continuación algunos ejemplos:
 
 ```ruby
     def array_second
