@@ -446,14 +446,18 @@ lo cual equivale a:
 ```
 
 Los "_operadores especiales_" (a veces llamados "_formas especiales_") proporcionan
-la estructura de control de Lisp. Por ejemplo, el operador especial **if** toma tres
-argumentos. Si el primer argumento no es **nil** , se evalúa como el segundo
-argumento; de lo contrario, se evalúa al tercer argumento. Así, la expresión
+la estructura de control de Lisp. Por ejemplo, el operador especial `if` toma tres
+argumentos. Si el primer argumento no es `nil` , se evalúa como el segundo
+argumento; de lo contrario, se evalúa al tercer argumento. Asi pues en el ejemplo siguente
+como la primera expresión se evalua `nil` el operador especial evaluará la expresion que
+toma el lugar del segundo argumento, y tengra igual valor de retorno que este segundo argumento
 
 ```lisp
-  (if nil
-    (list 1 2 "foo")
-    (list 3 4 "bar"))
+  (if nil               ;; la expresión `nil` primer argumento
+    (list 1 2 "foo")    ;; la expresión (list 1 2 "foo") segundo argumento
+    (list 3 4 "bar"))   ;; la expresión (list 3 4 "bar") tercer  argumento
+
+    ;; [1,2,"foo"]
 ```
 
 Lisp también proporciona operadores lógicos. Los operadores **and** y **or** realizan
