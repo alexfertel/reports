@@ -324,7 +324,7 @@ _DSL_.
 
 ### Algunos ejemplos y exponentes:
 
-### LISP
+#### LISP
 
 Lisp (históricamente LISP) es una familia de lenguajes de programación con una
 larga historia y una notación de prefijo distintiva, completamente entre paréntesis.
@@ -345,7 +345,7 @@ manipular el código fuente como una estructura de datos, dando lugar a los macr
 sistemas que permiten a los programadores crear nuevas sintaxis o nuevos lenguajes
 específicos de dominio integrados en Lisp.
 
-#### Sintaxis de Lisp
+##### Sintaxis de Lisp
 
 Lisp es un lenguaje orientado a expresiones y por tanto no se hace distinción entre
 "expresiones" y "declaraciones"; todo el código y los datos se escriben como
@@ -363,20 +363,20 @@ los datos. Esto permite escribir fácilmente programas que manipulan otros progr
 (metaprogramación). Muchos dialectos de Lisp explotan esta característica utilizando
 sistemas macro, que permiten la extensión del lenguaje casi sin límite.
 
-#### Expresiones _S_:
+##### Expresiones _S_:
 
 Una _expresión s_, también conocida como _sexpr_ o _sexp_ , es una forma de
 representar una lista anidada de datos . Significa "_expresión simbólica_".Por
 ejemplo, la expresión matemática simple `5*(7+3)` se puede escribir como una
 _expresión s_ con notación de prefijo de la forma `(* 5 (+ 7 3))`.
 
-#### Listas
+##### Listas
 
 Una lista de Lisp se escribe con sus elementos separados por espacios en blanco y
 entre paréntesis. La lista vacía `()` también se representa como el átomo especial
 **nil**. Esta es la única entidad en Lisp que es tanto un átomo como una lista.
 
-#### Expresiones
+##### Expresiones
 
 Las expresiones se escriben como listas, usando la notación de prefijo . El primer
 elemento en la lista es el nombre de una función, el nombre de una macro, una
@@ -397,7 +397,7 @@ Cualquier expresión sin comillas se evalúa de forma recursiva antes de evaluar
 AL evaluar esta expresión tenga en cuenta que el tercer argumento es una lista, o
 sea (1 2 (3 4))
 
-#### Operadores
+##### Operadores
 
 Los operadores aritméticos se tratan de manera similar a las expresiones:
 
@@ -438,7 +438,7 @@ una evaluación de cortocircuito y devolverán su primer argumento nil y non-nil
   (or (and "zero" nil "never") "James" 'task 'time)
 ```
 
-#### Expresiones lambda y definición de funciones
+##### Expresiones lambda y definición de funciones
 
 Otro operador especial **lambda**, se utiliza para vincular variables a valores que
 luego se evalúan dentro de una expresión. Este operador también se utiliza para
@@ -471,7 +471,7 @@ forma de lograrlo es
   (setf (fdefinition 'f) #'(lambda (a) (block f b...)))
 ```
 
-#### Estructura de lista del código del programa, explotación por macros y compiladores
+##### Estructura de lista del código del programa, explotación por macros y compiladores
 
 Una distinción fundamental entre Lisp y otros lenguajes es que en Lisp, la
 representación textual de un programa es simplemente una descripción legible por
@@ -498,7 +498,7 @@ la estructura de la lista a _código de máquina_ o _bytecode_ para su ejecució
 código puede ejecutarse tan rápido como el código compilado en lenguajes
 convencionales como _C_.
 
-#### Macros de Lisp y DSL
+##### Macros de Lisp y DSL
 
 Las macros se utilizan para definir extensiones de sintaxis de lenguaje para
 _Common Lisp_ o _Lenguajes de Dominio Específico_ _(DSL)_. Estos idiomas están
@@ -560,7 +560,7 @@ Ahora podemos ejecutar en la línea de comando:
 
 De esta manera es posible lograr casi cualquier sintaxis que se pueda desear.
 
-### Ruby
+#### Ruby
 
 _Ruby_ es un lenguaje orientado a objetos y sigue la noción habitual de cualquier
 otro lenguaje orientado a objetos para definir una clase, _Ruby_ tiene su propio
@@ -581,7 +581,7 @@ Singleton). Además, tiene una rica API para la _reflection_. Un programa de _Ru
 puede configurar dinámicamente nombres de variables, invocar nombres de métodos e
 incluso definir nuevas clases y nuevos métodos.
 
-#### Caracteristicas distintivas del lenguaje Ruby
+##### Caracteristicas distintivas del lenguaje Ruby
 
 La sintaxis de _Ruby_ esta orientada a la expresividad y su unidad básica es la
 expresión, el intérprete de _Ruby_ evalúa las expresiones y produce valores. Las
@@ -671,7 +671,7 @@ end
 res = (0..9).map { |x| x * x }
 ```
 
-#### Ruby y los DSL
+##### Ruby y los DSL
 
 En los lenguajes compilados como _C++_ los métodos y variables tienen valor en un
 espacio de memoria solo en tiempo de compilación, una vez finaliza el período de
@@ -715,7 +715,7 @@ existente, funciona como un diccionario en el cual un método puede tener difere
 nombres. Por otra parte, si se llama a un método no existente, se puede usar
 `method_missing` para capturar y manejar invocaciones arbitrarias en un objeto.
 
-### Ejemplo C++
+#### Ejemplo C++
 
 En _C++_ es posible lograr una sintaxis de tipo _DSL_ a partir de la
 utilización de macros, el siguiente ejemplo permite una sintaxis estilo
