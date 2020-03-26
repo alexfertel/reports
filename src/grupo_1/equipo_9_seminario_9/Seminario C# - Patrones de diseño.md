@@ -698,7 +698,6 @@ Se  deben realizar en el **`Container`** una serie de verificaciones como son:
 
 ### Explique el funcionamiento de las características de C# utilizadas: reflection, typeof, genericidad, herencia y polimorfismo, etc.
 
-
 Reflection:
 Reflection es el proceso mediante el cual un programa puede observar y cambiar su propia estructura y comportamiento en runtime.
 En nuestro código usamos funciones de reflection entre las que se encuentra **`GetParameters()`** para conocer las características de las clases dentro de nuestro contenedor.
