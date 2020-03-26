@@ -161,9 +161,9 @@ directorio resultante sería el siguiente:
 ### Ramas
 
 Los nombres de las ramas deben definir bien qué seminario y de qué equipo viene,
-manteniendo el siguiente formato: `equipo-X/seminario-Y`, donde `X` es el número
-del equipo y `Y` es el número del seminario para ese equipo, dado que cada equipo
-hace al menos 3 seminarios, un posible ejemplo de rama sería `equipo-3/seminario-1`.
+manteniendo el siguiente formato: `grupo-Z/equipo-X/seminario-Y`, donde `X` es el número
+del equipo y `Y` es el número del seminario que le toca a ese equipo y `Z` es el número del equipo, dado que cada equipo
+hace al menos 3 seminarios, un posible ejemplo de rama sería `grupo-1/equipo-3/seminario-3`.
 
 
 ## Ejemplos
