@@ -17,7 +17,7 @@ renderear fácilmente. En este repositorio se brinda un *cheatsheet* de [referen
 ### Compilar a LaTeX
 
 En caso de hacer el seminario en `Markdown`, pueden contactar con el profesor del **Grupo 2**
-para compilar a `LaTeX` el documento y mantener los estilos de las orientaciones de los seminarios. 
+para compilar a `LaTeX` el documento y mantener los estilos de las orientaciones de los seminarios.
 
 ## Git
 
