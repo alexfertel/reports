@@ -1,6 +1,6 @@
 # Seminario DSL-Reflection-Dynamic
 
-## Lenguajes de Dominio Específico (DSL)
+## DSL
 
 Supongamos la siguiente situación. Se quiere implementar un mecanismo
 para crear objetos de tipo _persona_. A estas _personas_ debe ser
@@ -13,7 +13,7 @@ class Person
     public string FirstName { get; set; }
     public string LastName { get; set; }
 
-    public StateMachine(string firstName, string lastName)
+    public Person(string firstName, string lastName)
     {
         this.FirstName = firstName;
         this.LastName = lastName;
@@ -86,7 +86,7 @@ Analicemos la definicion anterior:
   pueden ser muy útiles, pero esto convierte al lenguaje en algo complejo de
   aprender, utilizar y entender. Un **_DSL_** por otro lado es facil de comprender,
   es legible, soporta solo lo necesario para ser utilizado en su dominio. No
-  es posible contruir toda una aplicación con un **_DSL_**, se construyen
+  es posible construir toda una aplicación con un **_DSL_**, se construyen
   componentes de la misma. No es turing-completo en la mayoría de los casos.
 
 - **Enfocado a un dominio específico:**  
@@ -146,7 +146,8 @@ listar los metodos que esta contiene y documentarlos uno a uno, estos metodos
 tienen que tener sentido por si solos, ser _autocontenidos_; por otro lado en
 un **DSL interno** podria pensarse en los metodos como palabras de un
 lenguaje que no expresan una idea hasta que no son compuestas en oraciones.
-Por ejemplo metodos `transition(event)` o `to(dest)` - correspondientes a la creación de una maquina de estado - no tendrian sentido por
+Por ejemplo metodos `transition(event)` o `to(dest)` - correspondientes a la
+creación de una maquina de estado - no tendrian sentido por
 si solo en una _api clasica_, pero pueden ser utilizados en un **DSL interno**
 de la siguiente manera `.transition(event).to(dest)`. Es común
 tambien destinguir los **DSLs internos** por la no utilizacion de
@@ -168,33 +169,18 @@ por un ser humano, sino de ser editables.
 ### Modelo Semántico
 
 Observese que en el caso del _DSL_ externo es posible construir luego del proceso
-de **_parsing_** una instancia de `StateMachine` con el primer modelo, es decir:
+de **_parsing_** una instancia de `Person` con el primer modelo, es decir:
 
 ```csharp
-class StateMachine
+class Person
 {
-    private List<Transition> transitions;
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 
-    public StateMachine()
+    public Person(string firstName, string lastName)
     {
-        this.transitions = new List<Transition>();
-    }
-
-    public AddTransition(Transition transition)
-    {
-        this.transitions.Add(transition);
-    }
-}
-
-class Transition
-{
-    public string Origin { get; private set; }
-    public string Dest { get; private set; }
-
-    public Transition(string origin, string dest)
-    {
-        this.Origin = origin;
-        this.Dest = dest;
+        this.FirstName = firstName;
+        this.LastName = lastName;
     }
 }
 ```
@@ -221,9 +207,9 @@ la separación entre _lógica_ y _visualización_ en cualquier otra aplicación.
 Si estamos usando un _DSL externo_ y parseamos texto, obtendremos como sabemos
 un _AST_ - En un _DSL interno_ la jerarquia del _AST_ la darian los llamados a
 funciones -, la idea es convertir este _AST_ a nuestro **_Semantic Model_**, dado
-que ejecutar sobre el **_AST_**, a pesar de ser posible, complijazaría mucho la
+que ejecutar sobre el **_AST_**, a pesar de ser posible, haría muy compleja la
 situación, debido a la atadura tan grande que se crearía entre la sintaxis del
-**_DSL_** y la capacidad de procesamiento del mismo
+**_DSL_** y la capacidad de procesamiento del mismo.
 
 **El _modelo semántico_ no se restringe solo a los _DSLs externos_:**
 
@@ -289,13 +275,43 @@ instancia que se quiere construir. Este problema se puede resolver añadiendo un
 metodo `End()` al builder, que al ser llamado retornara la instancia construida
 hasta el momento; este enfoque puede parecer un poco _verbose_. Otra forma puede
 ser en lenguajes como _C#_ establecer un casteo implicito entre un builder y el tipo
-de objetos que este construye.
+de objetos que este construye, lo cual es posible hacer de la siguiente manera.
+
+```csharp
+class PersonBuilder
+{
+  private Person currentPerson = null;
+  // ...
+  public static implicit operator Person(PersonBuilder builder)
+  {
+    return builder.currentPerson;
+  }
+  // ...
+}
+```
 
 Otro enfoque para la implementación de interfaces fluidas son las
 _progressive interfaces_. Esta idea consiste en que cada metodo en la fluent
-interface retorna que implementa un interface de solo un metodo, de manera tal que
+interface tiene como tipo de retorno una interface de solo un metodo, de manera tal que
 el orden en que pueden encadenarse los metodos es determinado por el creador del
-_DSL_.
+_DSL_. Vease el siguiente ejemplo:
+
+```csharp
+interface IPersonBuilderFirstName
+{
+  IPersonBuilderLastName FirstName(string firstName);
+}
+
+interface IPersonBuilderLastName
+{
+  Person LastName(string lastName);
+}
+```
+
+Observese que en el ejemplo anterior, para crear una instancia de `Person`, es necesario
+primero indicar el `FirstName` y luego el `LastName`. De esta manera las _progressive interfaces_
+nos permiten controlar el orden en que se construye nuestra instancia; estas como puede observarse
+en el ejemplo anterior pueden resolver el _problema de la finalizacion_.
 
 ### Ventajas y Desventajas de los DSL:
 
@@ -325,7 +341,7 @@ _DSL_.
 
 ### Algunos ejemplos y exponentes:
 
-### LISP
+#### LISP
 
 Lisp (históricamente LISP) es una familia de lenguajes de programación con una
 larga historia y una notación de prefijo distintiva, completamente entre paréntesis.
@@ -337,8 +353,16 @@ Lisp fue creado originalmente como una práctica notación matemática para los
 programas de ordenador. Como uno de los primeros lenguajes de programación, Lisp fue
 pionera en muchas ideas en ciencias de la computación, incluyendo estructuras de
 árbol de datos, gestión de almacenamiento automático, tipado dinámico,
-condicionales, funciones de orden superior, la recursividad, la autoalojamiento
-compilador, y el ciclo de lectura – evaluación – impresión .
+condicionales, funciones de orden superior, la recursividad, compilador autocontenido,
+y el ciclo de lectura – evaluación – impresión .
+
+> **compilador autocontenido**: Desde 1970 se ha convertido en una practica muy comun
+> escribir el compilador en el mismo lenguaje que este compila. Y aunque parece antinatural
+> tiene una explicacion muy sencilla. Generalmente, la primera versión del compilador se
+> escribe en un lenguaje diferente, y luego cada versión posterior se escribe en ese lenguaje
+> y se compila con la versión anterior. Una vez que haya compilado la versión $x$ con la versión $x_1$,
+> puede usarse la versión recién creada $x$ para recompilarse, aprovechando las nuevas optimizaciones
+> que la versión presenta. _GCC_ hace sus lanzamientos de esa manera.
 
 Las listas enlazadas son una de las principales estructuras de datos de Lisp, y el
 código fuente de Lisp está hecho de listas. Por lo tanto, los programas Lisp pueden
@@ -346,7 +370,7 @@ manipular el código fuente como una estructura de datos, dando lugar a los macr
 sistemas que permiten a los programadores crear nuevas sintaxis o nuevos lenguajes
 específicos de dominio integrados en Lisp.
 
-#### Sintaxis de Lisp
+##### Sintaxis de Lisp
 
 Lisp es un lenguaje orientado a expresiones y por tanto no se hace distinción entre
 "expresiones" y "declaraciones"; todo el código y los datos se escriben como
@@ -359,25 +383,35 @@ sintaxis de las expresiones _S_ también es responsable de gran parte del poder 
 Lisp: la sintaxis es extremadamente regular, lo que facilita la manipulación por
 computadora.
 
+El elemento fundamental en Lisp es la lista, en el sentido más amplio del término,
+pues tanto los datos como los programas son listas. De ahí viene su nombre, pues
+Lisp es un acrónimo de _ListProcessing_.Las listas en _LISP_ están delimitadas por
+paréntesis. Estas listas son listas enlazadas implementadas sobre la base de los
+pares _car_ (Content of Address part of Register) y _cdr_
+(Content of Decremental part of Register). Una de las caracteristicas mas reconocibles
+del lenguaje Lisp es su _estructura de lista_, pues sus programas se componen de
+secuencias de expresiones donde cada expresión tiene el formato de lista antes
+mencionado y son interpretadas como tal.
+
 Las funciones de Lisp se escriben como listas, se pueden procesar exactamente como
 los datos. Esto permite escribir fácilmente programas que manipulan otros programas
 (metaprogramación). Muchos dialectos de Lisp explotan esta característica utilizando
 sistemas macro, que permiten la extensión del lenguaje casi sin límite.
 
-#### Expresiones _S_:
+##### Expresiones _S_:
 
 Una _expresión s_, también conocida como _sexpr_ o _sexp_ , es una forma de
 representar una lista anidada de datos . Significa "_expresión simbólica_".Por
 ejemplo, la expresión matemática simple `5*(7+3)` se puede escribir como una
 _expresión s_ con notación de prefijo de la forma `(* 5 (+ 7 3))`.
 
-#### Listas
+##### Listas
 
 Una lista de Lisp se escribe con sus elementos separados por espacios en blanco y
 entre paréntesis. La lista vacía `()` también se representa como el átomo especial
 **nil**. Esta es la única entidad en Lisp que es tanto un átomo como una lista.
 
-#### Expresiones
+##### Expresiones
 
 Las expresiones se escriben como listas, usando la notación de prefijo . El primer
 elemento en la lista es el nombre de una función, el nombre de una macro, una
@@ -398,7 +432,7 @@ Cualquier expresión sin comillas se evalúa de forma recursiva antes de evaluar
 AL evaluar esta expresión tenga en cuenta que el tercer argumento es una lista, o
 sea (1 2 (3 4))
 
-#### Operadores
+##### Operadores
 
 Los operadores aritméticos se tratan de manera similar a las expresiones:
 
@@ -422,14 +456,18 @@ lo cual equivale a:
 ```
 
 Los "_operadores especiales_" (a veces llamados "_formas especiales_") proporcionan
-la estructura de control de Lisp. Por ejemplo, el operador especial **if** toma tres
-argumentos. Si el primer argumento no es **nil** , se evalúa como el segundo
-argumento; de lo contrario, se evalúa al tercer argumento. Así, la expresión
+la estructura de control de Lisp. Por ejemplo, el operador especial `if` toma tres
+argumentos. Si el primer argumento no es `nil` , se evalúa como el segundo
+argumento; de lo contrario, se evalúa al tercer argumento. Asi pues en el ejemplo siguente
+como la primera expresión se evalua `nil` el operador especial evaluará la expresion que
+toma el lugar del segundo argumento, y tengra igual valor de retorno que este segundo argumento
 
 ```lisp
-  (if nil
-    (list 1 2 "foo")
-    (list 3 4 "bar"))
+  (if nil               ;; la expresión `nil` primer argumento
+    (list 1 2 "foo")    ;; la expresión (list 1 2 "foo") segundo argumento
+    (list 3 4 "bar"))   ;; la expresión (list 3 4 "bar") tercer  argumento
+
+    ;; [1,2,"foo"]
 ```
 
 Lisp también proporciona operadores lógicos. Los operadores **and** y **or** realizan
@@ -439,7 +477,7 @@ una evaluación de cortocircuito y devolverán su primer argumento nil y non-nil
   (or (and "zero" nil "never") "James" 'task 'time)
 ```
 
-#### Expresiones lambda y definición de funciones
+##### Expresiones lambda y definición de funciones
 
 Otro operador especial **lambda**, se utiliza para vincular variables a valores que
 luego se evalúan dentro de una expresión. Este operador también se utiliza para
@@ -472,7 +510,7 @@ forma de lograrlo es
   (setf (fdefinition 'f) #'(lambda (a) (block f b...)))
 ```
 
-#### Estructura de lista del código del programa, explotación por macros y compiladores
+##### Estructura de lista del código del programa, explotación por macros y compiladores
 
 Una distinción fundamental entre Lisp y otros lenguajes es que en Lisp, la
 representación textual de un programa es simplemente una descripción legible por
@@ -488,21 +526,22 @@ Además, debido a que el código Lisp tiene la misma estructura que las listas, 
 macros se pueden construir con cualquiera de las funciones de procesamiento de
 listas en el lenguaje. En resumen, cualquier cosa que Lisp pueda hacer a una
 estructura de datos, las macros de Lisp pueden hacer al código. En contraste, en la
-mayoría de los otros idiomas, la salida del analizador es puramente interna a la
+mayoría de los otros lenguajes, la salida del analizador es puramente interna a la
 implementación del lenguaje y el programador no puede manipularla.
 
 En implementaciones simplistas de Lisp, esta estructura de lista se interpreta
 directamente para ejecutar el programa. Una función es literalmente una parte de la
-estructura de la lista que el intérprete recorre al ejecutarla. Sin embargo, los
-sistemas Lisp más importantes también incluyen un compilador. El compilador traduce
-la estructura de la lista a _código de máquina_ o _bytecode_ para su ejecución. Este
-código puede ejecutarse tan rápido como el código compilado en lenguajes
-convencionales como _C_.
+estructura de la lista que el intérprete recorre al ejecutarla. Sin embargo, las
+distribuciones de Lisp mas importantes (Clojure, Common Lisp, etc.)
+también incluyen un compilador. El compilador traduce la estructura de lista a
+_código de máquina_ o _bytecode_ para su ejecución. Este código puede ejecutarse
+tan rápido como el código compilado en lenguajes convencionales como _C_. Profundizar
+en lo anterior esta lejos del alcance de este seminario.
 
-#### Macros de Lisp y DSL
+##### Macros de Lisp y DSL
 
 Las macros se utilizan para definir extensiones de sintaxis de lenguaje para
-_Common Lisp_ o _Lenguajes de Dominio Específico_ _(DSL)_. Estos idiomas están
+_Common Lisp_ o _Lenguajes de Dominio Específico_ _(DSL)_. Estos lenguajes están
 integrados directamente en el código Lisp existente. Ahora, los DSL pueden tener una
 sintaxis similar a Lisp o completamente diferente.
 
@@ -521,13 +560,14 @@ Lisp define un par de formas de sintaxis especiales.
 
 - **`'`**: indica que el siguiente token es literal.
 - **`` ` ``**: indica que el siguiente token es un literal con excepciones.
-  Las excepciones estan precedidas por el operador de coma. El literal `'(1 2 3)` es
-  el equivalente de _Python_ `[1, 2, 3]`. Puede asignarlo a otra variable o usarlo
-  en su lugar. Puede pensar `(1 2 ,x)` como el equivalente de _Python_
-  `[1, 2, x]`donde `x` es una variable previamente definida. Esta notación de la
-  lista es parte de la magia que entra en las macros. La segunda parte es el lector
-  Lisp que sustituye inteligentemente las macros por el código, pero que se ilustra
-  mejor a continuación:
+
+Las excepciones estan precedidas por el operador de coma. El literal `'(1 2 3)` es
+el equivalente de _Python_ `[1, 2, 3]`. Puede asignarlo a otra variable o usarlo
+en su lugar. Puede pensar en `(1 2, x)` como el equivalente de _Python_
+`[1, 2, x]`donde `x` es una variable previamente definida. Esta notación de la
+lista es parte de la magia que entra en las macros. La segunda parte es el lector
+Lisp que sustituye inteligentemente las macros por el código, pero que se ilustra
+mejor a continuación:
 
 Entonces podemos definir una macro llamada `lcomp`(abreviatura para
 _list comprehension_). Su sintaxis será exactamente como la de python que utilizamos
@@ -537,8 +577,8 @@ en el ejemplo `[x for x in range(10) if x % 2 == 0]`,
 ```lisp
     (defmacro lcomp (expression for var in list conditional conditional-test)
       (let ((result (gensym))) ;; crear un nombre de variable unico para el resultado
-        ;; the arguments are really code so we can substitute them
-        ;; store nil in the unique variable name generated above
+        ;; los argumentos son en realidad codigo, por lo que podemos sustituirlos
+        ;; guardar `nil` en el nombre de variable unico generado anteriormente
         ` (let ((,result nil))
            ;; var es un nombre de variable
            ;; list es la lista literal por la que iteraremos
@@ -561,7 +601,7 @@ Ahora podemos ejecutar en la línea de comando:
 
 De esta manera es posible lograr casi cualquier sintaxis que se pueda desear.
 
-### Ruby
+#### Ruby
 
 _Ruby_ es un lenguaje orientado a objetos y sigue la noción habitual de cualquier
 otro lenguaje orientado a objetos para definir una clase, _Ruby_ tiene su propio
@@ -573,16 +613,16 @@ lambdas y cierres en _Ruby_.
 
 Sin embargo, quizás la característica más apreciada de _Ruby_ es la
 metaprogramación, con la cual se puede manipular el lenguaje para satisfacer las
-necesidades, en lugar de adaptarse al lenguaje cómo es, es por ello que la
+necesidades del programador, en lugar de hacer a este adaptarse al lenguaje, es por ello que la
 metaprogramación y los DSLs tienen una estrecha relación en el mundo _Ruby_. _Ruby_
 es un lenguaje altamente dinámico; puede insertar nuevos métodos en las clases en
 tiempo de ejecución (incluso una clase principal como Array), crear alias para los
 métodos existentes, e incluso definir métodos en objetos individuales (métodos
-Singleton). Además, tiene una rica API para la _reflection_. Un programa de _Ruby_
+Singleton). Además, tiene una rica API para _reflection_. Un programa de _Ruby_
 puede configurar dinámicamente nombres de variables, invocar nombres de métodos e
 incluso definir nuevas clases y nuevos métodos.
 
-#### Caracteristicas distintivas del lenguaje Ruby
+##### Caracteristicas distintivas del lenguaje Ruby
 
 La sintaxis de _Ruby_ esta orientada a la expresividad y su unidad básica es la
 expresión, el intérprete de _Ruby_ evalúa las expresiones y produce valores. Las
@@ -590,7 +630,7 @@ expresiones más simples son las expresiones primarias, las cuales representan
 directamente los valores, ejemplo de esto son los números y las cadenas. El lenguaje
 tiene muchas similitudes con _Python_, aunque con diferencia en pequeños detalles.
 Mientras que _Python_ intenta a la vez ser lo mas legible y sencillo posible, _Ruby_
-intenta ser lo mas explesivo posible dentro de la sencillez y el tipado dinámico.
+intenta ser lo mas expresivo posible dentro de la sencillez y el tipado dinámico.
 Luego siguiendo esa idea los _scope_ en _Ruby_ estan delimitados por las palabras
 predefinidas del lenguage (`if`, `def`, etc.) y la palabra clave `end`. A
 continuacion se enumeraran algunas diferencias.
@@ -657,13 +697,13 @@ themethod do |foo|
 end
 ```
 
-6. En Ruby, cuando se importa un archivo con **require**, todas las cosas definidas
+6. En Ruby, cuando se importa un archivo con **require**, todo lo definido
    en ese archivo terminarán en su espacio de nombres global. Esto causa la
    contaminación del espacio de nombres. La solución a eso son los módulos Rubys. Pero
    si crea un espacio de nombres con un módulo, debe usar ese espacio de nombres para
    acceder a las clases contenidas.
 
-7. Ruby no tiene herencia multipli, sino que reutiliza el concepto de módulo como un
+7. Ruby no tiene herencia multiple, sino que reutiliza el concepto de módulo como un
    tipo de clases abstractas.
 
 8. Ruby simula las _list comprehensions_ de _Python_ de la siguiente manera:
@@ -672,23 +712,49 @@ end
 res = (0..9).map { |x| x * x }
 ```
 
-#### Ruby y los DSL
+##### Ruby y los DSL
 
-En los lenguajes compilados como _C++_ los métodos y variables tienen valor en un
-espacio de memoria solo en tiempo de compilación, una vez finaliza el período de
-compilación los espacios de memoria se liberan y se pierde la información
-relacionada con el programa, por esa razón no se pueden solicitar a una clase sus
-métodos de instancia, ya que, en el momento de hacer la solicitud, la clase se ha
-desvanecido. Por otra parte, en los lenguajes interpretados como Ruby la
-metaprogramación es posible, ya que en tiempo de ejecución la mayoría de las
-construcciones del lenguaje todavía están ahí, de esa forma, se pueden consultar
-valores y construcciones del programa en ejecución.
-
+Quizás la característica más apreciada de Ruby es la metaprogramación,
+con la cual se puede manipular el lenguaje para así lograr disímiles
+objetivos, en lugar de adaptarse al lenguaje cómo es, es por ello
+que la metaprogramación y los DSLs están tan relacionados en Ruby.
 Para la metaprogramacion _Ruby_ se vale de las clases `Kernel`, `Object` y `Module`
 que definen métodos con el mismo objetivo que `System.Reflection` en _C#_, trabajar
-con los metadatos del programa en ejecución. Pero gracias al tipado dinámico de Ruby
-y que sus tipos principales no son inmutables, este trabajo con los metadatos del
-programa aporta una gran flexibilidad al lenguaje. A continuación algunos ejemplos:
+con los metadatos del programa en ejecución.
+
+Otra de la características que hacen de Ruby un lenguage tan flexible e ideal
+para el desarrollo de DSLs es la posibilidad de continuar la implementacion de
+sus clases base, en un momento dado se puede escribir el codigo del ejemplo
+siguiente logrando asi sumar la propiedad `factorial` al tipo basico de Ruby
+`Integer`.
+
+```ruby
+class Integer
+     def factorial
+        if self < 0
+            return 'You can\'t take the factorial of a negative number!'
+        end
+        if self <= 1
+            1
+        else
+            self * (self - 1).factorial
+        end
+    end
+end
+
+puts 5.factorial ;; 120
+```
+
+Y aunque este objetivo tambien se puede lograr con la metaprogramacion, es una
+caracteristica muy util cuando se quiere agregar una cantidad considerable de
+metodos y propiedades. Este feature se puede lograr en C# con los metodos
+extensores. En _Python_ esto se puede lograr pero no con los tipos _built-in_
+del lenguaje.
+
+Pero gracias al tipado dinámico de Ruby, la posibilidad de extender sus tipos
+de manera facil y elegante (incluido los tipos principales) y este trabajo con
+los metadatos Ruby es uno de los lenguajes referencia al momento de hablar sobre
+DSLs. A continuación algunos ejemplos:
 
 ```ruby
     def array_second
@@ -716,7 +782,7 @@ existente, funciona como un diccionario en el cual un método puede tener difere
 nombres. Por otra parte, si se llama a un método no existente, se puede usar
 `method_missing` para capturar y manejar invocaciones arbitrarias en un objeto.
 
-### Ejemplo C++
+#### Ejemplo C++
 
 En _C++_ es posible lograr una sintaxis de tipo _DSL_ a partir de la
 utilización de macros, el siguiente ejemplo permite una sintaxis estilo
@@ -756,7 +822,7 @@ La palabra clave `dynamic` es utilizada para indicar que una instancia esta
 involucrada en un _**enlace tardío** (Late Binding)_ y que el **_DLR_** o
 _Dynamic Language Runtime_ se encargue del manejo de este objeto. El
 comportamiento de este objeto durante el _enlace tardío_ puede ser controlado y
-sobreescrito a traves de la implementación de la interfaz
+sobreescrito a traves de la implementación de la _interface_
 `IDynamicMetaObjectProvider`, el **_DLR_** se encargará de llamar a los métodos
 provenientes de `IDynamicMetaObjectProvider`, los cuales describen el comportamiento
 de la clase en el momento de enlace.
@@ -789,8 +855,8 @@ un mejor soporte de lenguajes dinámicos. Estos servicios incluyen lo siguiente:
   Para este propósito, el _DLR_ ha ampliado los árboles de expresión _LINQ_ para
   incluir el control de flujo, la asignación y otros nodos para modelar el lenguaje.
 - **Interaccion y almacenamiento en caché:**  
-  Mediante el dynamic call site, en un lugar en el código donde realiza una
-  operación como `a + b` o `a.B()` en objetos dinámicos. El DLR almacena en caché
+  Mediante el _dynamic call site_, en un lugar en el código donde realiza una
+  operación como `a + b` o `a.B()` en objetos dinámicos. El _DLR_ almacena en caché
   las características `a` y `b` (generalmente los tipos de estos objetos) e
   información sobre la operación. Si dicha operación se ha realizado previamente, el
   DLR recupera toda la información necesaria de la memoria caché para un envío
@@ -804,13 +870,13 @@ un mejor soporte de lenguajes dinámicos. Estos servicios incluyen lo siguiente:
 
 ### Enlace Tardío (Late binding)
 
-**_Enlace:_** se le denomina a la asociación de una función con su objeto
+**_Enlace (Binding):_** se le denomina a la asociación de una función con su objeto
 correspondiente al momento de llamado de la misma.
 
-**_Enlace de tiempo de compilación, estático o temprano:_** es el de una función
+**_Enlace en tiempo de compilación, estático o temprano:_** es el de una función
 miembro, que se llama dentro de un objeto, dicho enlace se resuelve en tiempo de
 compilación. Todos los métodos que pertenecen a un objeto o nombre de una clase
-(estáticos) son a los que se pueden realizar enlaze de tiempo de compilación.
+(estáticos) son a los que se pueden realizar enlace de tiempo de compilación.
 
 **_Enlace tardío o dinámico:_** es cuando solo se puede saber a que objeto pertenece
 una función, en tiempo de ejecución. Uno de los ejemplos más comunes de este tipo
@@ -819,10 +885,10 @@ enlace son los metodos virtuales.
 #### Enlace tardío con métodos dinámicos vs. métodos virtuales en CSharp
 
 Los métodos virtuales todavía están "_vinculados_" en tiempo de compilación.
-El compilador verifica la existencia real del método y su tipo de retorno, y el
+El compilador verifica la existencia real del método y su tipo de retorno, y
 fallará en compilar si el método no existe o existe alguna inconsistencia de tipos.
 
-El método virtual permite el polimorfismo y una forma de enlace tardío, ya que el
+El método virtual permite el polimorfismo y es una forma de enlace tardío, ya que el
 método se enlaza al tipo adecuado en tiempo de ejecución, a través de la tabla de
 métodos virtuales.
 
@@ -837,21 +903,21 @@ todavía tiene algún "_enlace temprano_" en su interior.
 
 ### Como se logra el comportamiento dinámico en CSharp
 
-Este comportamiento es concecuencia directa del desarrolo del _DLR_ el cual fue
+Este comportamiento es consecuencia directa del desarrollo del _DLR_ el cual fue
 concebido para admitir las implementaciones _"Iron"_ de los lenguajes de programación
 _Python_ y _Ruby_ en _.NET_.
 
-En en centro del entorno de ejecución _DLR_ se posiciona la clase
-llamada DynamicMetaObject. Dicha clase implemeta los siguientes métodos para dar
-respuesta a como actuar en todos los posibles esenarios en los que se puede
+En el centro del entorno de ejecución _DLR_ se posiciona la clase
+llamada `DynamicMetaObject`. Dicha clase implemeta los siguientes métodos para dar
+respuesta a como actuar en todos los posibles escenarios en los que se puede
 encontrar una instancia de un objecto en un momento dado:
 
 - `BindCreateInstance`: crea o activa un objeto.
-- `BindInvokeMember`: llamar a un método encapsulado.
+- `BindInvokeMember`: llama a un método encapsulado.
 - `BindInvoke`: ejecuta el objeto (como una función).
 - `BindGetMember`: obtenga un valor de propiedad.
 - `BindSetMember`: establece un valor de propiedad.
-- `BindDeleteMember`: eliminar un miembro.
+- `BindDeleteMember`: elimina un miembro.
 - `BindGetIndex`: obtener el valor en un índice específico.
 - `BindSetIndex`: establece el valor en un índice específico.
 - `BindDeleteIndex`: elimina el valor en un índice específico.
@@ -861,17 +927,17 @@ encontrar una instancia de un objecto en un momento dado:
 
 De manera general las clases definidas de manera ordinaria (estática) saben como
 reaccionar en dichos esenarios. Pero las clases _dinámicas_ no tienen estas
-reacciones predefinidas por lo cual es necesario predefinir para estas clases su
+reacciones predefinidas por lo cual es necesario redefinir para estas clases su
 propio `DynamicMetaObject`, el cual en tiempo de ejecución sepa que tiene que
 ejecutar en cada esenario. Para definir una clase _dinámica_, `System.Dynamic`
-proveé la interfaz `IDynamicMetaObjectProvider`, la cual contiene el metodo:
+provee la _interface_ `IDynamicMetaObjectProvider`, la cual contiene el metodo:
 
 ```csharp
 DynamicMetaObject GetMetaObject(Expression parameter)
 ```
 
 El cual debe encargarse de retornar el `DynamicMetaObject` que describa el
-comportamiento de la clase _dinamica_ que implemeta la interfaz
+comportamiento de la clase _dinamica_ que implemeta la _interface_
 `IDynamicMetaObjectProvider` según el árbol de expresiones que dicho método recibe
 como parámetro
 
@@ -880,7 +946,7 @@ como parámetro
 Como se puede observar, en principio lograr un comportamieto dinámico en **C#** pasa
 por crear estos `DynamicMetaObject` y tener conocimientos para trabajar sobre el
 árbol de expresiones de **C#**. Para evitar todo este proceso `System.Dynamic`
-provée la clase `DynamicObject`, pensada para poder definir comportamietos dinámicos
+provee la clase `DynamicObject`, pensada para poder definir comportamietos dinámicos
 abstraídos de todo el proceso anteriormente descrito pues ya cuenta con una
 implemetacion del metodo `GetMetaObject` de `IDynamicMetaObjectProvider`. Dicha
 imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
@@ -892,7 +958,7 @@ imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
   Proporciona implementación para operaciones binarias. Las clases derivadas de la
   clase `DynamicObject` pueden sobreescribir este método para especificar el
   comportamiento dinámico para operaciones como la suma, multiplicación, etc. La
-  clase BinaryOperationBinder contiene una `ExpressionType` con información de la
+  clase `BinaryOperationBinder` contiene una `ExpressionType` con información de la
   operación que se realiza en el momento de llamado de esta función. Este método
   considera que la instancia de la clase derivada de `DynamicObject` es el operador
   de la derecha y _arg_ es el de la izq.
@@ -952,18 +1018,18 @@ imlpemetación relaciona los siguentes métodos a sus respectivos esenarios:
 
 ### `System.Dynamic.ExpandoObject`
 
-Aunque la clase DynamicObject es una gran abstración del proceso base, para su
+Aunque la clase `DynamicObject` es una gran abstración del proceso base, para su
 utilización es necesario implementar una clase que herede de esta y realice los
 override necesarios, lo cual es demasiado verboso en los casos más sencillos.
 Suponiendo que solo se necesita de un objeto dinámico que permita un control
 dinámico de propiedades, mediante `DynamicObject` necesitamos implementar los
-metodos `TryGetMember` y `TrySetMember`. Para evitar esto `System.Dynamic` proveé la
+metodos `TryGetMember` y `TrySetMember`. Para evitar esto `System.Dynamic` provee la
 clase `ExpandoOject`, la misma es una clase `sealed` y por tanto no se puede
 extender.
 
-`ExpandoObject` implementa las interfaces
+`ExpandoObject` implementa las _interfaces_:
 `IDictionary<KeyValuePair<string, object>>` y `IDynamicMetaObjectProvider` entre
-otras. Mediante las dos interfaces antes mencionadas dicha clase logra el manejo
+otras. Mediante las dos _interfaces_ antes mencionadas dicha clase logra el manejo
 dinámico de las propiedades. El proceso es realmente sencillo puesto que en su
 interior contiene algún tipo de implementación de diccionario, al momento de asignar
 una propiedad guarda el nombre de la propiedad como llave y el objeto que se le esta
@@ -975,7 +1041,7 @@ excepción.
 ## Reflection
 
 _Reflection_ es la capacidad de un proceso de examinar, introspectar y modificar su
-propia estructura y comportamiento. Reflection ayuda a los programadores a crear
+propia estructura y comportamiento. _Reflection_ ayuda a los programadores a crear
 bibliotecas de software genéricas para mostrar datos, procesar diferentes formatos
 de datos, realizar la serialización o deserialización de datos para la
 comunicación, o agrupar y desagrupar datos para contenedores o ráfagas de
@@ -985,8 +1051,8 @@ orientado a la red.
 Tambien se puede utilizar para observar y modificar la ejecución del programa en
 tiempo de ejecución. Esto generalmente se logra mediante la asignación dinámica de
 código de programa en tiempo de ejecución. En lenguajes de programación orientados
-a objetos, esta técnica permite la inspección de clases, interfaces, campos y
-métodos en tiempo de ejecución sin conocer los nombres de las interfaces, campos y
+a objetos, esta técnica permite la inspección de clases, _interfaces_, campos y
+métodos en tiempo de ejecución sin conocer los nombres de las _interfaces_, campos y
 métodos en tiempo de compilación. También permite la creación de instancias de
 nuevos objetos y la invocación de métodos. Por lo antes dicho es claro que es
 también una estrategia clave para la metaprogramación .
@@ -999,14 +1065,14 @@ principales componentes de _CLR_. Cuando utiliza esta clase, puede encontrar los
 tipos utilizados en un módulo y un espacio de nombres y también determinar si un
 tipo dado es una referencia o un tipo de valor. Puede analizar las tablas de
 metadatos (Campos, Propiedades, Métodos, Eventos) correspondientes para ver estos
-elementos
+elementos.
 
 El enlace tardío también se pueden lograr a través de _Reflection_. Un ejemplo
-claro: es posible que no se sepa qué assembly cargar durante el tiempo de
+claro: es posible que no se sepa qué _assembly_ cargar durante el tiempo de
 compilación. En este caso, puede pedirle al usuario que ingrese el nombre y el tipo
 del ensamblado durante el tiempo de ejecución para que la aplicación pueda cargar
-el assembly apropiado. Con el tipo `System.Reflection.Assembly`, tiene algunos
-metodos estáticos que le permiten cargar un assembly directamente: `LoadFrom`,
+el _assembly_ apropiado. Con el tipo `System.Reflection.Assembly`, tiene algunos
+metodos estáticos que le permiten cargar un _assembly_ directamente: `LoadFrom`,
 `LoadWithPartialName`
 
 Dentro del archivo PE (ejecutable portátil) hay principalmente metadatos, que
@@ -1016,7 +1082,7 @@ contienen una variedad de tablas diferentes, como:
 - Tabla de definición de tipo
 - Tabla de definición de método
 
-### Api se `System.Reflection`
+### _API_ de `System.Reflection`
 
 Para realizar la manipulación de una instacia de un objeto en _C#_ mediante
 _Reflection_ se necesita comenzar obteniendo la clase `System.Type` que describe
@@ -1096,10 +1162,11 @@ ejemplificamos el caso de `PropertyInfo`:
     var person = new Person();
     person.LastName = "Name"
     PropertyInfo info = .GetProperty("LastName");
-    info.GetType(); //System.Reflection.PropertyInfo
-    a.GetValue(person); //Name
-    a.SetValue(person,"NewName");//person.LastName = "NewName"
-    a.Name;//LastName
-    a.PropertyType; //string
+    info.GetType();  // System.Reflection.PropertyInfo
+    a.GetValue(person);  // Name
+    // person.LastName = "NewName"
+    a.SetValue(person,"NewName");
+    a.Name;  // LastName
+    a.PropertyType;  // string
     ...
 ```
