@@ -716,9 +716,3 @@ Se usa para lograr las características de un **`IContainer`** en el **`Containe
 Polimorfismo:
 El polimorfismo se evidencia en la clase **`Program`** al hacer las pruebas con las diferentes clases que implementan **`IAnimal`**.
 
-
-### Bibliografía:
-
-
-
-
