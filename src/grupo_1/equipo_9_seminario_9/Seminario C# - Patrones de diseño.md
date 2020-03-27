@@ -1,4 +1,15 @@
+# Seminario 9 Patrones de diseño
+## Equipo 9
+- Adrian Tubal Paez Ruiz
+- Olivia Gonzalez Peña
+- Juan Carlos Casteleiro Wong
+- Gabriela Mijenes 
+- Reinaldo Barrera 
+
+
+
 # Mixin C#
+
 
 ## ¿Qué es **mixin**?
 
@@ -28,7 +39,7 @@ Como en C# no existe la herencia múltiple, una forma de recrear este patrón es
 En este caso utilizamos una definición recursiva de árbol binario, donde un árbol binario es un valor genérico (**`T Value`**) con un subárbol izquierdo (**`IBinaryTree<T> Left`**) y otro subárbol derecho (**`IBinaryTree<T> Right`**). Destacar que vimos necesaria una funcionalidad mínima de insertar valores. Además se plantea la restricción de que el tipo **`T`** debe ser capaz de compararse consigo mismo.
 
 ```c#
-public interface IBinaryTree<T> where T : IComparable<T>{
+public interface IBinaryTree<T> where T: IComparable<T>{
     T Value { get; set; }
     IBinaryTree<T> Left { get; set; }
     IBinaryTree<T> Right { get; set; }
@@ -39,7 +50,9 @@ public interface IBinaryTree<T> where T : IComparable<T>{
 Sobre esta interfaz planteamos la siguiente implementación:
 
 ```c#
-public class BinaryTree<T> : IBinaryTreeIterator<T>, IBinaryTreeHeigth<T> where T : IComparable<T> {
+public class BinaryTree<T> : IBinaryTreeIterator<T>,
+    IBinaryTreeHeigth<T> where T : IComparable<T> 
+    {
         public T Value { get; set; }
         public IBinaryTree<T> Left { get; set; }
         public IBinaryTree<T> Right { get; set; }
@@ -76,69 +89,73 @@ Uno de los objetivos de la implementación de una funcionalidad es poder decidir
 Declarar una interfaz **`IBinaryTreeIterator<T>`** a la cual le agregaremos las funcionalidades de iteración mediante la clase contenedora **`Iterators`**. También declaramos la interfaz **` IBinaryTreeHeigth<T>`**  a la cual le agregamos la funcionalidad de calcular la altura mediante la clase contenedora **`Metrics`**.
 
 ```c#
-public interface IBinaryTreeIterator<T> : IBinaryTree<T> where T : IComparable<T> { }
+public interface IBinaryTreeIterator<T> : IBinaryTree<T> 
+    where T : IComparable<T> { }
 ```
 ```c#
-public interface IBinaryTreeHeigth<T> : IBinaryTree<T> where T : IComparable<T> { }
+public interface IBinaryTreeHeigth<T> : IBinaryTree<T>
+    where T : IComparable<T> { }
 ```
 ```c#
-public static class Iterators {
-        public static IEnumerable<T> PreOrder<T>(this IBinaryTreeIterator<T> tree) where T : IComparable<T> {
-            yield return tree.Value;
-
-            if (tree.Left != null) {
-                foreach (var item in PreOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
-                    yield return item;
-                }
-            }
-
-            if (tree.Right != null) {
-                foreach (var item in PreOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
-                    yield return item;
-                }
+public static class Iterators 
+{
+    public static IEnumerable<T> PreOrder<T>(this IBinaryTreeIterator<T> tree)
+        where T : IComparable<T> 
+    {
+        yield return tree.Value;
+        if (tree.Left != null) {
+            foreach (var item in PreOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
+                yield return item;
             }
         }
-
-        public static IEnumerable<T> InOrder<T>(this IBinaryTreeIterator<T> tree) where T : IComparable<T> {
-            if (tree.Left != null) {
-                foreach (var item in InOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
-                    yield return item;
-                }
+        if (tree.Right != null) {
+            foreach (var item in PreOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
+                yield return item;
             }
-
-            yield return tree.Value;
-
-            if (tree.Right != null) {
-                foreach (var item in InOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
-                    yield return item;
-                }
-            }
-        }
-
-        public static IEnumerable<T> PostOrder<T>(this IBinaryTreeIterator<T> tree) where T : IComparable<T> {
-            if (tree.Left != null) {
-                foreach (var item in PostOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
-                    yield return item;
-                }
-            }
-
-
-            if (tree.Right != null) {
-                foreach (var item in PostOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
-                    yield return item;
-                }
-            }
-
-            yield return tree.Value;
         }
     }
+    public static IEnumerable<T> InOrder<T>(this IBinaryTreeIterator<T> tree)
+        where T : IComparable<T> 
+    {
+        if (tree.Left != null) {
+            foreach (var item in InOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
+                yield return item;
+            }
+        }
+        yield return tree.Value;
+        if (tree.Right != null) {
+            foreach (var item in InOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
+                yield return item;
+            }
+        }
+    }
+    public static IEnumerable<T> PostOrder<T>(this IBinaryTreeIterator<T> tree)
+        where T : IComparable<T>
+    {
+        if (tree.Left != null) {
+            foreach (var item in PostOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
+                yield return item;
+            }
+        }
+        if (tree.Right != null) {
+            foreach (var item in PostOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
+                yield return item;
+            }
+        }
+        yield return tree.Value;
+    }
+}
 ```
 ```c#
-public static class Metrics {
-    public static int Heigth<T>(this IBinaryTreeHeigth<T> tree) where T : IComparable<T> {
+public static class Metrics 
+{
+    public static int Heigth<T>(this IBinaryTreeHeigth<T> tree) 
+        where T : IComparable<T> 
+    {
         if (tree == null)
             return 0;
-        return 1 + Math.Max(Heigth((IBinaryTreeHeigth<T>) tree.Left), Heigth((IBinaryTreeHeigth<T>) tree.Right));
+        return 1 + Math.Max(Heigth((IBinaryTreeHeigth<T>) tree.Left),
+                            Heigth((IBinaryTreeHeigth<T>) tree.Right));
     }
 }
 ```
@@ -168,7 +185,9 @@ Heigth = 3
 En caso que se quiera desactivar una funcionalidad, solamente tenemos que dejar de implementar la interfaz correspondiente. En este caso por ejemplo, si se quiere quitar los iteradores basta con declarar la clase como:
 
 ```c#
-public class BinaryTree<T> : IBinaryTreeHeigth<T> where T : IComparable<T> {
+public class BinaryTree<T> : IBinaryTreeHeigth<T> 
+    where T : IComparable<T> 
+{
     ...
     ...
 }
@@ -179,7 +198,9 @@ En este caso tenemos el código de la clase **`BinaryTree<T>`** por lo que nos f
 ```c#
 public class BinaryTree<T> : IBinaryTree<T> where T : IComparable<T> { ... }
 
-public class MyBinaryTree<T> : BinaryTree<T>, IBinaryTreeIterator<T>, IBinaryTreeHeigth<T> where T : IComparable<T> {
+public class MyBinaryTree<T> : BinaryTree<T>, IBinaryTreeIterator<T>,
+    IBinaryTreeHeigth<T> where T : IComparable<T> 
+{
 
     public MyBinaryTree(T value) : base(value) { }
 
@@ -317,7 +338,7 @@ public interface IB
 
 Las clases que incluyan su propia version de M1() o M2(), utilizarán estos métodos en lugar de la implementación por defecto, en otros casos, se ejecutará la implementación por defecto proporcionada desde la interfaz.
 
-Pero es importante tener en cuenta un detalle: **`las implementaciones por defecto solo serán accesibles a través de las interfaces que las definen, y no desde las clases que las usan`**. Esto se ilustra en el siguiente bloque de código:
+Es importante tener en cuenta un detalle: **`las implementaciones por defecto solo serán accesibles a través de las interfaces que las definen, y no desde las clases que las usan`**. Esto se ilustra en el siguiente bloque de código:
 
 ```c#
 public interface ID 
@@ -405,7 +426,7 @@ class ConsoleLogger
 ```
 
 ```c#
-ConsoleLogger logger = newConsoleLogger();
+ConsoleLogger logger = new ConsoleLogger();
 logger.Log("Hello");
 ```
 
@@ -439,7 +460,7 @@ En este ejemplo, si queremos agregar un nuevo logger lo hacemos implementar la i
 
 ## Inyección de Dependencias
 
-Imaginemos por un momento que tenemos deseos de comer pizza, ñam ñam ñam. Si fuéramos un programa que para alimentarse no usa inyección de dependencias necesitamos saber la receta para hacer una pizza y ponernos manos a la obra; sin embargo, si la usáramos sería tan sencillo como ir a algún sitio a comer la pizza.
+Imaginemos por un momento que tenemos deseos de comer pizza. Si fuéramos un programa que para alimentarse no usa inyección de dependencias necesitamos saber la receta para hacer una pizza y ponernos manos a la obra; sin embargo, si la usáramos sería tan sencillo como ir a algún sitio a comer la pizza.
 
 Ahora bien, imaginemos que mañana ya no queremos pizza, sino hamburguesa, en el primer caso tendríamos que aprender la receta para las hamburguesas, pero en el segundo bastaría con pedirla en un nuevo sitio.
 Más formalmente: una inyección de dependencias consiste en un objeto (o método estático) que depende de otro objeto. Una dependencia es un objeto que puede ser usado (llamado usualmente servicio). Una inyección es el pasar una dependencia a un objeto dependiente (llamado usualmente cliente) el cual lo usará. Pasar un servicio a un cliente en lugar de que el cliente cree o busque por su cuenta el servicio es en lo que consiste este patrón de diseño.
@@ -666,6 +687,7 @@ container.Register<Dog>(typeof(Wolf)); // Wolf hereda de Dog
 ```
 
 Se  deben realizar en el **`Container`** una serie de verificaciones como son:
+
  - Que **`T`** sea de tipo interfaz.
  - Que **`implemetation`** implemente a T(interfaz).
  
@@ -679,12 +701,15 @@ Se  deben realizar en el **`Container`** una serie de verificaciones como son:
         {
             List<Type> interfaces = new List<Type(implementation.GetInterfaces());
             if (!interfaces.Contains(key))
-                throw new ArgumentException("La clase de entrada noimplementa la interface especificada.");
+                throw new ArgumentException(
+                "La clase de entrada no implementa la interface especificada.");
         }
         else if (key.IsAbstract && !implementation.IsSubclassOf(key))
-            throw new ArgumentException("La clase de entrada no essubclase de la clase especificada.");
+            throw new ArgumentException(
+            "La clase de entrada no es subclase de la clase especificada.");
         else if (!key.IsInterface && !key.IsAbstract)
-            throw new Exception("El tipo llave no puede ser unaimplementación específica.");
+            throw new Exception(
+            "El tipo llave no puede ser una implementación específica.");
     }
     public void Register<T>(Type implementation)
     {
@@ -708,7 +733,7 @@ El operador **`typeof`** de C# permite obtener una instancia de **`System.Type`*
 En la implementación de **`Container`** anterior se aprecia el uso del **`typeof`** para conocer el tipo sin necesidad de tener una instancia.
 
 Genericidad:
-En el caso de la genericidad, estudiada ya en clases, la podemos ver en la implementación de **`Container`** para lograr un cdigo que funcionara sin importar el tipo de datos de los parámetros que recibimos.
+En el caso de la genericidad, estudiada ya en clases, la podemos ver en la implementación de **`Container`** para lograr un código que funcionara sin importar el tipo de datos de los parámetros que recibimos.
 
 Herencia:
 Se usa para lograr las características de un **`IContainer`** en el **`Container`** implementado por nosotros, así como las características de **`Animal`** en cada uno de los animales.
