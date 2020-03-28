@@ -1,10 +1,13 @@
 # Seminario 9 Patrones de diseño
+
 ## Equipo 9
+
 - Adrian Tubal Paez Ruiz
 - Olivia Gonzalez Peña
 - Juan Carlos Casteleiro Wong
-- Gabriela Mijenes 
-- Reinaldo Barrera 
+- Gabriela Mijenes Carrera
+- Reinaldo Barrera Travieso
+
 
 
 
@@ -92,10 +95,12 @@ Declarar una interfaz **`IBinaryTreeIterator<T>`** a la cual le agregaremos las 
 public interface IBinaryTreeIterator<T> : IBinaryTree<T> 
     where T : IComparable<T> { }
 ```
+
 ```c#
 public interface IBinaryTreeHeigth<T> : IBinaryTree<T>
     where T : IComparable<T> { }
 ```
+
 ```c#
 public static class Iterators 
 {
@@ -327,13 +332,14 @@ public interface IA
 }
 
 public interface IB
-{ 
+{  
     int B { get; set; }
     void M2()
     {
         Console.WriteLine(B);
     }
-}    
+}  
+
 ```
 
 Las clases que incluyan su propia version de M1() o M2(), utilizarán estos métodos en lugar de la implementación por defecto, en otros casos, se ejecutará la implementación por defecto proporcionada desde la interfaz.
@@ -382,6 +388,7 @@ public interface IB
 
 public interface IC : IA, IB { }
 ```
+
 ```c#
 public class C : IC
 {
@@ -395,6 +402,7 @@ public class C : IC
     }
 }
 ```
+
 ```c#
 static void Main(string[] args)
 {
@@ -404,7 +412,95 @@ static void Main(string[] args)
 }
 ```
 
-Podemos decir que a partir de C# 8 se proporciona soporte para implementar de forma más natural el patrón de diseño Mixin.
+### Más sobre las interfaces en C# 8
+
+Para analizar las novedades de las interfaces en C# 8, veamos el siguiente ejemplo:
+Una empresa brinda un servicio y quiere beneficiar a los clientes con un determinado descuento de fidelidad. Al descuento aplicarían quienes sean clientes desde hace al menos dos años y hayan efectuado como mínimo 10 compras.
+
+```c#
+public interface ICustomer
+{
+    IEnumerable<IOrder> PreviousOrders { get; }
+
+    DateTime DateJoined { get; }
+    DateTime? LastOrder { get; }
+    string Name { get; }
+
+    public decimal ComputeLoyaltyDiscount()
+    {
+        DateTime TwoYearsAgo = DateTime.Now.AddYears(-2);
+        if ((DateJoined < TwoYearsAgo) && (PreviousOrders.Count() > 10))
+        {
+            return 0.10m;
+        }
+        return 0;
+    }
+}
+
+public interface IOrder
+{
+    DateTime Purchased { get; }
+    decimal Cost { get; }
+}
+```
+
+Un primer enfoque sería incluir el método por defecto **`ComputeLoyaltyDiscount`** en la interfaz **`ICostumer`**, sin embargo, esta implementación predeterminada es demasiado restrictiva, de querer cambiar el valor de alguna de las condiciones para aplicar el descuento deberíamos proveer una nueva implementación para **`ComputeLoyaltyDiscount`** modificando solo los valores. ¿Cómo podríamos mejorarlo?
+Con C# 8 llega la posibilidad de asignarles modificadores de acceso ( **`public, private, protected, static, sealed, virtual, ...`** ) a los miembros de una interfaz.
+
+
+```c#
+public interface ICustomer
+{
+    IEnumerable<IOrder> PreviousOrders { get; }
+
+    DateTime DateJoined { get; }
+    DateTime? LastOrder { get; }
+    string Name { get; }
+    
+    public static void SetLoyaltyThresholds(TimeSpan ago, 
+        int minimumOrders = 10, decimal percentageDiscount = 0.10m)
+    {
+        length = ago;
+        orderCount = minimumOrders;
+        discountPercent = percentageDiscount;
+    }
+
+    private static TimeSpan length = new TimeSpan(365 * 2, 0,0,0); // two years
+    private static int orderCount = 10;
+    private static decimal discountPercent = 0.10m;
+
+    public decimal ComputeLoyaltyDiscount()
+    {
+        DateTime start = DateTime.Now - length;
+
+        if ((DateJoined < start) && (PreviousOrders.Count() > orderCount))
+        {
+            return discountPercent;
+        }
+        return 0;
+    }
+
+}
+```
+
+Con este nuevo enfoque se puede computar el descuento de lealtad para distintos paramétros sin necesidad de hacer una implementación personalizada. Podemos establecer los valores de los argumentos a través del método estático **`SetLoyaltyThresholds`**. El siguiente código muestra un ejemplo para recompensar con un 25% de descuento a cualquier cliente con más de un mes de membresía y al menos una compra:
+
+```c#
+// SampleCustumer implementa ICustumer
+SampleCustomer c = new SampleCustomer("customer one", new DateTime(2010, 5, 31));
+
+// SampleOrder implementa IOrder
+SampleOrder o = new SampleOrder(new DateTime(2012, 6, 1), 5m);
+c.AddOrder(o);
+
+ICustumer theCustomer = c;
+ICustomer.SetLoyaltyThresholds(new TimeSpan(30, 0, 0, 0), 1, 0.25m);
+Console.WriteLine($"Current discount: {theCustomer.ComputeLoyaltyDiscount()}");
+```
+
+Con una combinación de los campos estáticos y las implementaciones por defecto se pueden lograr interfaces mucho más expresivas y por ende se aplica mejor el concepto de Mixin.
+
+
 
 ## Loosely Coupled
 
