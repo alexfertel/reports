@@ -314,8 +314,9 @@ static class Methods {
 ## ¿Qué desventajas tienen el uso de métodos extensores en C#?
 
 - Una de las desventajas es que hay que cargar el namespace completo que lo contiene, aunque sea lo único que se utilice.
-- La colisión de estructura puede provocar que un método extensor nunca pueda ser utilizado. Esto sucede si la signatura (nombre y argumentos) del método extensor coincide con alguno de la clase o interfaz.
+- La colisión de estructura puede provocar que un método extensor no sea utilizado. Esto sucede si la signatura (nombre y argumentos) del método extensor coincide con alguno de la clase o interfaz.
 - Los métodos extensores solo pueden ser eso, métodos. No se pueden declarar operadores, indexadores o propiedades.
+
 
 ## Mixin en C# 8.0
 
@@ -760,14 +761,13 @@ public class Container: IContainer
             List<object> par = new List<object>();
             foreach (var param in parameters)
             {
-                if (param.ParameterType.IsInterface)
-                {
-                    object dependency = Resolve(param.ParameterType);
-                    par.Add(dependency);
-                }
+                object dependency = (registers.ContainsKe(param.ParameterType)) ? 
+                    Resolve(param.ParameterType) : 
+                    dependency = default(object);
+                par.Add(dependency);
                 types.Add(param.ParameterType);
             }
-            var constructor = reflect.GetConstructor(types.ToArray());
+            var constructor = reflect.GetConstructor(types.ToArray();
             var instance = constructor.Invoke(par.ToArray());
             return instance;
         }
@@ -782,30 +782,29 @@ container.Register<ILogger>(typeof(Dog));
 container.Register<Dog>(typeof(Wolf)); // Wolf hereda de Dog
 ```
 
-Se  deben realizar en el **`Container`** una serie de verificaciones como son:
-
- - Que **`T`** sea de tipo interfaz.
- - Que **`implemetation`** implemente a T(interfaz).
+Se  deben realizar en el **`Container`** una serie de verificaciones:
  
  ```c#
- public class Container: IContainer
+public class Container: IContainer
 {
     //...
     public void CheckException(Type key, Type implementation)
-    {
-        if (key.IsInterface)
+    { 
+        if(key.IsInterface)
         {
-            List<Type> interfaces = new List<Type(implementation.GetInterfaces());
-            if (!interfaces.Contains(key))
+            if(!implementation.GetInterfaces().Contains(key))
                 throw new ArgumentException(
-                "La clase de entrada no implementa la interface especificada.");
+                "La clase de entrada noimplementa la interface especificada.");
         }
-        else if (key.IsAbstract && !implementation.IsSubclassOf(key))
-            throw new ArgumentException(
-            "La clase de entrada no es subclase de la clase especificada.");
-        else if (!key.IsInterface && !key.IsAbstract)
+        else if(key.IsAbstract)
+        {
+            if(!implementation.IsSubclassOf(key))
+                throw new ArgumentException(
+                "La clase de entrada noes subclase de la clase especificada.");
+        }
+        else if(key.Name != implementation.Name)
             throw new Exception(
-            "El tipo llave no puede ser una implementación específica.");
+            "El tipo llave no puede ser unaimplementación específica.");
     }
     public void Register<T>(Type implementation)
     {
