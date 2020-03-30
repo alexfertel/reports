@@ -260,7 +260,7 @@ Heigth = 3
 
 * Ventajas del mixin
     - Es muy útil para la reutilización de código sin tener que ensuciarse las manos con la semántica de la herencia múltiple.
-    - También es práctico por permitir añadir funcionalidades a clases que ya existían previamente, sin modificar su declaración. En la herencia no se podría lograr de esta forma, pues sería necesario crear una nueva clase con la funcionalidad, que herede de la clase que queremos modificar; en este caso no podría usar directamente la clase original.
+    - También es práctico por permitir añadir funcionalidades a clases que ya existían previamente, sin modificar su declaración. Esta ventaja es en particular para C# debido a que es una ventaja más asociada a los métodos extensores.
 
 **Consideramos que las desventajas de cada uno de ellos es lo opuesto a las ventajas del otro :)**. Además es muy subjetivo el planteamiento de desventajas, ya que depende completamente del contexto de uso. Después de todo mixin es un patrón de diseño que se utiliza solo si es factible.
 
@@ -705,6 +705,67 @@ int Main(string[] args) {
 	pluto.Action(new FileLogger());
 }
 ```
+
+### Inyección de dependencias y Mixin
+
+Hasta el momento vimos que el patrón **Mixin** en C# 3.0 se logra mediante métodos extensores a interfaces. Pero por la forma de declaración de los métodos extensores (**`static`**) es difícil mantener un contexto o estado para esos métodos. Como estamos agregando una funcionalidad nueva, es probable que también necesitemos de un contexto o estado para esa funcionalidad, pero no queremos que sea parte de la clase ya que solo queremos usarlo si implementamos la funcionalidad. Entonces una solución que se nos ocurre es inyectar ese contexto cuando usemos mixin.
+
+Veamos un ejemplo muy sencillo. Supongamos que queremos agregar una nueva funcionalidad **`Talk`**, esta funcionalidad imprimiría "Hola" en la terminal si es la primera vez que habla o si anteriormente dijo "Adiós", y dice "Adiós" si anteriormente dijo "Hola". Aquí surge nuestro problema del contexto, queremos recordad lo último que se dijo.
+
+Una primera idea sería agregar un campo a la clase con lo último que se dijo, pero entonces el hecho de poner y quitar fácilmente la funcionalidad se ve afectado, entonces esta no nos sirve.
+
+Una segunda idea más aceptada, es: *Si te hace falta un contexto, encárgate de tu del contexto*. Es decir que el portador de la nueva funcionalidad se encargue de mantener el contexto. En esta solución hay que contar con que pueden existir más de una clase implementando la funcionalidad, por lo que tiene que haber un contexto por cada una de esas clases.
+
+Implementemos entonces la segunda solución:
+
+```c#
+public interface ITalk {  }
+```
+```c#
+public static class TalkImpl {
+    private static Dictionary<ITalk, string> States = new Dictionary<ITalk, string>();
+
+    public static void Talk(this ITalk t) {
+        if (States.ContainsKey(t)) {
+            string state = States[t];
+            if (state.Equals("Hola")) {
+                Console.WriteLine("Adiós");
+                States[t] = "Adiós";
+                return;
+            }
+        }
+
+        Console.WriteLine("Hola");
+        States[t] = "Hola";
+    }
+}
+```
+```c#
+public class Talker : ITalk { }
+```
+> Este código se puede ver en el fichero **Talk.cs**
+
+Veamos la salida del siguiente código
+
+```c#
+var t1 = new Talker();
+var t2 = new Talker();
+t1.Talk();
+t2.Talk();
+t1.Talk();
+t2.Talk();
+```
+
+*Output:*
+
+```
+Hola
+Hola
+Adiós
+Adiós
+```
+
+Se puede ver entonces que se pudo guardar correctamente el contexto para cada una de las instancias de **`Talk`**.
 
 ## IoC Containers
 Contenedores con Inversión del control (IoC containers): Según Martin Fowler, es un estilo de programación donde la creación de los objetos es responsabilidad de una “entidad” que se le llama “Contenedor”. Al contenedor se le registran las dependencias y es él quien realiza todas las instanciaciones.
