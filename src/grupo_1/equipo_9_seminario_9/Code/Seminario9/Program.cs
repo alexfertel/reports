@@ -33,6 +33,14 @@ namespace Seminario9 {
             foreach (var value in bt.PreOrder())
                 Console.WriteLine(value);
             Console.WriteLine("Heigth = {0}", bt.Heigth());
+            
+            // TALKER
+            var t1 = new Talker();
+            var t2 = new Talker();
+            t1.Talk();
+            t2.Talk();
+            t1.Talk();
+            t2.Talk();
         }
     }
 }
