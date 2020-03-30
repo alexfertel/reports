@@ -316,6 +316,72 @@ static class Methods {
 - Una de las desventajas es que hay que cargar el namespace completo que lo contiene, aunque sea lo único que se utilice.
 - La colisión de estructura puede provocar que un método extensor no sea utilizado. Esto sucede si la signatura (nombre y argumentos) del método extensor coincide con alguno de la clase o interfaz.
 - Los métodos extensores solo pueden ser eso, métodos. No se pueden declarar operadores, indexadores o propiedades.
+- Los métodos extensores son resueltos en tiempo de compilación, lo cual constituye una desventaja en escenarios como el siguiente:
+
+```c#
+interface IA
+{
+    void F(object o);
+}
+
+class A : IA
+{
+    public virtual void F(object o)
+    {
+        Console.WriteLine("Soy F de A");
+    }
+}
+
+class B : A
+{
+    public override void F(object o)
+    {
+        Console.WriteLine("Soy F de B");
+    }
+}
+```
+
+```c#
+interface IC {}
+
+class C : IC {}
+```
+
+```c#
+static class Extensors
+{
+    public static void F(this IC ic, object o)
+    {
+        Console.WriteLine("Soy F, método extensor");
+    }
+}
+```
+
+```c#
+class D : C
+{
+    // no se le puede poner override (error de compilación) 
+    // por tanto no hay polimorfismo
+    public void F(object o)  
+    {
+        Console.WriteLine("Soy F de D");
+    }
+}
+```
+
+```c#
+static void Main(string[] args)
+{
+    // caso 1:
+    A a = new B();  // se ejecuta el método del tipo dinámico
+    a.F("")         // Soy F de B
+
+    // caso 2:
+    C c = new D(); // se ejecuta el método del tipo estático
+    c.F("");       // Soy F, método extensor
+}
+```
+En el caso 1, a través del polimorfismo pudimos ejecutar el método **`F`** de la clase **`B`**. Sin embargo, en el caso 2 es imposible acceder al método **`F`** de la clase **`D`** (los métodos extensores no se pueden poner **`virtual`**), por lo cual se desaprovecha la potencia del polimorfismo, se ejecuta el método correspondiente al tipo estático de la variable.
 
 
 ## Mixin en C# 8.0
