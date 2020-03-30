@@ -260,7 +260,7 @@ Heigth = 3
 
 * Ventajas del mixin
     - Es muy útil para la reutilización de código sin tener que ensuciarse las manos con la semántica de la herencia múltiple.
-    - También es práctico por permitir añadir funcionalidades a clases que ya existían previamente, sin modificar su declaración.
+    - También es práctico por permitir añadir funcionalidades a clases que ya existían previamente, sin modificar su declaración. En la herencia no se podría lograr de esta forma, pues sería necesario crear una nueva clase con la funcionalidad, que herede de la clase que queremos modificar; en este caso no podría usar directamente la clase original.
 
 **Consideramos que las desventajas de cada uno de ellos es lo opuesto a las ventajas del otro :)**. Además es muy subjetivo el planteamiento de desventajas, ya que depende completamente del contexto de uso. Después de todo mixin es un patrón de diseño que se utiliza solo si es factible.
 
