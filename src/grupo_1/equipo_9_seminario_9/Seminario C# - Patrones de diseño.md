@@ -2,8 +2,8 @@
 
 ## Equipo 9
 
-- Adrian Tubal Paez Ruiz
-- Olivia Gonzalez Peña
+- Adrian Tubal Páez Ruiz
+- Olivia González Peña
 - Juan Carlos Casteleiro Wong
 - Gabriela Mijenes Carrera
 - Reinaldo Barrera Travieso
