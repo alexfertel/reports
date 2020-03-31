@@ -1,4 +1,18 @@
+# Seminario 9 Patrones de diseño
+
+## Equipo 9
+
+- Adrian Tubal Páez Ruiz
+- Olivia González Peña
+- Juan Carlos Casteleiro Wong
+- Gabriela Mijenes Carrera
+- Reinaldo Barrera Travieso
+
+
+
+
 # Mixin C#
+
 
 ## ¿Qué es **mixin**?
 
@@ -28,7 +42,7 @@ Como en C# no existe la herencia múltiple, una forma de recrear este patrón es
 En este caso utilizamos una definición recursiva de árbol binario, donde un árbol binario es un valor genérico (**`T Value`**) con un subárbol izquierdo (**`IBinaryTree<T> Left`**) y otro subárbol derecho (**`IBinaryTree<T> Right`**). Destacar que vimos necesaria una funcionalidad mínima de insertar valores. Además se plantea la restricción de que el tipo **`T`** debe ser capaz de compararse consigo mismo.
 
 ```c#
-public interface IBinaryTree<T> where T : IComparable<T>{
+public interface IBinaryTree<T> where T: IComparable<T>{
     T Value { get; set; }
     IBinaryTree<T> Left { get; set; }
     IBinaryTree<T> Right { get; set; }
@@ -39,7 +53,9 @@ public interface IBinaryTree<T> where T : IComparable<T>{
 Sobre esta interfaz planteamos la siguiente implementación:
 
 ```c#
-public class BinaryTree<T> : IBinaryTreeIterator<T>, IBinaryTreeHeigth<T> where T : IComparable<T> {
+public class BinaryTree<T> : IBinaryTreeIterator<T>,
+    IBinaryTreeHeigth<T> where T : IComparable<T> 
+    {
         public T Value { get; set; }
         public IBinaryTree<T> Left { get; set; }
         public IBinaryTree<T> Right { get; set; }
@@ -76,69 +92,75 @@ Uno de los objetivos de la implementación de una funcionalidad es poder decidir
 Declarar una interfaz **`IBinaryTreeIterator<T>`** a la cual le agregaremos las funcionalidades de iteración mediante la clase contenedora **`Iterators`**. También declaramos la interfaz **` IBinaryTreeHeigth<T>`**  a la cual le agregamos la funcionalidad de calcular la altura mediante la clase contenedora **`Metrics`**.
 
 ```c#
-public interface IBinaryTreeIterator<T> : IBinaryTree<T> where T : IComparable<T> { }
+public interface IBinaryTreeIterator<T> : IBinaryTree<T> 
+    where T : IComparable<T> { }
 ```
+
 ```c#
-public interface IBinaryTreeHeigth<T> : IBinaryTree<T> where T : IComparable<T> { }
+public interface IBinaryTreeHeigth<T> : IBinaryTree<T>
+    where T : IComparable<T> { }
 ```
+
 ```c#
-public static class Iterators {
-        public static IEnumerable<T> PreOrder<T>(this IBinaryTreeIterator<T> tree) where T : IComparable<T> {
-            yield return tree.Value;
-
-            if (tree.Left != null) {
-                foreach (var item in PreOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
-                    yield return item;
-                }
-            }
-
-            if (tree.Right != null) {
-                foreach (var item in PreOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
-                    yield return item;
-                }
+public static class Iterators 
+{
+    public static IEnumerable<T> PreOrder<T>(this IBinaryTreeIterator<T> tree)
+        where T : IComparable<T> 
+    {
+        yield return tree.Value;
+        if (tree.Left != null) {
+            foreach (var item in PreOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
+                yield return item;
             }
         }
-
-        public static IEnumerable<T> InOrder<T>(this IBinaryTreeIterator<T> tree) where T : IComparable<T> {
-            if (tree.Left != null) {
-                foreach (var item in InOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
-                    yield return item;
-                }
+        if (tree.Right != null) {
+            foreach (var item in PreOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
+                yield return item;
             }
-
-            yield return tree.Value;
-
-            if (tree.Right != null) {
-                foreach (var item in InOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
-                    yield return item;
-                }
-            }
-        }
-
-        public static IEnumerable<T> PostOrder<T>(this IBinaryTreeIterator<T> tree) where T : IComparable<T> {
-            if (tree.Left != null) {
-                foreach (var item in PostOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
-                    yield return item;
-                }
-            }
-
-
-            if (tree.Right != null) {
-                foreach (var item in PostOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
-                    yield return item;
-                }
-            }
-
-            yield return tree.Value;
         }
     }
+    public static IEnumerable<T> InOrder<T>(this IBinaryTreeIterator<T> tree)
+        where T : IComparable<T> 
+    {
+        if (tree.Left != null) {
+            foreach (var item in InOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
+                yield return item;
+            }
+        }
+        yield return tree.Value;
+        if (tree.Right != null) {
+            foreach (var item in InOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
+                yield return item;
+            }
+        }
+    }
+    public static IEnumerable<T> PostOrder<T>(this IBinaryTreeIterator<T> tree)
+        where T : IComparable<T>
+    {
+        if (tree.Left != null) {
+            foreach (var item in PostOrder<T>((IBinaryTreeIterator<T>) tree.Left)) {
+                yield return item;
+            }
+        }
+        if (tree.Right != null) {
+            foreach (var item in PostOrder<T>((IBinaryTreeIterator<T>) tree.Right)) {
+                yield return item;
+            }
+        }
+        yield return tree.Value;
+    }
+}
 ```
 ```c#
-public static class Metrics {
-    public static int Heigth<T>(this IBinaryTreeHeigth<T> tree) where T : IComparable<T> {
+public static class Metrics 
+{
+    public static int Heigth<T>(this IBinaryTreeHeigth<T> tree) 
+        where T : IComparable<T> 
+    {
         if (tree == null)
             return 0;
-        return 1 + Math.Max(Heigth((IBinaryTreeHeigth<T>) tree.Left), Heigth((IBinaryTreeHeigth<T>) tree.Right));
+        return 1 + Math.Max(Heigth((IBinaryTreeHeigth<T>) tree.Left),
+                            Heigth((IBinaryTreeHeigth<T>) tree.Right));
     }
 }
 ```
@@ -168,7 +190,9 @@ Heigth = 3
 En caso que se quiera desactivar una funcionalidad, solamente tenemos que dejar de implementar la interfaz correspondiente. En este caso por ejemplo, si se quiere quitar los iteradores basta con declarar la clase como:
 
 ```c#
-public class BinaryTree<T> : IBinaryTreeHeigth<T> where T : IComparable<T> {
+public class BinaryTree<T> : IBinaryTreeHeigth<T> 
+    where T : IComparable<T> 
+{
     ...
     ...
 }
@@ -179,7 +203,9 @@ En este caso tenemos el código de la clase **`BinaryTree<T>`** por lo que nos f
 ```c#
 public class BinaryTree<T> : IBinaryTree<T> where T : IComparable<T> { ... }
 
-public class MyBinaryTree<T> : BinaryTree<T>, IBinaryTreeIterator<T>, IBinaryTreeHeigth<T> where T : IComparable<T> {
+public class MyBinaryTree<T> : BinaryTree<T>, IBinaryTreeIterator<T>,
+    IBinaryTreeHeigth<T> where T : IComparable<T> 
+{
 
     public MyBinaryTree(T value) : base(value) { }
 
@@ -234,7 +260,7 @@ Heigth = 3
 
 * Ventajas del mixin
     - Es muy útil para la reutilización de código sin tener que ensuciarse las manos con la semántica de la herencia múltiple.
-    - También es práctico por permitir añadir funcionalidades a clases que ya existían previamente, sin modificar su declaración.
+    - También es práctico por permitir añadir funcionalidades a clases que ya existían previamente, sin modificar su declaración. Esta ventaja es en particular para C# debido a que es una ventaja más asociada a los métodos extensores.
 
 **Consideramos que las desventajas de cada uno de ellos es lo opuesto a las ventajas del otro :)**. Además es muy subjetivo el planteamiento de desventajas, ya que depende completamente del contexto de uso. Después de todo mixin es un patrón de diseño que se utiliza solo si es factible.
 
@@ -288,8 +314,75 @@ static class Methods {
 ## ¿Qué desventajas tienen el uso de métodos extensores en C#?
 
 - Una de las desventajas es que hay que cargar el namespace completo que lo contiene, aunque sea lo único que se utilice.
-- La colisión de estructura puede provocar que un método extensor nunca pueda ser utilizado. Esto sucede si la signatura (nombre y argumentos) del método extensor coincide con alguno de la clase o interfaz.
+- La colisión de estructura puede provocar que un método extensor no sea utilizado. Esto sucede si la signatura (nombre y argumentos) del método extensor coincide con alguno de la clase o interfaz.
 - Los métodos extensores solo pueden ser eso, métodos. No se pueden declarar operadores, indexadores o propiedades.
+- Los métodos extensores son resueltos en tiempo de compilación, lo cual constituye una desventaja en escenarios como el siguiente:
+
+```c#
+interface IA
+{
+    void F(object o);
+}
+
+class A : IA
+{
+    public virtual void F(object o)
+    {
+        Console.WriteLine("Soy F de A");
+    }
+}
+
+class B : A
+{
+    public override void F(object o)
+    {
+        Console.WriteLine("Soy F de B");
+    }
+}
+```
+
+```c#
+interface IC {}
+
+class C : IC {}
+```
+
+```c#
+static class Extensors
+{
+    public static void F(this IC ic, object o)
+    {
+        Console.WriteLine("Soy F, método extensor");
+    }
+}
+```
+
+```c#
+class D : C
+{
+    // no se le puede poner override (error de compilación) 
+    // por tanto no hay polimorfismo
+    public void F(object o)  
+    {
+        Console.WriteLine("Soy F de D");
+    }
+}
+```
+
+```c#
+static void Main(string[] args)
+{
+    // caso 1:
+    A a = new B();  // se ejecuta el método del tipo dinámico
+    a.F("")         // Soy F de B
+
+    // caso 2:
+    C c = new D(); // se ejecuta el método del tipo estático
+    c.F("");       // Soy F, método extensor
+}
+```
+En el caso 1, a través del polimorfismo pudimos ejecutar el método **`F`** de la clase **`B`**. Sin embargo, en el caso 2 es imposible acceder al método **`F`** de la clase **`D`** (los métodos extensores no se pueden poner **`virtual`**), por lo cual se desaprovecha la potencia del polimorfismo, se ejecuta el método correspondiente al tipo estático de la variable.
+
 
 ## Mixin en C# 8.0
 
@@ -306,18 +399,19 @@ public interface IA
 }
 
 public interface IB
-{ 
+{  
     int B { get; set; }
     void M2()
     {
         Console.WriteLine(B);
     }
-}    
+}  
+
 ```
 
 Las clases que incluyan su propia version de M1() o M2(), utilizarán estos métodos en lugar de la implementación por defecto, en otros casos, se ejecutará la implementación por defecto proporcionada desde la interfaz.
 
-Pero es importante tener en cuenta un detalle: **`las implementaciones por defecto solo serán accesibles a través de las interfaces que las definen, y no desde las clases que las usan`**. Esto se ilustra en el siguiente bloque de código:
+Es importante tener en cuenta un detalle: **`las implementaciones por defecto solo serán accesibles a través de las interfaces que las definen, y no desde las clases que las usan`**. Esto se ilustra en el siguiente bloque de código:
 
 ```c#
 public interface ID 
@@ -361,6 +455,7 @@ public interface IB
 
 public interface IC : IA, IB { }
 ```
+
 ```c#
 public class C : IC
 {
@@ -374,6 +469,7 @@ public class C : IC
     }
 }
 ```
+
 ```c#
 static void Main(string[] args)
 {
@@ -383,7 +479,95 @@ static void Main(string[] args)
 }
 ```
 
-Podemos decir que a partir de C# 8 se proporciona soporte para implementar de forma más natural el patrón de diseño Mixin.
+### Más sobre las interfaces en C# 8
+
+Para analizar las novedades de las interfaces en C# 8, veamos el siguiente ejemplo:
+Una empresa brinda un servicio y quiere beneficiar a los clientes con un determinado descuento de fidelidad. Al descuento aplicarían quienes sean clientes desde hace al menos dos años y hayan efectuado como mínimo 10 compras.
+
+```c#
+public interface ICustomer
+{
+    IEnumerable<IOrder> PreviousOrders { get; }
+
+    DateTime DateJoined { get; }
+    DateTime? LastOrder { get; }
+    string Name { get; }
+
+    public decimal ComputeLoyaltyDiscount()
+    {
+        DateTime TwoYearsAgo = DateTime.Now.AddYears(-2);
+        if ((DateJoined < TwoYearsAgo) && (PreviousOrders.Count() > 10))
+        {
+            return 0.10m;
+        }
+        return 0;
+    }
+}
+
+public interface IOrder
+{
+    DateTime Purchased { get; }
+    decimal Cost { get; }
+}
+```
+
+Un primer enfoque sería incluir el método por defecto **`ComputeLoyaltyDiscount`** en la interfaz **`ICostumer`**, sin embargo, esta implementación predeterminada es demasiado restrictiva, de querer cambiar el valor de alguna de las condiciones para aplicar el descuento deberíamos proveer una nueva implementación para **`ComputeLoyaltyDiscount`** modificando solo los valores. ¿Cómo podríamos mejorarlo?
+Con C# 8 llega la posibilidad de asignarles modificadores de acceso ( **`public, private, protected, static, sealed, virtual, ...`** ) a los miembros de una interfaz.
+
+
+```c#
+public interface ICustomer
+{
+    IEnumerable<IOrder> PreviousOrders { get; }
+
+    DateTime DateJoined { get; }
+    DateTime? LastOrder { get; }
+    string Name { get; }
+    
+    public static void SetLoyaltyThresholds(TimeSpan ago, 
+        int minimumOrders = 10, decimal percentageDiscount = 0.10m)
+    {
+        length = ago;
+        orderCount = minimumOrders;
+        discountPercent = percentageDiscount;
+    }
+
+    private static TimeSpan length = new TimeSpan(365 * 2, 0,0,0); // two years
+    private static int orderCount = 10;
+    private static decimal discountPercent = 0.10m;
+
+    public decimal ComputeLoyaltyDiscount()
+    {
+        DateTime start = DateTime.Now - length;
+
+        if ((DateJoined < start) && (PreviousOrders.Count() > orderCount))
+        {
+            return discountPercent;
+        }
+        return 0;
+    }
+
+}
+```
+
+Con este nuevo enfoque se puede computar el descuento de lealtad para distintos paramétros sin necesidad de hacer una implementación personalizada. Podemos establecer los valores de los argumentos a través del método estático **`SetLoyaltyThresholds`**. El siguiente código muestra un ejemplo para recompensar con un 25% de descuento a cualquier cliente con más de un mes de membresía y al menos una compra:
+
+```c#
+// SampleCustumer implementa ICustumer
+SampleCustomer c = new SampleCustomer("c1", new DateTime(2010, 5, 31));
+
+// SampleOrder implementa IOrder
+SampleOrder o = new SampleOrder(new DateTime(2012, 6, 1), 5m);
+c.AddOrder(o);
+
+ICustumer costumer = c;
+ICustomer.SetLoyaltyThresholds(new TimeSpan(30, 0, 0, 0), 1, 0.25m);
+Console.WriteLine($"Current discount: {costumer.ComputeLoyaltyDiscount()}");
+```
+
+Con una combinación de los campos estáticos y las implementaciones por defecto se pueden lograr interfaces mucho más expresivas y por ende se aplica mejor el concepto de Mixin.
+
+
 
 ## Loosely Coupled
 
@@ -405,7 +589,7 @@ class ConsoleLogger
 ```
 
 ```c#
-ConsoleLogger logger = newConsoleLogger();
+ConsoleLogger logger = new ConsoleLogger();
 logger.Log("Hello");
 ```
 
@@ -439,7 +623,7 @@ En este ejemplo, si queremos agregar un nuevo logger lo hacemos implementar la i
 
 ## Inyección de Dependencias
 
-Imaginemos por un momento que tenemos deseos de comer pizza, ñam ñam ñam. Si fuéramos un programa que para alimentarse no usa inyección de dependencias necesitamos saber la receta para hacer una pizza y ponernos manos a la obra; sin embargo, si la usáramos sería tan sencillo como ir a algún sitio a comer la pizza.
+Imaginemos por un momento que tenemos deseos de comer pizza. Si fuéramos un programa que para alimentarse no usa inyección de dependencias necesitamos saber la receta para hacer una pizza y ponernos manos a la obra; sin embargo, si la usáramos sería tan sencillo como ir a algún sitio a comer la pizza.
 
 Ahora bien, imaginemos que mañana ya no queremos pizza, sino hamburguesa, en el primer caso tendríamos que aprender la receta para las hamburguesas, pero en el segundo bastaría con pedirla en un nuevo sitio.
 Más formalmente: una inyección de dependencias consiste en un objeto (o método estático) que depende de otro objeto. Una dependencia es un objeto que puede ser usado (llamado usualmente servicio). Una inyección es el pasar una dependencia a un objeto dependiente (llamado usualmente cliente) el cual lo usará. Pasar un servicio a un cliente en lugar de que el cliente cree o busque por su cuenta el servicio es en lo que consiste este patrón de diseño.
@@ -521,6 +705,72 @@ int Main(string[] args) {
 	pluto.Action(new FileLogger());
 }
 ```
+
+### Inyección de dependencias y Mixin
+
+Hasta el momento vimos que el patrón **Mixin** en C# 3.0 se logra mediante métodos extensores a interfaces. Pero por la forma de declaración de los métodos extensores (**`static`**) es difícil mantener un contexto o estado para esos métodos. Como estamos agregando una funcionalidad nueva, es probable que también necesitemos de un contexto o estado para esa funcionalidad, pero no queremos que sea parte de la clase ya que solo queremos usarlo si implementamos la funcionalidad. Entonces una solución que se nos ocurre es inyectar ese contexto cuando usemos mixin.
+
+Veamos un ejemplo muy sencillo. Supongamos que queremos agregar una nueva funcionalidad **`Talk`**, esta funcionalidad imprimiría "Hola" en la terminal si es la primera vez que habla o si anteriormente dijo "Adiós", y dice "Adiós" si anteriormente dijo "Hola". Aquí surge nuestro problema del contexto, queremos recordar lo último que se dijo.
+
+Una primera idea sería agregar un campo a la clase con lo último que se dijo, pero entonces el hecho de poner y quitar fácilmente la funcionalidad se ve afectado, entonces esta no nos sirve.
+
+Una segunda idea más aceptada, es: *Si te hace falta un contexto, encárgate tú del contexto*. Es decir, que el portador de la nueva funcionalidad se encargue de mantener el contexto. En esta solución hay que contar con que puede existir más de una clase implementando la funcionalidad, por lo que tiene que haber un contexto por cada una de estas clases.
+
+Implementemos entonces la segunda solución:
+
+```c#
+public interface ITalk {  }
+```
+```c#
+public static class TalkImpl 
+{
+    private static Dictionary<ITalk, string> States = 
+        new Dictionary<ITalk, string>();
+
+    public static void Talk(this ITalk t) 
+    {
+        if (States.ContainsKey(t)) 
+        {
+            string state = States[t];
+            if (state.Equals("Hola")) 
+            {
+                Console.WriteLine("Adiós");
+                States[t] = "Adiós";
+                return;
+            }
+        }
+
+        Console.WriteLine("Hola");
+        States[t] = "Hola";
+    }
+}
+```
+```c#
+public class Talker : ITalk { }
+```
+> Este código se puede ver en el fichero **Talk.cs**
+
+Veamos la salida del siguiente código
+
+```c#
+var t1 = new Talker();
+var t2 = new Talker();
+t1.Talk();
+t2.Talk();
+t1.Talk();
+t2.Talk();
+```
+
+*Output:*
+
+```
+Hola
+Hola
+Adiós
+Adiós
+```
+
+Esto evidencia que se pudo guardar correctamente el contexto para cada una de las instancias de **`Talk`**.
 
 ## IoC Containers
 Contenedores con Inversión del control (IoC containers): Según Martin Fowler, es un estilo de programación donde la creación de los objetos es responsabilidad de una “entidad” que se le llama “Contenedor”. Al contenedor se le registran las dependencias y es él quien realiza todas las instanciaciones.
@@ -643,14 +893,15 @@ public class Container: IContainer
             List<object> par = new List<object>();
             foreach (var param in parameters)
             {
-                if (param.ParameterType.IsInterface)
-                {
-                    object dependency = Resolve(param.ParameterType);
-                    par.Add(dependency);
-                }
+                object dependency = 
+                    (registers.ContainsKey(param.ParameterType)) ? 
+                    Resolve(param.ParameterType) : 
+                    dependency = default(object);
+
+                par.Add(dependency);
                 types.Add(param.ParameterType);
             }
-            var constructor = reflect.GetConstructor(types.ToArray());
+            var constructor = reflect.GetConstructor(types.ToArray();
             var instance = constructor.Invoke(par.ToArray());
             return instance;
         }
@@ -665,26 +916,29 @@ container.Register<ILogger>(typeof(Dog));
 container.Register<Dog>(typeof(Wolf)); // Wolf hereda de Dog
 ```
 
-Se  deben realizar en el **`Container`** una serie de verificaciones como son:
- - Que **`T`** sea de tipo interfaz.
- - Que **`implemetation`** implemente a T(interfaz).
+Se  deben realizar en el **`Container`** una serie de verificaciones:
  
  ```c#
- public class Container: IContainer
+public class Container: IContainer
 {
     //...
     public void CheckException(Type key, Type implementation)
-    {
-        if (key.IsInterface)
+    { 
+        if(key.IsInterface)
         {
-            List<Type> interfaces = new List<Type(implementation.GetInterfaces());
-            if (!interfaces.Contains(key))
-                throw new ArgumentException("La clase de entrada noimplementa la interface especificada.");
+            if(!implementation.GetInterfaces().Contains(key))
+                throw new ArgumentException(
+                "La clase de entrada noimplementa la interface especificada.");
         }
-        else if (key.IsAbstract && !implementation.IsSubclassOf(key))
-            throw new ArgumentException("La clase de entrada no essubclase de la clase especificada.");
-        else if (!key.IsInterface && !key.IsAbstract)
-            throw new Exception("El tipo llave no puede ser unaimplementación específica.");
+        else if(key.IsAbstract)
+        {
+            if(!implementation.IsSubclassOf(key))
+                throw new ArgumentException(
+                "La clase de entrada noes subclase de la clase especificada.");
+        }
+        else if(key.Name != implementation.Name)
+            throw new Exception(
+            "El tipo llave no puede ser unaimplementación específica.");
     }
     public void Register<T>(Type implementation)
     {
@@ -707,7 +961,7 @@ El operador **`typeof`** de C# permite obtener una instancia de **`System.Type`*
 En la implementación de **`Container`** anterior se aprecia el uso del **`typeof`** para conocer el tipo sin necesidad de tener una instancia.
 
 Genericidad:
-En el caso de la genericidad, estudiada ya en clases, la podemos ver en la implementación de **`Container`** para lograr un cdigo que funcionara sin importar el tipo de datos de los parámetros que recibimos.
+En el caso de la genericidad, estudiada ya en clases, la podemos ver en la implementación de **`Container`** para lograr un código que funcionara sin importar el tipo de datos de los parámetros que recibimos.
 
 Herencia:
 Se usa para lograr las características de un **`IContainer`** en el **`Container`** implementado por nosotros, así como las características de **`Animal`** en cada uno de los animales.
