@@ -71,7 +71,11 @@ namespace Dynamic
 
 Si bien ambos dan la misma salida eso no quiere decir que se comporten igual. A continuación veremos algunas diferencias:
 
+<<<<<<< HEAD
 * Este código de ejemplo no es muy complejo pero vale destacar que cuando usamos *`object`* debemos hacer una casteo cuando queremos usarlo como un tipo específico ya que un objeto tipado con *`object`* no esta libre del chequeo estático de tipos en tiempo de compilación mientras que con *`dynamic`* nos quitamos de arriba este casteo pudiendo tener un código menos verboso pero que puede llegar a ser ilegible si lo escribimos usando malas prácticas. La respuesta a cuál de las dos opciones es mejor solo la situación lo dirá.
+=======
+* Este código de ejemplo no es muy complejo, pero vale destacar que cuando usamos *`object`* debemos hacer una casteo cuando queremos usarlo como un tipo específico, pues un objeto tipado con *`object`* no esta libre del chequeo estático de tipos en tiempo de compilación. Con *`dynamic`* nos quitamos de arriba este casteo pudiendo tener un código menos verboso pero que puede llegar a ser ilegible. La respuesta a cuál de las dos opciones es mejor solo la situación lo dirá.
+>>>>>>> master
 
 * Ambos códigos ejemplos pueden dar error de ejecución si son mal usados, en el caso de *`object`* si se hace un casteo erróneo y en el caso de *`dynamic`* si se le aplica una operación al objeto no acorde al tipo del mismo. Ejemplo:
 
@@ -122,9 +126,15 @@ namespace Dynamic
 //   at Dynamic.Program.Main(String[] args) in /home/user/Proyectos/RiderProjects/Dynamic/Dynamic/Program.cs:line 10
 ```
 
+<<<<<<< HEAD
 Como podemos observar los errores son distintos pero el resultado es el mismo, error de ejecución.
 
 Esto ya nos da una idea de que lo que esta haciendo *`dynamic`* es más que una simple **search and replace** de *`dynamic`* a *`object`*, ya que la pila de llamados en los que da error son distintas. Esto tiene sentido ya que el comportamiento a continuación si es muy diferente al anterior.
+=======
+Como podemos observar los errores son distintos pero el resultado es el mismo, error en tiempo de ejecución.
+
+Esto ya nos da una idea de que lo que esta haciendo *`dynamic`* es más que un simple **search and replace** de *`dynamic`* a *`object`*, ya que la pila de llamados en los que da error son distintas. Esto tiene sentido ya que el comportamiento a continuación si es muy diferente al anterior.
+>>>>>>> master
 
 ```csharp
 using System;
@@ -181,11 +191,19 @@ namespace Dynamic
 
 <center>
 
+<<<<<<< HEAD
 ### Round 2: Python vs C# (Dinamismo)
 
 </center>
 
 Perfecto, en este punto ya hemos visto como se comporta un objeto tipado con *`dynamic`* con respecto a *`object`*, pero quedan algunas cosa dudas al respecto, ¿será este el límite del dinamismo de `c#`, o tendrá más sorpresas?
+=======
+## Round 2: Python vs C# (Dinamismo)
+
+</center>
+
+Perfecto, en este punto ya hemos visto como se comporta un objeto tipado con *`dynamic`* con respecto a *`object`*, pero quedan algunas cosa dudas al respecto. ¿Será este el límite del dinamismo de `c#`, o tendrá más sorpresas?
+>>>>>>> master
 
 Para responder a estas preguntas vamos a fijarnos en `python` el rey de los lenguajes de tipado dinámico. Analicemos el siguiente código escrito en `python3`:
 
@@ -275,7 +293,11 @@ namespace Dynamic
     {
         private static void Main(string[] args)
         {
+<<<<<<< HEAD
             *`dynamic`* foo = new ExpandoObject();
+=======
+            dynamic foo = new ExpandoObject();
+>>>>>>> master
             foo.field1 = "I am a new field";
             foo.field2 = "I am a second field";
             foreach (var pair in foo)
@@ -293,7 +315,11 @@ namespace Dynamic
 // field2 : I am a second field
 ```
 
+<<<<<<< HEAD
 Tras ver esto uno puede quedarse satisfecho con las posibilidades que brinda **`ExpandoObject`** al mundo del dinamismo en `C#` pero, ¿qué pasa si queremos ir más allá? ¿Qué sucede si queremos controlar el llamado a los miembros de la un tipo dinámico? En este caso **`ExpandoObject`** no nos será de utilidad ya que es una *`sealed class`* por lo que no podemos heredar de ella, en cambio tenemos a su hermano **`DynamicObject`** el cual usaremos para dar solución al siguiente problema.
+=======
+Tras ver esto uno puede quedarse satisfecho con las posibilidades que brinda **`ExpandoObject`** al mundo del dinamismo en `C#` pero, ¿Qué pasa si queremos ir más allá? ¿Qué sucede si queremos controlar el llamado a los miembros de la un tipo dinámico? En este caso **`ExpandoObject`** no nos será de utilidad ya que es una *`sealed class`* por lo que no podemos heredar de ella, en cambio tenemos a su hermano **`DynamicObject`** el cual usaremos para dar solución al siguiente problema.
+>>>>>>> master
 
 <center>
 
@@ -341,7 +367,11 @@ namespace Dynamic
 
 </center>
 
+<<<<<<< HEAD
 Primero declararemos nuestra clase **`Prototype`** que heredara de **`DynamicObject`**.
+=======
+Primero declararemos nuestra clase **`Prototype`** que heredará de **`DynamicObject`**.
+>>>>>>> master
 
 ```csharp
 using System;
@@ -391,7 +421,11 @@ namespace Dynamic
 
 Pasaremos a explicar cada uno de los métodos sobreescritos en **`Prototype`** con la siguiente tabla.
 
+<<<<<<< HEAD
 Metodo | ón
+=======
+Método | Descripción
+>>>>>>> master
 -------|------------
 TryGetMember(GetMemberBinder binder, out object result) | Provee la implementación para la operación de obtener el valor de un miembro. Las clases derivadas de **`DynamicObject`**  pueden sobreescribir este métodos para especificar el comportamiento dinámico para la operación de obtener el valor de una propiedad.
 TrySetMember(SetMemberBinder binder, object value) | Provee una implementación para la operación de setear el valor de un miembro. Las clases derivadas de **`DynamicObject`** pueden sobreescribir este método para especificar elcomportamiento dinámico para la operación de setear el valor de na propiedad.
@@ -441,7 +475,11 @@ namespace Dynamic
 }
 ```
 
+<<<<<<< HEAD
 El método `TryGetMember` se activa cada vez que se produce un dispatch sin asignación en una instancia de nuestro tipo **`Prototype`** siempre que este este declarado con tipo *`dynamic`*, como es el caso `prototype.frase`, donde en el llamado a nuestro método `TryGetMember` comprobaremos si la llave `"frase"` se encuentra en nuestro diccionario `_memberDictionary` y en caso de este retornaremos `true` y asiganremos a `result` el valor correspondiente a la llave en el diccionario, en caso contrario retornaremos `false` y `result` será `null`. Si el resultado del método es `false` este lanzará el siguiente error **`Microsoft.CSharp.RuntimeBinder.RuntimeBinderException`**.
+=======
+El método `TryGetMember` se activa cada vez que se produce un dispatch sin asignación en una instancia de nuestro tipo **`Prototype`** (siempre que este esté declarado con tipo *`dynamic`*). En el caso de `prototype.frase`, en el llamado a nuestro método `TryGetMember` comprobaremos si la llave `"frase"` se encuentra en nuestro diccionario `_memberDictionary`, en caso negativo, asiganremos a `result` el valor correspondiente a la llave en el diccionario y retornaremos `true`; en caso contrario retornaremos `false` y `result` será `null`. Si el resultado del método es `false` este lanzará el siguiente error **`Microsoft.CSharp.RuntimeBinder.RuntimeBinderException`**.
+>>>>>>> master
 
 ```csharp
 using System;
@@ -466,7 +504,12 @@ namespace Dynamic
 }
 ```
 
+<<<<<<< HEAD
 El método `TrySetMember` se activa cada vez que se produce un dispatch con asignación en una instancia de nuestro tipo **`Prototype`** siempre que este este declarado con tipo *`dynamic`*, como es el caso `prototype.frase = "Hello World"`, donde el llamado a nuestro método `TrySetMember` siempre retornara `true` ya siempre es posibre asignarle valor a un miembro ya sea existente o nuevo.
+=======
+El método `TrySetMember` se activa cada vez que se produce un dispatch con asignación en una instancia de nuestro tipo **`Prototype`** (siempre que este esté declarado con tipo *`dynamic`*).
+Por ejemplo en el caso de `prototype.frase = "Hello World"`, donde el llamado a nuestro método `TrySetMember` siempre retornará `true` ya siempre es posibre asignarle valor a un miembro ya sea existente o nuevo.
+>>>>>>> master
 
 ```csharp
 using System;
@@ -492,16 +535,28 @@ namespace Dynamic
 }
 ```
 
+<<<<<<< HEAD
 El método `TryInvokeMember` se activa cada vez que se produce un dispatch con un llamdo a función en una instancia de nuestro tipo **`Prototype`** siempre que este este declarado con tipo *`dynamic`*, como es el caso `parte1.metodoA()`, donde el llamado a nuestro método `TryInvokeMember` colocará como primer parámetro del vector de argumentos una instancia de si mismo con la palabre clave `this`, ya que todo método dinámico que se declare en **`Prototype`**  debe tener como primer parámetro una instancia de él mismo como es el caso de la orden donde tenemos `parte1.MetodoA = (Action<dynamic>) ((self) => { Console.WriteLine("MétodoA dice '{0}'", self.frase); });`, y este puede ser invocado de la siguiente forma `parte1.MetodoA()`, igual a como funciona en `python`.
 
 En este caso una vez colocamos una instancia del objeto como primer elemento del vector de argumentos obtenemos valor del diccionario de `_memberDictionary` asociado al nombre del método, y aqui pueden suceder 4 cosas en tiempo de ejecución:
+=======
+El método `TryInvokeMember` se activa cada vez que se produce un dispatch con un llamdo a función en una instancia de nuestro tipo **`Prototype`** (siempre que este esté declarado con tipo *`dynamic`*).
+Como es el caso `parte1.metodoA()`, donde el llamado a nuestro método `TryInvokeMember` colocará como primer parámetro del vector de argumentos una instancia de si mismo con la palabre clave `this`, ya que todo método dinámico que se declare en **`Prototype`**  debe tener como primer parámetro una instancia de él mismo como es el caso de la orden donde tenemos `parte1.MetodoA = (Action<dynamic>) ((self) => { Console.WriteLine("MétodoA dice '{0}'", self.frase); });`.
+Este puede ser invocado de la siguiente forma `parte1.MetodoA()`, igual a como funciona en `python`.
+
+En este caso una vez colocamos una instancia del objeto como primer elemento del vector de argumentos obtenemos valor del diccionario de `_memberDictionary` asociado al nombre del método, y aqui pueden suceder 4 errores en tiempo de ejecución:
+>>>>>>> master
 
 * si este no existe se lanzará una excepción no controlada del tipo **`System.Collections.Generic.KeyNotFoundException`**
 * si este existe pero no es un tipo derivado de la clase **`Delegate`** no podra acceder al método `DynamicInvoke` lanzando la excepción no controlada **`Microsoft.CSharp.RuntimeBinder.RuntimeBinderException`**
 * si este existe y es un tipo derivado de la clase **`Delegate`** pero el numero de parámetros no es el correcto se lanzará la excepción no controlada **`System.Reflection.TargetParameterCountException`**
 * si este existe, es un tipo derivado de la clase **`Delegate`**, el numero de parámetros es el correcto pero el tipo de los parámetro es incorrecto se lanzará la excepción no controlada **`System.ArgumentException`**
 
+<<<<<<< HEAD
 Tras mencionar estos errores puede surgir la duda de porqué querriamos que se lanzara cualquiera de estas excepciones en lugar de capturarlas y retornar `false` en el método. Sucede que si el llamado a `TryInvokeMember` retorna `false` se llama directamente a `TryGetMember` y podrían escaparse casos como `parte1.metodoA(parte1)` donde en el `TryInvokeMember` daría `false`, pero en  `TryGetMember` devolveria `true` y si ejecutaria el método, y este comportamiento no es el querido en nuestro tipo **`Prototype`**.
+=======
+Tras mencionar estos errores puede surgir la duda de porqué querriamos que se lanzara cualquiera de estas excepciones en lugar de capturarlas y retornar `false` en el método. Sucede que si el llamado a `TryInvokeMember` retorna `false` se llama directamente a `TryGetMember` y podrían escaparse casos como `parte1.metodoA(parte1)` donde en el `TryInvokeMember` daría `false`, pero en  `TryGetMember` devolveria `true` y si ejecutaría el método, y este comportamiento no es el querido en nuestro tipo **`Prototype`**.
+>>>>>>> master
 
 Por último el método `BlendWith` unirá los miembros de ambas partes y creará uno nuevo objeto con la composición de estas.
 
@@ -535,7 +590,11 @@ namespace Dynamic
 }
 ```
 
+<<<<<<< HEAD
 Como se puede observar el código bastante explicito con su funcionamiento. Tan solo creamos un nuevo prototipo y llenamos su diccionario de miembros con las dos partes.
+=======
+Como se puede observar el código bastante explícito con su funcionamiento. Tan solo creamos un nuevo prototipo y llenamos su diccionario de miembros con las dos partes.
+>>>>>>> master
 
 <center>
 
@@ -569,7 +628,11 @@ Implemente también para **`Prototype`** un método `Clone` de manera que los mi
 
 ## Solución al Inciso II
 
+<<<<<<< HEAD
 ### "Y el programador dijo 'Hagase el clon!!!' y el clon se hizo sin más explicación, pero ... ¿qué tipo de clon era?"
+=======
+### "Y el programador dijo 'Hágase el clon!!!' y el clon se hizo sin más explicación, pero ... ¿qué tipo de clon era?"
+>>>>>>> master
 
 </center>
 
@@ -683,7 +746,11 @@ namespace Dynamic
 }
 ```
 
+<<<<<<< HEAD
 `C#` ya viene preparado con el método `MemberwiseClone` que crea una shallow copy del objeto que lo invoca. Este crea un nuevo objeto y luego copia los campos no estáticos del objeto original. Si el campo es por valor de hace uan copia del mismo bit a bit, de lo contrario, si es por referencia, solo se copia la referencia de tal forma que ambos campos apuntan al mismo opjeto.
+=======
+`C#` ya viene preparado con el método `MemberwiseClone` que crea una shallow copy del objeto que lo invoca. Este crea un nuevo objeto y luego copia los campos no estáticos del objeto original. Si el campo es por valor de hace una copia del mismo bit a bit, de lo contrario, solo se copia la referencia de tal forma que ambos campos apuntan al mismo objeto.
+>>>>>>> master
 
 Por otro lado nuestra implementación de `DeepCopy` crea tambien una copia del diccionario de miembros con los mismos valores que el original pero ahora ambos campos no apuntan al mismo objeto. Sin embargo los tipos por referencia del nuevo diccionario y el anterior si son iguales ya que hicimos una deep copy de un solo nivel.
 
