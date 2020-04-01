@@ -1,25 +1,8 @@
-<center>
-
-# Lenguajes de Programación
-
 # Seminario 10 - Dinamismo con C\#
 
-## Autores
+## Un corto recorrido por el mundo dinámico de `C# 4.0`
 
-Alejandro Klever Clemente C311
-Miguel Angel Gonzales Calles C311
-Yasmin Cisneros Cimadevila C311
-Damian O'Hallorans Toledo C312
-
-</center>
-
-<center>
-
-# Un corto recorrido por el mundo dinámico de `C# 4.0`
-
-## Round 1 : *dynamic* vs *object*
-
-</center>
+### Round 1 : *dynamic* vs *object*
 
 El tipo *`dynamic`* es un tipo estático presentado por `C# 4.0`. A pesar de que es un tip estático un objeto de tipo *`dynamic`* omite la comprobación de tipado estático en tiempo de compilación. En la mayoría de los casos, funciona como si tuviera un tipo *`object`*. En tiempo de compilación, se supone que un elemento que se escribe como *`dynamic`* admite cualquier operación. Por lo tanto, no tiene que preocuparse por las operaciones o miembros que soporta el objeto marcado como *`dynamic`*. Sin embargo, si el código no es válido, se detectan errores en tiempo de ejecución. Algunas ventajas de estos se muestran en el siguiente código.
 
@@ -198,7 +181,7 @@ namespace Dynamic
 
 <center>
 
-## Round 2: Python vs C# (Dinamismo)
+### Round 2: Python vs C# (Dinamismo)
 
 </center>
 
