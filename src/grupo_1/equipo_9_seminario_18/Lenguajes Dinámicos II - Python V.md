@@ -1,21 +1,29 @@
 
-# Seminarios de Lenguajes Dinámicos II
+# Seminario 18 Python V
 
-## Seminario 18 - Python V
+## Equipo 9
 
-1- Implemente un módulo llamado **`functionTools`** donde se encuentren las siguientes definiciones:
+- Adrian Tubal Páez Ruiz
+- Olivia González Peña
+- Juan Carlos Casteleiro Wong
+- Gabriela Mijenes Carrera
+- Reinaldo Barrera Travieso
+
+
+
+
+### 1- Implemente un módulo llamado **`functionTools`** donde se encuentren las siguientes definiciones:
 
 * **`fixParams`**: Función que permite “fijar” valores como argumentos de funciones. Por ejemplo, fijar el valor 2 como primer argumento de una función **`f`** con tres parámetros consiste en obtener una función **`g`** de 2 parámetros de manera que **`g(a, b)`** sea equivalente a hacer **`f(2, a, b)`** . Para esto **`fixParams`** recibe como primer argumento la función seguida de los valores que se quieren fijar. Por ejemplo, la siguiente línea fija los valores 6 y 7 como segundo y cuarto argumento respectivamente de una función de cuatro parámetros. **`g = fixParams(f, _, 6, _, 7)`**. El valor especial **`_`** (guión bajo) debe ser definido en el módulo functionTools para indicar que un parámetro no tiene valor fijo. Luego de la línea del ejemplo hacer **`g(1, 2)`** es equivalente a hacer **`f(1, 6, 2, 7)`**.
 
 * **`_`**: valor especial para indicar un parámetro sin valor fijo en la función **`fixParams`**.
 
-> Resto de la orientción...
 
 ### **`fixParams`**
 
 Par poder explicar directamente esta función pondremos directamente el código y a continuación lo explicaremos.
 
-Definimos el tipo **`_`** para poder ser usado en la función **`fixParams`** como indicador de pará metro libre.
+Definimos el tipo **`_`** para poder ser usado en la función **`fixParams`** como indicador de parámetro libre.
 
 ```python
 class Ignore:
@@ -72,4 +80,147 @@ En el cuerpo de **`newFunction`** se pueden ver tres ciclos **`while`** seguidos
 Tener en cuanta la definición de la función **`newFunction`** dentro de la función **`fixParams`**, esto es posible en Python ya que en este lenguaje las funciones son ciudadanos de primer orden.
 
 Notar también que **`newFunction`** termina con el llamado a la función original **`func`** con los argumentos modificados.
+
+
+## Name Binding (Enlace de Nombres)
+
+Name Binding es la asociación entre un nombre y un objeto (valor). En Python hacemos este vínculo a través del operador de asignación (=).
+
+```python
+a = 1
+b = 2 
+```
+En este ejemplo se crean los nombres **`a`**, **`b`** y se le vinculan los valores 1, 2 respectivamente. Si quisiéramos hacer una asignación del estilo:
+
+```python
+c = a
+```
+En Python se crea un nombre **`c`** asociado al objeto 1, el cual ya está vinculado al nombre **`a`**. No se copia el objeto 1, ni se crea uno nuevo, solo se intruduce un nuevo nombre para este objeto, entonces ambos **`a`** y **`c`** están vinculados al objeto 1. Por tanto tendríamos tres nombres y dos objetos:
+
+```
+a ---> 1 <--- c
+b ---> 2
+```
+
+Si luego de esto hiciéramos:
+
+```python
+a = b
+``` 
+Ahora el nombre **`a`** está vinculado al objeto 2, sin tener implicaciones sobre el valor de **`c`**, el cual se mantiene vinculado al objeto 1.
+
+```
+       1 <--- c
+b ---> 2 <--- a
+```
+
+Binding (Enlace) está estrechamente relacionado con scoping (alcance, ámbito), ya que el scope determina qué nombres se vinculan a qué objetos dependiendo de la ubicación del código del programa. En Python la resolución de nombres se rige por la llamada regla LEGB (Local, Enclosing, Global, Built-In):
+
+ - **`Local`**: es el cuerpo de cualquier función o expresión lambda. Este ámbito contiene los nombres que define dentro de la función, que serán visibles solo desde el código de la función. Se crea en la llamada a la función, no en la definición, por lo que tendrá tantos ámbitos locales diferentes como llamadas. Esto es cierto incluso si llama a la misma función varias veces o de forma recursiva; cada llamada dará como resultado la creación de un nuevo ámbito local. 
+ - **`Enclosing (Nonlocal)`**: solo existe para funciones anidadas. Si el ámbito local es una función interna o anidada (inner) entonces el ámbito envolvente (enclosing scope) es el de la función externa; este ámbito contiene tanto los nombres definidos en su cuerpo como los definidos en el enclosing scope.
+ - **`Global`**: es el alcance más alto en un programa, script o módulo de Python. Los nombres en este ámbito son visibles desde cualquier parte de su código.
+ - **`Built-In`**: este ámbito contiene nombres como palabras claves, funciones, excepciones y otros atributos integrados en Python. Están disponible en cualquier parte de su código y se carga automáticamente cuando se ejecuta un programa o script.
+
+ La regla LEGB es un tipo de procedimiento de búsqueda de nombres, que determina el orden en que Python busca los nombres. Se busca secuencialmente en el ámbito local, envolvente (enclosing), global, built-in; si el nombre existe se obtendrá la primera aparición, de lo contrario se obtendrá un error.  
+
+ En Python podemos especificar a quién referenciar con las palabras claves **`global`** y **`nonlocal`**. Por ejemplo:
+
+```python
+def f():
+    global value1
+    value1 = 100
+    value2 = 200
+
+value1 = 0
+value2 = 0
+f()
+print(value1)    # 100 
+print(value2)    # 0
+```
+
+Fue posible modificar el valor de la variable **`value1`** ya que fue referenciada a través de la palabra clave **`global`**.
+
+En caso de tener funciones anidadas podemos lograr un comportamiento similar haciendo uso de la palabra clave **`nonlocal`** teniendo en cuenta las siguientes restricciones:
+ - **`nonlocal`** debe hacer referencia a una variable existente en el cuerpo de alguna función que la envuelve.
+ - no puede acceder a las variables globales.
+
+Sin utilizar **`nonlocal`**:
+
+```python
+x = 0
+def outer():
+    x = 1
+    def inner():
+        x = 2
+        print("inner:", x)
+
+    inner()
+    print("outer:", x)
+
+outer()
+print("global:", x)
+```
+
+*Output:*
+```
+inner: 2
+outer: 1
+global: 0
+```
+
+Usando **`nonlocal`**:
+
+```python
+x = 0
+def outer():
+    x = 1
+    def inner():
+        nonlocal x
+        x = 2
+        print("inner:", x)
+
+    inner()
+    print("outer:", x)
+
+outer()
+print("global:", x)
+```
+
+*Output:*
+```
+inner: 2
+outer: 2
+global: 0
+```
+
+Usando **`global`**:
+
+```python
+x = 0
+def outer():
+    x = 1
+    def inner():
+        global x
+        x = 2
+        print("inner:", x)
+
+    inner()
+    print("outer:", x)
+
+outer()
+print("global:", x)
+```
+
+*Output:*
+```
+inner: 2
+outer: 1
+global: 2
+```
+
+
+
+
+
+
 
