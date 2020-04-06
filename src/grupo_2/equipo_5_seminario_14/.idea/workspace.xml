@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c5cd42b0-9a68-47c9-bb31-a944c414a59e" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1a8JgCZMWQUAmmfJt0zh8HGQAJH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Python.type_checker">
+    <configuration name="Circle" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="equipo_5_seminario_14" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/Circle.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="decorators" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="equipo_5_seminario_14" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/decorators.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="equipo_5_seminario_14" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="type_checker" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="equipo_5_seminario_14" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Code" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Code/type_checker.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.type_checker" />
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.Circle" />
+        <item itemvalue="Python.decorators" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c5cd42b0-9a68-47c9-bb31-a944c414a59e" name="Default Changelist" comment="" />
+      <created>1586111399383</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1586111399383</updated>
+      <workItem from="1586111410828" duration="546000" />
+      <workItem from="1586122214209" duration="13435000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1322" height="200" key="GridCell.Tab.0.bottom" timestamp="1586137023282">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1586137023282" />
+    <state width="1322" height="200" key="GridCell.Tab.0.center" timestamp="1586137023281">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1586137023281" />
+    <state width="1322" height="200" key="GridCell.Tab.0.left" timestamp="1586137023280">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1586137023280" />
+    <state width="1322" height="200" key="GridCell.Tab.0.right" timestamp="1586137023281">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1586137023281" />
+    <state width="1322" height="200" key="GridCell.Tab.1.bottom" timestamp="1586137023284">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.1.bottom/0.27.1366.741@0.27.1366.741" timestamp="1586137023284" />
+    <state width="1322" height="200" key="GridCell.Tab.1.center" timestamp="1586137023283">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.1.center/0.27.1366.741@0.27.1366.741" timestamp="1586137023283" />
+    <state width="1322" height="200" key="GridCell.Tab.1.left" timestamp="1586137023283">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.1.left/0.27.1366.741@0.27.1366.741" timestamp="1586137023283" />
+    <state width="1322" height="200" key="GridCell.Tab.1.right" timestamp="1586137023284">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.1.right/0.27.1366.741@0.27.1366.741" timestamp="1586137023284" />
+    <state width="1322" height="200" key="GridCell.Tab.2.bottom" timestamp="1586137023286">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.2.bottom/0.27.1366.741@0.27.1366.741" timestamp="1586137023286" />
+    <state width="1322" height="200" key="GridCell.Tab.2.center" timestamp="1586137023285">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.2.center/0.27.1366.741@0.27.1366.741" timestamp="1586137023285" />
+    <state width="1322" height="200" key="GridCell.Tab.2.left" timestamp="1586137023285">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.2.left/0.27.1366.741@0.27.1366.741" timestamp="1586137023285" />
+    <state width="1322" height="200" key="GridCell.Tab.2.right" timestamp="1586137023285">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state width="1322" height="200" key="GridCell.Tab.2.right/0.27.1366.741@0.27.1366.741" timestamp="1586137023285" />
+    <state x="179" y="31" width="1007" height="737" key="SettingsEditor" timestamp="1586111612746">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="179" y="31" width="1007" height="737" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1586111612746" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Code/main.py</url>
+          <line>31</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Code/type_checker.py</url>
+          <line>45</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/equipo_5_seminario_14$decorators.coverage" NAME="decorators Coverage Results" MODIFIED="1586124586832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code" />
+    <SUITE FILE_PATH="coverage/equipo_5_seminario_14$main.coverage" NAME="main Coverage Results" MODIFIED="1586133418509" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code" />
+    <SUITE FILE_PATH="coverage/equipo_5_seminario_14$Circle.coverage" NAME="Circle Coverage Results" MODIFIED="1586130248272" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code" />
+    <SUITE FILE_PATH="coverage/equipo_5_seminario_14$type_checker.coverage" NAME="type_checker Coverage Results" MODIFIED="1586136968316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Code" />
+  </component>
+</project>
