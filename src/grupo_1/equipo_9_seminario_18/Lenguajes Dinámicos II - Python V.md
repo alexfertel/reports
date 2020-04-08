@@ -12,18 +12,20 @@
 
 
 
-### 1- Implemente un módulo llamado **`functionTools`** donde se encuentren las siguientes definiciones:
+### Implemente un módulo llamado **`functionTools`** donde se encuentren las siguientes definiciones:
 
-* **`fixParams`**: Función que permite “fijar” valores como argumentos de funciones. Por ejemplo, fijar el valor 2 como primer argumento de una función **`f`** con tres parámetros consiste en obtener una función **`g`** de 2 parámetros de manera que **`g(a, b)`** sea equivalente a hacer **`f(2, a, b)`** . Para esto **`fixParams`** recibe como primer argumento la función seguida de los valores que se quieren fijar. Por ejemplo, la siguiente línea fija los valores 6 y 7 como segundo y cuarto argumento respectivamente de una función de cuatro parámetros. **`g = fixParams(f, _, 6, _, 7)`**. El valor especial **`_`** (guión bajo) debe ser definido en el módulo functionTools para indicar que un parámetro no tiene valor fijo. Luego de la línea del ejemplo hacer **`g(1, 2)`** es equivalente a hacer **`f(1, 6, 2, 7)`**.
+* **`fixParams`**: Función que permite “fijar” valores como argumentos de funciones. Por ejemplo, fijar el valor 2 como primer argumento de una función **`f`** con tres parámetros consiste en obtener una función **`g`** de 2 parámetros de manera que **`g(a, b)`** sea equivalente a hacer **`f(2, a, b)`** . Para esto **`fixParams`** recibe como primer argumento la función seguida de los valores que se quieren fijar. Por ejemplo, la siguiente línea fija los valores 6 y 7 como segundo y cuarto argumento respectivamente de una función de cuatro parámetros: **`g = fixParams(f, _, 6, _, 7)`**. El valor especial **`_`** (guión bajo) debe ser definido en el módulo functionTools para indicar que un parámetro no tiene valor fijo. Luego de la línea del ejemplo hacer **`g(1, 2)`** es equivalente a hacer **`f(1, 6, 2, 7)`**.
 
 * **`_`**: valor especial para indicar un parámetro sin valor fijo en la función **`fixParams`**.
 
+* **`rearrangeParams`**: Función que permite cambiar el orden de los parámetros de una función. Recibe una función de n parámetros y una permutación de 0, ..., n − 1 y devuelve una función con los parámetros ordenados según dicha permutación. El valor en la posición i de la permutación indica la posición del parámetro i de la función original en la función resultante. Veamos los siguientes ejemplos:
+    - **`g = rearrangeParams(sum, 3, 2, 1, 0)`**: la función **`g`** es equivalente a la función **`sum`** con los parámetros invertidos, o sea, **`sum(a, b, c, d)`** es equivalente a hacer **`g(d, c, b, a)`**.
+    - **`g = rearrangeParams(sum, 0, 1, 3, 2)`** : la función **`g`** es equivalente a la función **`sum`** con los dos últimos parámetros invertidos, o sea, **`sum(a, b, c, d)`** es equivalente a hacer **`g(a, b, d, c)`**.
+
+
 
 ### **`fixParams`**
-
-Par poder explicar directamente esta función pondremos directamente el código y a continuación lo explicaremos.
-
-Definimos el tipo **`_`** para poder ser usado en la función **`fixParams`** como indicador de parámetro libre.
+Definimos el tipo **`_`** para utilizarlo posteriormente en la función **`fixParams`** como indicador de parámetro libre.
 
 ```python
 class Ignore:
@@ -65,21 +67,75 @@ def fixParams(func, *args, **kwargs):
 
 En el código anterior vamos a identificar y describir las siguientes variables:
 
-- **`func`**: es la función a la cual se le quiere fijar valores en los argumentos
-- **`fixed_args`**: es la tupla con el conjunto de valores fijos y libres. Por ejemplo `(_, 6, _, 7)`
+- **`func`**: es la función a la cual se le quiere fijar valores en los argumentos.
+- **`fixed_args`**: es la tupla con el conjunto de valores fijos y libres. Por ejemplo `(_, 6, _, 7)`.
 - **`fixed_kwargs`**: es el conjunto de argumentos con valores por defecto, si existen, serán los últimos argumentos de la función.  ¿Para qué queremos usar **`kwargs`** en este caso? Si **`func`** tiene varios **`kwargs`** sería cómodo poder fijarle valores a un conjunto de esos **`kwargs`**, esto nos permite cambiar el valor por defecto que tenía.
 - **`newFunction`**: es la función con los cambios realizados y que será devuelta por **`fixParams`**.
 - **`newArgs`**: es el nuevo vector de argumentos que será utilizado.
 
-En el cuerpo de **`newFunction`** se pueden ver tres ciclos **`while`** seguidos, que van a implementar la estrategia de reemplazo de los argumentos. El remplazo de argumentos sigue la siguiente estrategia:
+En el cuerpo de **`newFunction`** se pueden ver tres ciclos **`while`** seguidos, que van a implementar la estrategia de reemplazo de los argumentos. El reemplazo de argumentos sigue la siguiente estrategia:
 
-- El i-esimo elemento de **`args`** será puesto en el i-esimo argumento libre ( **`_`** ) de **`fixed_args`**. Es decir si **`args = (1,3)`** y **`fixed_args = (0,_,2,_)`** el resultado es **`(0,1,2,3)`**. 
+- El i-ésimo elemento de **`args`** será puesto en el i-ésimo argumento libre ( **`_`** ) de **`fixed_args`**. Es decir si **`args = (1,3)`** y **`fixed_args = (0,_,2,_)`** el resultado es **`(0,1,2,3)`**. 
 - Si hay más elementos en **`args`** que espacios libres en **`fixed_args`**, entonces simplemente el resto se agrega al final, por ejemplo, **`args = (1,3,4,5)`** y **`fixed_args = (0,_,2,_)`** el resultado es **`(0,1,2,3,4,5)`**.
 - Si hay más espacios libres en **`fixed_args`** que elementos en **`args`**, entonces son ignorados los que sobran, por ejemplo, **`args = (1,3)`** y **`fixed_args = (0,_,2,_,_,_)`** el resultado es **`(0,1,2,3)`**
 
-Tener en cuanta la definición de la función **`newFunction`** dentro de la función **`fixParams`**, esto es posible en Python ya que en este lenguaje las funciones son ciudadanos de primer orden.
+Tener en cuenta que la definición de la función **`newFunction`** está dentro de la función **`fixParams`**, esto es posible en Python ya que las funciones son ciudadanos de primer orden.
 
 Notar también que **`newFunction`** termina con el llamado a la función original **`func`** con los argumentos modificados.
+
+
+### **`rearrangeParam`**
+
+```python
+def rearrangeParam(f, *p):
+    def retf(*arg):
+        narg = [0 for i in range(len(p))]
+        for i in range(len(p)):
+            narg[p[i]] = arg[i]
+        arg = narg
+        return f(*arg)
+    return retf
+
+def f(x, y):
+    return x - y
+
+g = rearrangeParam(f, 1, 0)
+print(g(1, 2))              # 1
+```
+La función **`rearrangeParam`** se encarga de recibir una función **`f`**, una lista de parámetros **`p`** y devolver la función **`retf`**, que ya tiene los parámetros reconfigurados.
+
+Dentro del cuerpo de **`retf`** encontramos a **`narg`**, una lista donde se van a guardar los parámetros ya reconfigurados según la permutación **`p`** recibida en **`rearrangeParam`**. Una vez que tengamos la nueva configuración devolvemos la función con la nueva lista de parámetros.
+
+Usando las ventajas de Python podemos dar una implementación más reducida, como se muestra a continuación:
+
+```python
+def rearrangeParam(f, *args):
+    def newFunc(*kargs):
+        return f(*(kargs[i] for i in args))
+    return newFunc
+```
+
+En este caso **`newFunc`** retorna la función **`f`** con una tupla, que tiene los parámetros ya reconfigurados, ahorrándonos la declaración de una variable para almacenar la configuración deseada.
+
+Ejemplos de prueba:
+```python
+def sum(*args):
+    s = 0
+    for x in args:
+        s += x
+    return x
+
+g = rearrangeParam(sum, 3, 2, 1, 0)
+print(g(3, 2, 1, 0) == sum(0, 1, 2, 3))     #True
+```
+
+```python
+def minus(x,y):
+    return x - y
+
+g = rearrangeParam(minus, 1, 0)
+print(g(1, 2) == minus(2, 1))               #True
+```
 
 
 ## Name Binding (Enlace de Nombres)
@@ -90,12 +146,12 @@ Name Binding es la asociación entre un nombre y un objeto (valor). En Python ha
 a = 1
 b = 2 
 ```
-En este ejemplo se crean los nombres **`a`**, **`b`** y se le vinculan los valores 1, 2 respectivamente. Si quisiéramos hacer una asignación del estilo:
+En este ejemplo se crean los nombres **`a`**, **`b`** y se le vinculan los valores 1, 2, respectivamente. Si quisiéramos hacer una asignación al estilo:
 
 ```python
 c = a
 ```
-En Python se crea un nombre **`c`** asociado al objeto 1, el cual ya está vinculado al nombre **`a`**. No se copia el objeto 1, ni se crea uno nuevo, solo se intruduce un nuevo nombre para este objeto, entonces ambos **`a`** y **`c`** están vinculados al objeto 1. Por tanto tendríamos tres nombres y dos objetos:
+En Python se crea un nombre **`c`** asociado al objeto 1, el cual ya está vinculado al nombre **`a`**. No se copia el objeto 1, ni se crea uno nuevo, solo se introduce un nuevo nombre para este objeto; entonces, ambos, **`a`** y **`c`** están vinculados al objeto 1. Por tanto tendríamos tres nombres y dos objetos:
 
 ```
 a ---> 1 <--- c
@@ -107,7 +163,7 @@ Si luego de esto hiciéramos:
 ```python
 a = b
 ``` 
-Ahora el nombre **`a`** está vinculado al objeto 2, sin tener implicaciones sobre el valor de **`c`**, el cual se mantiene vinculado al objeto 1.
+Ahora el nombre **`a`** está vinculado al objeto 2, sin tener implicaciones sobre **`c`**, que se mantiene vinculado al objeto 1.
 
 ```
        1 <--- c

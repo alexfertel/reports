@@ -32,3 +32,21 @@ def fixParams(func, *args, **kwargs):
         func(*newArgs, **kwargs)
 
     return newFunction
+
+
+def rearrangeParam(f, *p):
+    def retf(*arg):
+        narg = [0 for i in range(len(p))]
+        for i in range(len(p)):
+            narg[p[i]] = arg[i]
+        arg = narg
+        return f(*arg)
+    return retf
+
+
+# Versión mejorada 
+# def rearrangeParam(f, *args):
+#     def newFunc(*kargs):
+#         return f(*(kargs[i] for i in args))
+#     return newFunc
+
