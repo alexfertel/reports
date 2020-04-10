@@ -1000,3 +1000,8 @@ fabric.properties
 ./**/.idea/**/markdown-navigator/
 
 # End of https://www.gitignore.io/api/jetbrains
+
+
+# Grupo1_Equipo9
+
+src/grupo_1/equipo_9_seminario_*/Code/.idea
