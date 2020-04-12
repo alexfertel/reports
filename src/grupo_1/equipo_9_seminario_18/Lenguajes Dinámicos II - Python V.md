@@ -9,7 +9,7 @@
 - Gabriela Mijenes Carrera
 - Reinaldo Barrera Travieso
 
-
+ 
 
 
 ### Implemente un módulo llamado **`functionTools`** donde se encuentren las siguientes definiciones:
