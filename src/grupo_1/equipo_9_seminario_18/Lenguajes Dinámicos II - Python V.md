@@ -326,6 +326,10 @@ print(Suma7(a = 1, d = 3))  # 11
 La función **`Suma7`** es una aplicación parcial de **`Suma`** con los parámetros **`b`** y **`c`** fijados con los valores 5 y 2, respectivamente.
 
 
+## Diferencias entre currying y aplicación parcial de funciones
+Es fácil confundir estos dos conceptos: ambos toman una función que recibe n parámetros y retornan una que espera un número menor de parámetros, la diferencia está en que en aplicación parcial de funciones se fijan con valores específicos algunos parámetros mientras que currying toma una función y proporciona una nueva función que acepta un solo argumento y devuelve la función especificada con su primer argumento establecido (esto nos permite representar funciones con múltiples argumentos como una serie de funciones de argumento único).
 
+### Curiosidad
+En Haskell todas las funciones reciben exactamente un parámetro. Cuando queremos crear una que reciba múltiples parámetros hacemos uso de currying creando una serie de funciones donde cada una reciba un parámetro.
 
 
