@@ -276,6 +276,40 @@ outer: 1
 global: 2
 ```
 
+## Currying
+El término currying se refiere al proceso de tomar una función que recibe n argumentos y convertirla en n funciones de un argumento cada una. LLeva el nombre de Haskell Curry, matemático y lógico del siglo XX, cuyo trabajo sentó las bases para los lenguajes de programación funcionales.
+
+Veamos el siguiente código:
+
+```python
+def Suma(a, b, c, d):
+    return a + b + c + d
+```
+
+Esta función recibe cuatro parámetros para resolverse y devuelve la suma de ellos al terminar. Cuando aplicamos currying a **`Suma`** lo que obtenemos es una función que toma un argumento y retorna otra función que recibe el siguiente, este proceso se repite hasta haber obtenido todos los argumentos, será entonces que se devuelva la suma de ellos.
+
+A continuación proponemos una implemetación de un decorador para aplicar currying  
+
+```python
+def currying(func):
+    def curried(*args, **kwargs):
+        if len(args) + len(kwargs) >=
+        func.__code__.co_argcount:
+            return func(*args, **kwargs)
+        def newFunc(*args2, **kwargs2):
+            return curried(*(args + args2))
+        return newFunc
+    return curried
+
+@currying
+def Suma(a, b, c, d):
+    return a + b + c + d
+```
+
+```python
+print(Suma(1)(2)(3)(4))     # 10
+```
+
 
 
 
