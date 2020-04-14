@@ -69,7 +69,7 @@ En el código anterior vamos a identificar y describir las siguientes variables:
 
 - **`func`**: es la función a la cual se le quiere fijar valores en los argumentos.
 - **`fixed_args`**: es la tupla con el conjunto de valores fijos y libres. Por ejemplo `(_, 6, _, 7)`.
-- **`fixed_kwargs`**: es el conjunto de argumentos con valores por defecto, si existen, serán los últimos argumentos de la función.  ¿Para qué queremos usar **`kwargs`** en este caso? Si **`func`** tiene varios **`kwargs`** sería cómodo poder fijarle valores a un conjunto de esos **`kwargs`**, esto nos permite cambiar el valor por defecto que tenía.
+- **`fixed_kwargs`**: es el conjunto de parámetros nombrados, si existen, serán los últimos argumentos de la función.  ¿Para qué queremos usar **`kwargs`** en este caso? Si **`func`** tiene varios **`kwargs`** sería cómodo poder fijarle valores a un conjunto de esos **`kwargs`**, esto nos permite cambiar el valor por defecto que tenía.
 - **`newFunction`**: es la función con los cambios realizados y que será devuelta por **`fixParams`**.
 - **`newArgs`**: es el nuevo vector de argumentos que será utilizado.
 
