@@ -79,7 +79,9 @@ En el cuerpo de **`newFunction`** se pueden ver tres ciclos **`while`** seguidos
 - Si hay más elementos en **`args`** que espacios libres en **`fixed_args`**, entonces simplemente el resto se agrega al final, por ejemplo, **`args = (1,3,4,5)`** y **`fixed_args = (0,_,2,_)`** el resultado es **`(0,1,2,3,4,5)`**.
 - Si hay más espacios libres en **`fixed_args`** que elementos en **`args`**, entonces son ignorados los que sobran, por ejemplo, **`args = (1,3)`** y **`fixed_args = (0,_,2,_,_,_)`** el resultado es **`(0,1,2,3)`**
 
-Tener en cuenta que la definición de la función **`newFunction`** está dentro de la función **`fixParams`**, esto es posible en Python ya que las funciones son ciudadanos de primer orden.
+Tener en cuenta que la definición de la función **`newFunction`** está dentro de la función **`fixParams`**, esto es posible en Python ya que las funciones son ciudadanos de primera clase.
+
+Se dice que en un lenguaje las funciones son ciudadanos de primera clase cuando se pueden tratar como cualquier otro valor del lenguaje, es decir, cuando se pueden almacenar en variables, pasar como parámetros o devolver como valor de retorno de una función, sin ningún tratamiento especial.
 
 Notar también que **`newFunction`** termina con el llamado a la función original **`func`** con los argumentos modificados.
 
