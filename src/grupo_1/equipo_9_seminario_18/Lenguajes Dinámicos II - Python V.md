@@ -310,7 +310,20 @@ def Suma(a, b, c, d):
 print(Suma(1)(2)(3)(4))     # 10
 ```
 
+## Aplicación parcial de funciones
+Si una función f espera n parámetros y es llamada con m (m < n) normalmente el compilador nos dice que necesitamos más argumentos para f. En el ejemplo anterior si llamáramos a **`Suma`** con solo dos argumentos sucedería esto. Aplicar parcialmente una función es precisamente lo que el compilador nos diría que es un error: aplicamos una función a un número menor de parámetros que los que espera, y obtenemos una función que recibe el resto de los parámetros que hacen falta y devuelve un valor del tipo que retorna la función original.
 
+```python
+from functools import partial
+
+def Suma(a, b, c, d):
+    return a + b + c + d
+
+Suma7 = partial(Suma, b = 5, c = 2)
+print(Suma7(a = 1, d = 3))  # 11
+```
+
+La función **`Suma7`** es una aplicación parcial de **`Suma`** con los parámetros **`b`** y **`c`** fijados con los valores 5 y 2, respectivamente.
 
 
 
