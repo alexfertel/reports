@@ -91,9 +91,15 @@ Como se puede ver en el programa utilizamos el método `DescendantNodes` del nod
 
 ```c#
  var ifStatements = root.DescendantNodes().OfType<IfStatementSyntax>();
+
+ Console.WriteLine($"La cantidad de if-statements en el programa es: {ifStatements.Count()}");
 ```
 
-Cada una de las subclases de nodos expone sus nodos hijos a través de propiedades fuertemente tipadas por ejemplo la clase `IfStatementSyntax` tiene una propieda `Else` de tipo `ElseClauseSyntax` la cual returna `null` si no existiese cláusula `else`, por tanto pudiesemos extender el programa para saber cuántas instrucciones `if` tienen cláusula `else`.
+> NOTA:
+>
+> La sintaxis `$""` corresponde al uso de **string interpolation** para generar `strings`  que contengan valores de expresiones, para más información véase el epígrafe **1.d** de este seminario.
+
+Cada una de las subclases de nodos expone sus nodos hijos a través de propiedades fuertemente tipadas, por ejemplo, la clase `IfStatementSyntax` tiene una propiedad `Else` de tipo `ElseClauseSyntax` la cual returna `null` si no existiese cláusula `else`, por tanto pudiesemos extender el programa para saber cuántas instrucciones `if` tienen cláusula `else`.
 
 ```c#
 Console.WriteLine($"La cantidad de instrucciones if-else en el programa es:{ifStatements.Count(p => p.Else != null)}");
@@ -622,6 +628,7 @@ object[] objArray1 = new object[] { time, vegetable, num, item };
 Console.WriteLine(string.Format("On {0}, the price of {1} was {2} per {3}.",             (object[])objArray1));
 ```
 
+`Output: On 3/25/2020 12:16:38 AM, the price of Vegetable was 1.99 per item.`
 Notemos que se crea un array de tipo `object` donde se almacenan todas las variables usadas en la interpolación y luego en el string se utiliza `string.Format` de la manera que se utilizaba antes de la versión **C#** 6.0 
 
 Veamos que ocurre con el formato de strings en los dos últimos ejemplos:
@@ -847,7 +854,186 @@ Otras características de `using static`:
 * Hace que los métodos extensores declarados en el tipo especificado estén disponibles para la búsqueda de métodos de extensión.
 * Los métodos con el mismo nombre importados de diferentes tipos por diferentes instrucciones `using static`  en el mismo `namespace` forman un grupo de m. La resolución de sobrecarga dentro de estos grupos de métodos siguen las reglas normales de **C#**.
 
+## 1.g nameof
 
+Una expresión nameof es usada para obtener el nombre de una entidad de un programa como un constant string. Esta es una excelente forma de hacer funcionar bien algunas herramientas cuando se requiera conocer el nombre de una variable, una propiedad, o un miembro de un campo.
+
+```C#
+Console.WriteLine(nameof(System.Colections.Generic)); //output: Generic
+Console.WriteLine(nameof(List<int>));                 // output: List
+Console.WriteLine(nameof(List<int>.Count));           // output: Count
+Console.WriteLine(nameof(List<int>.Add));             // output: Add
+
+var numbers = new List<int> { 1, 2, 3 };
+Console.WriteLine(nameof(numbers));                   //output: numbers
+Console.WriteLine(nameof(numbers.Count));             //output: Count
+Console.WriteLine(nameof(numbers.Add));               //output: Add
+```
+
+Como muestra el ejemplo anterior, en el caso de un tipo y un namespace, el nombre producido es usualmente not fully qualified; donde el nombre fully qualified de N es la dirección jerárquica completa de los identificadores que llevan hacia N, comenzando por el namespace global. El nombre de una expresión es evaluado en tiempo de compilación y no tiene ningún efecto en tiempo de ejecución.
+
+Uno de sus usos más comunes es proveer el nombre de un símbolo que causa una excepción:
+
+```C#
+if (IsNullOrWhiteSpace(lastname))
+    throw new ArgumentException(message: "Cannot be blank", paramName: nameof(lastname));
+```
+
+Otro uso es con las aplicaciones basadas en XAML que implementan la interfaz INotifyPropertyChanged:
+
+```C#
+public string LastName
+{
+    get { return lastName; }
+    set
+    {
+        if (value != lastName)
+        {
+            lastName = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LastName)));
+        }
+    }
+}
+private string lastName;
+```
+
+Además, se puede usar una expresión nameof para hacer el chequeo de argumentos más sostenido:
+
+```C#
+public string Name
+{
+    get => name;
+    set => name = value ?? throw new ArgumentNullException(nameof(value), $"{nameof(Name)} cannot be null");
+}
+```
+
+Usualmente para conocer el string name de un enum se utiliza .ToString(), pero esto se comporta relativamente lento puesto que .Net guarda el valor del enum y encuentra su nombre en tiempo de ejecución.
+
+```C#
+enum MyEnum { ... FooBar = 7 ... }
+Console.WriteLine(MyEnum.FooBar.ToString());
+```
+
+En cambio, se utiliza nameof, donde .Net remplaza el nombre del enum con un string en tiempo de compilación.
+
+```C#
+Console.WriteLine(nameof(MyEnum.FooBar));
+```
+
+## 1.h Big Integer
+
+El tipo BigInteger es un tipo inmutable que representa un entero arbitrariamente largo donde su valor en teoría no tiene límite máximo ni mínimo. Debido a esto, una excepción OutOfMemoryException puede ser lanzada por cualquier operación que cause al valor BigInteger crecer mucho. Su valor sin inicializar por defecto es 0.
+
+Un objeto BigInteger puede inicializar de distintas maneras:
+
+1. Se puede utilizar la palabra clave new y proveer cualquier valor intergral o floating-point como parámetro del constructor de BigInteger (los valores floating-point son truncados antes de ser asignados al constructor). Ejemplo:
+
+```C#
+BigInteger bigIntFromDouble = new BigInteger(179032.6541);
+Console.WriteLine(bigIntFromDouble);                        //output: 179032
+BigInteger bigIntFromInt64 = new BigInteger(934157136952);
+Console.WriteLine(bigIntFromInt64);                        //output: 934157136952
+```
+
+2. Se puede declarar una variable BigInteger y asignarle un valor al igual que a cualquier tipo numérico, mientras el valor sea de tipo entero. Ejemplo:
+
+```C#
+long longValue = 6315489358112;
+BigInteger assignedFromLong = longValue;
+Console.WriteLine(assignedFromLong);     //output: 6315489358112
+```
+
+3. Se puede asignar un valor decimal o floating-point a un objeto BigInteger si se castea o se convierte primero. Ejemplo:
+
+```C#
+BigInteger assignedFromDouble = (BigInteger) 179032.6541;
+Console.WriteLine(assignedFromDouble);                     //output: 179032
+BigInteger assignedFromDecimal = (BigInteger) 64312.65m;
+Console.WriteLine(assignedFromDecimal);                    //output: 64312
+```
+
+Estos métodos solo permiten iniciar un objeto de tipo BigInteger cuyo valor está dentro del rango de uno de los tipos numéricos existentes. Se puede iniciar un objeto BigInteger cuyo valor pueda exceder el rango de los tipos numéricos existentes en una de estas tres formas:
+
+1. Se puede usar la palabra clave new y proveer un byte array de cualquier tamaño al constructor BigInteger.BigInteger. Por ejemplo:
+
+```C#
+byte[] byteArray = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+BigInteger newBigInt = new BigInteger(byteArray);
+Console.WriteLine("The value of newBigInt is {0} (or 0x{0:x}).", newBigInt);
+//output: The value of newBigInt is 477275222530853130 (or 0x102030405060708090a).
+```
+
+2. Se puede llamar a los métodos Parse o TryParse para convertir de la representación en string de un número a BigInteger. Por ejemplo:
+
+```C#
+string positiveString = "91389681247993671255432112000000";
+string negativeString = "-90315837410896312071002088037140000";
+BigInteger posBigInt = 0;
+BigInteger negBigInt = 0;
+try
+{
+   posBigInt = BigInteger.Parse(positiveString);
+   Console.WriteLine(posBigInt);
+}
+catch (FormatException)
+{
+   Console.WriteLine("Unable to convert the string '{0}' to a BigInteger value.", 
+                     positiveString);
+}
+if (BigInteger.TryParse(negativeString, out negBigInt))
+  Console.WriteLine(negBigInt);
+else
+   Console.WriteLine("Unable to convert the string '{0}' to a BigInteger value.", 
+                      negativeString);
+/* output: 9.1389681247993671255432112E+31
+           -9.0315837410896312071002088037E+34 */
+```
+
+3. Se puede llamar a un método estático de BigInteger que realiza alguna operación en una expresión numérica y retorna el resultado BigInteger calculado. Ejemplo:
+
+```C#
+BigInteger number = BigInteger.Pow(UInt64.MaxValue, 3);
+Console.WriteLine(number);  
+//output: 6277101735386680762814942322444851025767571854389858533375
+```
+
+Una instancia BigInteger puede ser usada al igual que cualquier tipo entero. BigInteger sobrecarga las operaciones numéricas estándares para permitir realizar operaciones matemáticas básicas como suma, resta, división, multiplicación, negación y negación unaria. Además, se pueden utilizar los operadores estándares para comparar dos valores BigInteger y los operadores AND, OR, XOR, left shift y right shift. Muchos miembros de la estructura BigInteger corresponde directamente a miembros de tipos enteros. En adición, agrega otros miembros como: Sign, Abs, DivRem y greatestCommonDivisor.
+
+El siguiente ejemplo inicializa un objeto BigInteger y luego incrementa su valor en 1:
+
+```C#
+BigInteger number = BigInteger.Multiply(Int64.MaxValue, 3);
+number++;
+Console.WriteLine(number);
+```
+
+Aunque este ejemplo parezca modificar el valor del objeto existente, este no es el caso. Los objetos BigInteger son inmutables, lo que significa que internamente, en tiempo de ejecución, se crea un nuevo objeto BigInteger y le asigna un valor una vez mas grande q el anterior. Este nuevo objeto es retornado por el llamado.
+
+### Implemente la función BigInteger Fibonacci(int n) que retorna el n-ésimo término de la sucesión de Fibonacci e imprima Fibonacci(1000).
+
+```C#
+static BigInteger Fibonacci(int n)
+{
+    if (n == 0)
+        return 0;
+    BigInteger a = 0;
+    BigInteger b = 1;
+    n--;
+
+    while(n > 0)
+    {
+        BigInteger c = a + b;
+        a = b;
+        b = c;
+        n--;
+    }
+    return b;
+}
+
+Console.WriteLine(Fibonacci(1000));
+
+//output: 43466557686937456435688527675040625802564660517371780402481729089536555417949051890403879840079255169295922593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875
+```
 
 # C# 7.0
 
@@ -1095,11 +1281,391 @@ Como ya se ha expuesto anteriormente, existe una clara ventaja del `pattern matc
 *	Generaliza el uso de las declaraciones `switch` para que estas puedan ser usadas con cualquier tipo.
 *	Crea una bella combinación para el uso de los métodos `try`.
 
+
+Pero las ventajas no son solo desde un punto de vista sintáctico sino que son mejores en cuanto a la eficiencia. Ilustremos esto mediante ejemplos:
+
+Supongamos que tenemos esta situación:
+```C#
+public void Code2(object shape)
+        {
+            if (((Rectangle)shape).Lenght == 4)
+            {
+                Console.WriteLine("Legth = 4");
+            }
+            else if (((Rectangle)shape).Lenght == 2)
+            {
+                Console.WriteLine("Legth = 2");
+            }
+            else if (((Rectangle)shape).Lenght == 3)
+            {
+                Console.WriteLine("Legth = 3");
+            }
+            else if (((Rectangle)shape).Lenght == 5)
+            {
+                Console.WriteLine("Legth = 5");
+            }
+            else if (((Circle)shape).Radius == 2)
+            {
+                Console.WriteLine("Radius = 2");
+            }
+            else
+            {
+                Console.WriteLine("<unknown shape>");
+            }
+        }
+```
+
+Aquí queremos comprobar ciertas condiciones que debería cumplir el `object` shape. Veamos que genera el código en compilación:
+```C#
+public void Code2(object shape)
+{
+    if (((Rectangle) shape).Lenght == 4)
+    {
+        Console.WriteLine("Legth = 4");
+    }
+    else if (((Rectangle) shape).Lenght == 2)
+    {
+        Console.WriteLine("Legth = 2");
+    }
+    else if (((Rectangle) shape).Lenght == 3)
+    {
+        Console.WriteLine("Legth = 3");
+    }
+    else if (((Rectangle) shape).Lenght == 5)
+    {
+        Console.WriteLine("Legth = 5");
+    }
+    else if (((Circle) shape).Radius == 2)
+    {
+        Console.WriteLine("Radius = 2");
+    }
+    else
+    {
+        Console.WriteLine("<unknown shape>");
+    }
+}
+
+```
+Es exactamente el mismo, observemos ahora el código IL generado:
+```C#
+.method public hidebysig instance void Code2(object shape) cil managed
+{
+    .maxstack 2
+    L_0000: ldarg.1 
+    L_0001: castclass SeminarioLP12.Class1/Rectangle
+    L_0006: ldfld int32 SeminarioLP12.Class1/Rectangle::Lenght
+    L_000b: ldc.i4.4 
+    L_000c: bne.un.s L_0019
+    L_000e: ldstr "Legth = 4"
+    L_0013: call void [System.Console]System.Console::WriteLine(string)
+    L_0018: ret 
+    L_0019: ldarg.1 
+    L_001a: castclass SeminarioLP12.Class1/Rectangle
+    L_001f: ldfld int32 SeminarioLP12.Class1/Rectangle::Lenght
+    L_0024: ldc.i4.2 
+    L_0025: bne.un.s L_0032
+    L_0027: ldstr "Legth = 2"
+    L_002c: call void [System.Console]System.Console::WriteLine(string)
+    L_0031: ret 
+    L_0032: ldarg.1 
+    L_0033: castclass SeminarioLP12.Class1/Rectangle
+    L_0038: ldfld int32 SeminarioLP12.Class1/Rectangle::Lenght
+    L_003d: ldc.i4.3 
+    L_003e: bne.un.s L_004b
+    L_0040: ldstr "Legth = 3"
+    L_0045: call void [System.Console]System.Console::WriteLine(string)
+    L_004a: ret 
+    L_004b: ldarg.1 
+    L_004c: castclass SeminarioLP12.Class1/Rectangle
+    L_0051: ldfld int32 SeminarioLP12.Class1/Rectangle::Lenght
+    L_0056: ldc.i4.5 
+    L_0057: bne.un.s L_0064
+    L_0059: ldstr "Legth = 5"
+    L_005e: call void [System.Console]System.Console::WriteLine(string)
+    L_0063: ret 
+    L_0064: ldarg.1 
+    L_0065: castclass SeminarioLP12.Class1/Circle
+    L_006a: ldfld int32 SeminarioLP12.Class1/Circle::Radius
+    L_006f: ldc.i4.2 
+    L_0070: bne.un.s L_007d
+    L_0072: ldstr "Radius = 2"
+    L_0077: call void [System.Console]System.Console::WriteLine(string)
+    L_007c: ret 
+    L_007d: ldstr "<unknown shape>"
+    L_0082: call void [System.Console]System.Console::WriteLine(string)
+    L_0087: ret 
+}
+```
+Notemos que efectivamente se raliza un casteo del objeto `shape` cinco veces en el código IL para después comprobar si cumple la condición deseada, lo cual obviamente no es muy eficiente. 
+Realicemos el equivalente de este código utilizando `switch case`:
+
+```C#
+public void Code(object shape, object o)
+{
+    switch (shape)
+    {
+        case Rectangle r when r.Lenght == 4:
+            Console.WriteLine("Legth = 4");
+            break;
+        case Rectangle r when r.Lenght == 3:
+            Console.WriteLine("Legth = 4");
+            break;
+        case Circle c when c.Radius == 2:
+            Console.WriteLine("radius = 2");
+            break;
+        default:
+            Console.WriteLine("<unknown shape>");
+            break;
+    }
+
+}
+```
+
+Veamos que ocurre con el código generado por el compilador:
+```C#
+public void Code(object shape)
+{
+    Rectangle rectangle = shape as Rectangle;
+    if (rectangle == null)
+    {
+        Circle circle = shape as Circle;
+        if ((circle != null) && (circle.Radius == 2))
+        {
+            Console.WriteLine("radius = 2");
+            return;
+        }
+    }
+    else
+    {
+        if (rectangle.Lenght == 4)
+        {
+            Console.WriteLine("Legth = 4");
+            return;
+        }
+        if (rectangle.Lenght == 3)
+        {
+            Console.WriteLine("Legth = 3");
+            return;
+        }
+        if (rectangle.Lenght == 5)
+        {
+            Console.WriteLine("Legth = 5");
+            return;
+        }
+        if (rectangle.Lenght == 6)
+        {
+            Console.WriteLine("Legth = 6");
+            return;
+        }
+    }
+    Console.WriteLine("<unknown shape>");
+}
+
+```
+
+Notemos que ocurre aquí: `shape` es casteado a `Rectangle` una sola vez y se comprueba a partir de esto las dos condiciones respecto a su `Length`; en caso de que no pueda ser casteado como `Rectangle`, es decir que la instancia de null, se castea a `Circle` y se realiza la pertinente comprobación de la condición. Notemos que se realiza la operación de casteo solo dos veces, varias veces menos que en el caso anterior.
+
+Veamos el código IL generado:
+```C#
+.method public hidebysig instance void Code(object shape, object o) cil managed
+{
+    .maxstack 2
+    .locals init (
+        [0] class SeminarioLP12.Class1/Rectangle rectangle,
+        [1] class SeminarioLP12.Class1/Circle circle)
+    L_0000: ldarg.1 
+    L_0001: isinst SeminarioLP12.Class1/Rectangle
+    L_0006: stloc.0 
+    L_0007: ldloc.0 
+    L_0008: brtrue.s L_0016
+    L_000a: ldarg.1 
+    L_000b: isinst SeminarioLP12.Class1/Circle
+    L_0010: stloc.1 
+    L_0011: ldloc.1 
+    L_0012: brtrue.s L_0066
+    L_0014: br.s L_007a
+    L_0016: ldloc.0 
+    L_0017: ldfld int32 SeminarioLP12.Class1/Rectangle::Lenght
+    L_001c: ldc.i4.4 
+    L_001d: bne.un.s L_002a
+    L_001f: ldstr "Legth = 4"
+    L_0024: call void [System.Console]System.Console::WriteLine(string)
+    L_0029: ret 
+    L_002a: ldloc.0 
+    L_002b: ldfld int32 SeminarioLP12.Class1/Rectangle::Lenght
+    L_0030: ldc.i4.3 
+    L_0031: bne.un.s L_003e
+    L_0033: ldstr "Legth = 3"
+    L_0038: call void [System.Console]System.Console::WriteLine(string)
+    L_003d: ret 
+    L_003e: ldloc.0 
+    L_003f: ldfld int32 SeminarioLP12.Class1/Rectangle::Lenght
+    L_0044: ldc.i4.5 
+    L_0045: bne.un.s L_0052
+    L_0047: ldstr "Legth = 5"
+    L_004c: call void [System.Console]System.Console::WriteLine(string)
+    L_0051: ret 
+    L_0052: ldloc.0 
+    L_0053: ldfld int32 SeminarioLP12.Class1/Rectangle::Lenght
+    L_0058: ldc.i4.6 
+    L_0059: bne.un.s L_007a
+    L_005b: ldstr "Legth = 6"
+    L_0060: call void [System.Console]System.Console::WriteLine(string)
+    L_0065: ret 
+    L_0066: ldloc.1 
+    L_0067: ldfld int32 SeminarioLP12.Class1/Circle::Radius
+    L_006c: ldc.i4.2 
+    L_006d: bne.un.s L_007a
+    L_006f: ldstr "radius = 2"
+    L_0074: call void [System.Console]System.Console::WriteLine(string)
+    L_0079: ret 
+    L_007a: ldstr "<unknown shape>"
+    L_007f: call void [System.Console]System.Console::WriteLine(string)
+    L_0084: ret 
+}
+
+```
+
+Notemos que aquí solamente se toma al objeto como de tipo `Rectangle` o `Circle` y se comprueba de cual es instancia y luego se comprueban las condiciones de cada tipo. Notemos que claramente el uso del `switch case` utilizando pattern matching, además de ahorrarle al programador de la escritura de los `if else if .... else if else` es mucho más eficiente ya que el compilador de C# a pesar de que pudiera haber sustituido el `switch` por varias cláusulas `if else` actúa de manera más eficiente ahorrandonos además del proceso de casteo del objeto, el cual además lo realiza de manera inteligente y eficiente.
+
+Veamos otro ejemplo que demuestra una vez más la eficiencia del compilador de C#:
+```C#
+ public void Code3(object shape)
+{
+    switch (shape)
+    {
+        case 0:
+            Console.WriteLine("zero");
+            break;
+        case 1:
+            Console.WriteLine("one");
+            break;
+        case 2:
+            Console.WriteLine("two");
+            break;
+        case 3:
+            Console.WriteLine("three");
+            break;
+        case 4:
+            Console.WriteLine("four");
+            break;
+        case 5:
+            Console.WriteLine("five");
+            break;
+        case "six":
+            Console.WriteLine("6");
+            break;
+    }
+
+}
+```
+
+Veamos el código generado por el compilador:
+```C#
+public void Code3(object shape)
+{
+    if (!(shape is int))
+    {
+        string str = (string) (shape as string);
+        if ((str != null) && (str == "six"))
+        {
+            Console.WriteLine("6");
+        }
+    }
+    else
+    {
+        switch (((int) shape))
+        {
+            case 0:
+                Console.WriteLine("zero");
+                return;
+
+            case 1:
+                Console.WriteLine("one");
+                return;
+
+            case 2:
+                Console.WriteLine("two");
+                return;
+
+            case 3:
+                Console.WriteLine("three");
+                return;
+
+            case 4:
+                Console.WriteLine("four");
+                return;
+
+            case 5:
+                Console.WriteLine("five");
+                return;
+        }
+    }
+} 
+
+```
+
+Notemos que el compilador intenta castear a `int` y si no es posible castea el objeto a `string` y comprueba solamente el caso donde el objeto `shape` era de tipo string. En caso de que el tipo sea efectivamente `int` comprueba el resto de los casos. Nuevamente el compilador de C# muestra su eficiencia en el manejo de los `switch`
+
+Ahora veamos el código IL generado:
+```C#
+.method public hidebysig instance void Code3(object shape) cil managed
+{
+    .maxstack 2
+    .locals init (
+        [0] int32 num,
+        [1] string str)
+    L_0000: ldarg.1 
+    L_0001: isinst [System.Runtime]System.Int32
+    L_0006: brfalse.s L_002e
+    L_0008: ldarg.1 
+    L_0009: unbox.any [System.Runtime]System.Int32
+    L_000e: stloc.0 
+    L_000f: ldloc.0 
+    L_0010: switch (L_0046, L_0051, L_005c, L_0067, L_0072, L_007d)
+    L_002d: ret 
+    L_002e: ldarg.1 
+    L_002f: isinst [System.Runtime]System.String
+    L_0034: stloc.1 
+    L_0035: ldloc.1 
+    L_0036: brfalse.s L_0092
+    L_0038: ldloc.1 
+    L_0039: ldstr "Pepe"
+    L_003e: call bool [System.Runtime]System.String::op_Equality(string, string)
+    L_0043: brtrue.s L_0088
+    L_0045: ret 
+    L_0046: ldstr "zero"
+    L_004b: call void [System.Console]System.Console::WriteLine(string)
+    L_0050: ret 
+    L_0051: ldstr "one"
+    L_0056: call void [System.Console]System.Console::WriteLine(string)
+    L_005b: ret 
+    L_005c: ldstr "two"
+    L_0061: call void [System.Console]System.Console::WriteLine(string)
+    L_0066: ret 
+    L_0067: ldstr "three"
+    L_006c: call void [System.Console]System.Console::WriteLine(string)
+    L_0071: ret 
+    L_0072: ldstr "four"
+    L_0077: call void [System.Console]System.Console::WriteLine(string)
+    L_007c: ret 
+    L_007d: ldstr "five"
+    L_0082: call void [System.Console]System.Console::WriteLine(string)
+    L_0087: ret 
+    L_0088: ldstr "six"
+    L_008d: call void [System.Console]System.Console::WriteLine(string)
+    L_0092: ret 
+} 
+```
+
+Veamos que en este caso en el código se utiliza una instrucción del tipo switch propia de IL luego de verificar que sea una instancia de `int`, en caso de ser instancia de `string` se realiza la comprobación de la condición.
+
+En conclusión, podemos resumir que los `switch case` con pattern matching no son solo azúcar sintáctico sino que representan una mejoría en eficiencia en cuanto a el uso de la cadena de cláusulas `if else` equivalentes.
 ## 2.c Tuples
 
 ### i
 
-Las tuplas tienen sentido en algunos escenarios, como cuando se  quiere que un método retorne más de un valor, muchas veces se pueden  usar parámetros *out* pero por ejemplo estos no están disponibles en métodos asíncronos. También son útiles para evitar la creación de  clases de transferencia de datos sólo para determinados métodos, o  incluso para evitar el uso de tipos dinámicos, objetos anónimos,  diccionarios u otras fórmulas de almacenamiento de datos.  Cuando C# no  tenía implementadas las tuplas y tenía que devolver varios valores lo  que había que hacer era usar una clase propia que guardara dichos  valores o una matriz o parámetros *out*.
+Las tuplas tienen sentido en algunos escenarios, como cuando se  quiere que un método retorne más de un valor, muchas veces se pueden  usar parámetros *out* pero por ejemplo estos no están disponibles en métodos asíncronos. También son útiles para evitar la creación de  clases de transferencia de datos sólo para determinados métodos, o  incluso para evitar el uso de tipos dinámicos, objetos anónimos,  diccionarios u otras fórmulas de almacenamiento de datos.  Cuando C# no  tenía implementadas las tuplas y tenía que devolver varios valores lo  que había que hacer era usar una clase propia que guardara dichos  valores o una matriz o parámetros *out*,también se utilizaba *System.Tuple*.
 
 ### ii
 
@@ -1142,6 +1708,23 @@ namespace Example2
     }
 }
 ```
+*** Código del Compilador *** 
+```C#
+private static void Method1(string[] args)
+{
+    (string, int) tuple1 = ("Alejandro", 0x22);
+    Console.WriteLine(tuple1.Item1);
+    Console.WriteLine(tuple1.Item2);
+}
+
+private static void Method2(string[] args)
+{
+    (string, int) tuple1 = ("Alejandro", 0x22);
+    Console.WriteLine(tuple1.Item1);
+    Console.WriteLine(tuple1.Item2);
+}
+```
+Como se muestra en el código del compilador el mismo trata a las tuplas con nombres de igual forma que a las tuplas normales o sea que trata a las propiedades nombradas como item1 e item2.
 
 ### iii
 
@@ -1442,6 +2025,7 @@ static void Drift2(ref Point point, int steps)
 }
 ```
 
+
 El lenguaje C# tiene varias reglas que los protegen contra el mal uso de los ref locales y las devoluciones:
 
 1. Se debe agregar la palabra clave ref a la firma del método y a  todas las return declaraciones de un método, esto deja claro que el  método devuelve por referencia en todo el método    
@@ -1451,3 +2035,35 @@ El lenguaje C# tiene varias reglas que los protegen contra el mal uso de los ref
 5. Los *ref* locales y las devoluciones no se pueden usar  como métodos asíncronos. El compilador no puede saber si la variable  referenciada se ha establecido en su valor final cuando devuelve el  método asíncrono.
 
 Agregar *ref* al valor de retorno es un cambio compatible con  la fuente. El código existente se compila, pero el valor de retorno de  referencia se copia cuando se asigna. Las personas que llaman deben  actualizar el almacenamiento de valor de retorno a una *ref* variable local para almacenar el retorno como referencia.
+
+El uso de referencias locales y devoluciones habilita algoritmos que usan y devuelven referencias a variables definidas en otros lugares. En el siguiente código se muestra una implementación de un método *ref*. 
+
+```C#
+using System;
+using System.Collections.Generic;
+
+namespace Example7
+{
+    class Program
+    {
+        public static ref int Find(int[,] matrix, Func<int, bool> predicate)
+        {
+            for (int i = 0; i < matrix.GetLength(0); i++)
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                    if (predicate(matrix[i, j]))
+                        return ref matrix[i, j];
+            throw new InvalidOperationException("Not found");
+        }
+        public static void Main()
+        {
+            int[,] matrix = new int[5, 5];
+            matrix[4, 2] = 42; 
+            ref var item = ref Find(matrix, (val) => val == 42);
+            Console.WriteLine(item);
+            item = 24;
+            Console.WriteLine(matrix[4, 2]);
+        }
+    }
+}
+```
+Entre las restricciones antes mencionadas se ponen de manifiesto en el código anterior: agregar ref en la firma del método y a todas las return declaraciones del mismo, la variable item tiene que ser de tipo *ref* ya que el método  Find es un método de retono *ref*. 
