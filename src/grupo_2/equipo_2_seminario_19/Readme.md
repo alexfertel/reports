@@ -149,7 +149,7 @@ def parent(num):
         return second_child
 ```
 
-Notar que estamos retornado una referencia a las funciones, así que la siguiente salida es lo esperado.
+Notar que estamos retornando una copia de la referencia a esas funciones, así que la siguiente salida es lo esperado.
 
 ```python
 >>> first = parent(1)
