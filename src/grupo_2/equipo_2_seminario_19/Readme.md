@@ -166,7 +166,7 @@ Notar que estamos retornando una copia de la referencia a esas funciones, así q
 
 #### Decoradores Simples
 
-Ahora que ya hemos visto algunas características de las funciones en `Python` veamos que son los decoradores.
+Ahora que ya hemos visto algunas características de las funciones en `Python` veamos qué son los decoradores.
 
 ###### my_decorator
 
