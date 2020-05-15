@@ -195,7 +195,7 @@ Esto no es nada nuevo, es simplemente lo que ya se vio en ejemplos anteriores, a
 'Something is happening after the function is called.'
 ```
 
-En este ejemplo el decorador ocurre en la linea `say_whee = my_decorator(say_whee)`, la variable `say_whee` ahora apunta al `wrapper` que se define dentro de `my_decorator`. Pero `wrapper` tiene una referencia a la función original `say_whee` y es la que ejecuta entre los dos `prints`.
+En este ejemplo la acción de decorar ocurre en `say_whee = my_decorator(say_whee)`, `my_decorator()` es una función que retorna una copia de la referencia a la función `wapper` que se define dentro del mismo, luego la variable `say_whee` tiene la copia de esta referencia. Y a su vez  `wrapper` tiene una copia de la referencia a la función original `say_whee` y es esta la que ejecuta entre los dos `prints`.
 
 En simples términos:  ***decorators wrap a function, modifying its behavior.***
 
