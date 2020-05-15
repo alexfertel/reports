@@ -1,46 +1,5 @@
 ## Seminario 2: C#
 
-<span style="font-weight: bold;font-size: 2rem">Integrantes</span>
-
-<ol>
-    <li>
-        Joel David Hernández Cruz
-    </li>
-    <li>
-        Leandro González Montesino
-    </li>
-    <li>
-        Wendy Díaz Ramírez
-    </li>
-</ol>
-
-<span style="font-weight: bold">Tabla de Contenido</span>
-
-- [Orientación](#Ejercicio)
-- [Diseño por Contratos](#que-es-el-diseño-por-contratos?)
-- [Decoradores en Python](#decoradores-en-python)
-  - [Funciones como objetos de primera clase](#funciones-como-objetos-de-primera-clase)
-  - [Funciones anidadas](#funciones-anidadas)
-  - [Funciones que retornan funciones](#funciones-que-retornan-funciones)
-- [Decoradores Simples](#decoradores-simples)
-- [Decorando clases](#decorando-clases)
-- [Implementación](#implementación)
-  - [Librerias usadas](#Librerías-usadas)
-- [Ejemplo](#Ejemplo)
-- [Por Implementar](#Por-implementar)
-
-### Ejercicio:
-
-Para este seminario debemos proponer e implementar un mecanismo de contratos al estilo de ``CodeContract`` en el lenguaje ***Python***. Con nuestra implementación deberíamos ser capaces de hacer algo como lo siguiente:
-
-```python
-@Contract(require= lambda x: x > 0, ensure= lambda result: result > 0)
-def someFunction(x):
-    pass
-```
-
-----
-
 ### Que es el diseño por Contratos?
 La verificación automática de programas ha sido un viejo anhelo de la Ciencia de la Computación, ya desde hace tiempo en lenguajes como ``CLU`` aparecieron las **aserciones**, que no son mas que mecanismos para especificar requerimientos y garantías sobre nuestro código. No fue hasta la propuesta de ***Bertrand Meyer*** de **Diseño por Contratos** ***(Design by Contracts)*** en su lenguaje ``Eiffel`` que el uso de las **aserciones** se integró verdaderamente a un lenguaje de programación.
 
@@ -52,7 +11,7 @@ La idea de ***Meyer***, aunque genial, se basa en una metáfora muy simple. Entr
 |Diseñador de la clase|**Pos-condiciones e invariantes**|**Pre-condiciones**              |
 
 -   ***Pre-condición***:
-    Es una cláusula lógica que **debe estar libre de efectos colaterales**, y que debe **cumplirse como requisito para ejecutar el método al que está asociada**. Un uso frecuente de las **pre-condiciones** es validar los parámetros de entrada de los métodos (algo que no puede satisfacerse solo con la declaración y tipado estático de los parámetros).
+     Es una cláusula lógica que **debe estar libre de efectos colaterales**, y que debe **cumplirse como requisito para ejecutar el método al que está asociada**. Un uso frecuente de las **pre-condiciones** es validar aserciones en los parámetros de entrada a los métodos que no puede satisfacerse solo con la declaración y tipado estático de los mismo. 
 -   ***Pos-condición***:
     Es una cláusula lógica que **debe cumplirse luego de la ejecución del método**, y sirve como garantía de lo que éste hace. Por tanto, las **pos-condiciones** **son evaluadas justo después de ejecutado el método** y **antes de retornar al código que llama**.
 -   ***Invariante***:
@@ -197,8 +156,6 @@ Esto no es nada nuevo, es simplemente lo que ya se vio en ejemplos anteriores, a
 
 En este ejemplo la acción de decorar ocurre en `say_whee = my_decorator(say_whee)`, `my_decorator()` es una función que retorna una copia de la referencia a la función `wapper` que se define dentro del mismo, luego la variable `say_whee` tiene la copia de esta referencia. Y a su vez  `wrapper` tiene una copia de la referencia a la función original `say_whee` y es esta la que ejecuta entre los dos `prints`.
 
-En simples términos:  ***decorators wrap a function, modifying its behavior.***
-
 Un decorador envuelve una función, agregándole o modificando su funcionalidad.
 
 `Python` te permite un azúcar sintáctico para usar decoradores en el código de una manera mas fácil y legible. **Usando el símbolo @**, el anterior código quedaría entonces:
@@ -332,7 +289,7 @@ class Circle:
     pass
 ```
 
-Decorar una clase, no es muy distinto que decorar una función. Por supuesto la diferencia esta en que el decorador en lugar de recibir una función como argumento, recibe una clase. El decorador que vimos anteriormente [my_decorator](#my_decorator) funcionara igual si se le pasa una clase, lo que es probable que no haga lo que teníamos pensado cuando lo hicimos. Para mas información sobre decoradores les compartimos los siguientes enlaces.
+Decorar una clase, no es muy distinto que decorar una función. Por supuesto la diferencia está en que el decorador en lugar de recibir una función como argumento, recibe una clase. El decorador que vimos anteriormente [my_decorator](#my_decorator) funcionará igual si se le pasa una clase, lo que es probable que no haga lo que teníamos pensado cuando lo hicimos. Para más información sobre decoradores les compartimos los siguientes enlaces.
 
 Documentación sobre <span style="font-weight: bold">Python Decorators</span>.
 
@@ -345,7 +302,7 @@ Documentación sobre <span style="font-weight: bold">Python Decorators</span>.
 
 #### Implementación
 
-##### Librerías usadas:
+##### Bibliotecas usadas:
 
 - [inspect](https://docs.python.org/3/library/inspect.html)
   - [signature]( https://docs.python.org/3/library/inspect.html#inspect.signature )
@@ -422,7 +379,7 @@ def contract(require, ensure):
     return func_wrapper
 ```
 
-Primero nos aseguramos que lo que se le paso al decorador son funciones u objetos invocables. Luego haciendo uso de las librerías antes mencionadas, guardamos el nombre de los argumentos que se usan en las funciones ***require*** y ***ensure***, para luego buscarlas en el contexto actual esos valores (**Contexto actual dígase, la instancia de la clase de donde se llamo al método decorado, y los argumentos que se pasaron a este método**).
+Primero nos aseguramos que lo que se le paso al decorador son funciones u objetos invocables. Luego haciendo uso de las bibliotecas antes mencionadas, guardamos el nombre de los argumentos que se usan en las funciones ***require*** y ***ensure***, para luego buscarlas en el contexto actual esos valores (**Contexto actual dígase, la instancia de la clase de donde se llamo al método decorado, y los argumentos que se pasaron a este método**).
 
 -----
 
