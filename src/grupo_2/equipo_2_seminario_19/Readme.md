@@ -79,7 +79,7 @@ Primero aclaremos algunas características del lenguaje `Python`, en particular 
 
 ##### Funciones como Objetos de Primera Clase:
 
-Esto significa que las funciones en `Python` son objetos y como cualquier otro objeto puede ser pasadas y usadas como argumentos:
+Esto significa que las funciones en `Python` son objetos y como cualquier otro objeto pueden ser pasadas y usadas como argumentos:
 
 ```python
 def say_hello(name):
