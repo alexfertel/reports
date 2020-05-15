@@ -54,7 +54,7 @@ La idea de ***Meyer***, aunque genial, se basa en una metáfora muy simple. Entr
 -   ***Pre-condición***:
     Es una cláusula lógica que **debe estar libre de efectos colaterales**, y que debe **cumplirse como requisito para ejecutar el método al que está asociada**. Un uso frecuente de las **pre-condiciones** es validar los parámetros de entrada de los métodos (algo que no puede satisfacerse solo con la declaración y tipado estático de los parámetros).
 -   ***Pos-condición***:
-    Es una cláusula lógica que **debe cumplirse luego de la ejecución del método**, y funge como garantía de lo que éste hace. Por tanto, las **pos-condiciones** **son evaluadas justo después de ejecutado el método** y **antes de retornar al código que llama**.
+    Es una cláusula lógica que **debe cumplirse luego de la ejecución del método**, y sirve como garantía de lo que éste hace. Por tanto, las **pos-condiciones** **son evaluadas justo después de ejecutado el método** y **antes de retornar al código que llama**.
 -   ***Invariante***:
     Es una cláusula que **establece las condiciones bajo las cuales el estado de un objeto es "correcto"**. Por tanto, los invariantes **se validan luego de creados los objetos** y **después de ejecutar cualquier método**.
 
