@@ -75,7 +75,7 @@ Para mas información sobre el Patrón de Diseño por Contratos le compartimos l
 
 ### Decoradores en Python
 
-Primero debemos aclarar algunas características del lenguaje `Python` y como funcionan sus funciones, que les serán útiles para entender decoradores.
+Primero aclaremos algunas características del lenguaje `Python`, en particular el comportamiento de sus funciones.
 
 ##### Funciones como Objetos de Primera Clase:
 
