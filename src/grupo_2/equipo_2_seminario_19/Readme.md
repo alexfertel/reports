@@ -102,7 +102,7 @@ En este ejemplo tenemos 3 funciones `say_hello()` y `be_awesome()` son funciones
 'Yo Bob, together we are the awesomest!'
 ```
 
-Importante notar aquí como las funciones `say_hello()` y `be_awesome()` son llamadas sin los paréntesis, esto significa que solo una referencia a la función es pasada como parámetro. 
+Importante notar aquí como las funciones `say_hello` y `be_awesome` son usadas sin los paréntesis, esto significa que solo una copia de la referencia a esa función es pasada como parámetro.
 
 ##### Funciones anidadas
 
