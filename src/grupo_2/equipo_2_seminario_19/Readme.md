@@ -21,7 +21,7 @@ Para terminar este pequeña ***intro*** al **Diseño por Contratos**, un ejemplo
 
 ![Eiffel_code_1](..\resources\Eiffel_code.PNG)
 
-Para mas información sobre el Patrón de Diseño por Contratos le compartimos los siguientes enlaces:
+Para más información sobre el Patrón de Diseño por Contratos le compartimos los siguientes enlaces:
 
 <span>Diseño por Contratos: </span>
 <span style="font-weight: bold; font-size: 1rem;">Aunque principalmente recomendamos el Libro del profesor Miguel Katrib y Jorge Luis de Armas: Diseño por Contratos en .NET 4.0</span>
@@ -51,7 +51,7 @@ def greet_bob(greeter_func):
     return greeter_func("Bob")
 ```
 
-En este ejemplo tenemos 3 funciones `say_hello()` y `be_awesome()` son funciones normales que esperan un parámetro `name` de tipo *string*. La función `gree_bob()` sin embargo espera una función como su argumento. Es fácil saber cual sera la salida para el siguiente ejemplo:
+En este ejemplo tenemos 3 funciones `say_hello()` y `be_awesome()` son funciones normales que esperan un parámetro `name` de tipo *string*. La función `gree_bob()` sin embargo espera una función como su argumento. Es fácil saber cuál será la salida para el siguiente ejemplo:
 
 ```python
 >>> greet_bob(say_hello)
@@ -145,7 +145,7 @@ def say_whee():
 say_whee = my_decorator(say_whee)
 ```
 
-Esto no es nada nuevo, es simplemente lo que ya se vio en ejemplos anteriores, así que es fácil saber cual sera la salida de llamar a `say_whee()`.
+Esto no es nada nuevo, es simplemente lo que ya se vio en ejemplos anteriores, así que es fácil saber cuál será la salida de llamar a `say_whee()`.
 
 ```python
 >>> say_whee()
@@ -158,7 +158,7 @@ En este ejemplo la acción de decorar ocurre en `say_whee = my_decorator(say_whe
 
 Un decorador envuelve una función, agregándole o modificando su funcionalidad.
 
-`Python` te permite un azúcar sintáctico para usar decoradores en el código de una manera mas fácil y legible. **Usando el símbolo @**, el anterior código quedaría entonces:
+`Python` te permite un azúcar sintáctico para usar decoradores en el código de una manera más fácil y legible. **Usando el símbolo @**, el anterior código quedaría entonces:
 
 ```python
 @my_decorator
@@ -185,7 +185,7 @@ Traceback (most recent call last):
 TypeError: wrapper() takes 0 positional arguments but 1 was given
 ```
 
-Recordemos que nuestro decorador [my_decorator](#my_decorator) retorna una referencia a `wrapper` y esta es una función que no recibe ningún argumento. Esto se podría arreglar simplemente agregándole un parámetro a `wrapper` pero entonces la primera función `say_whee` dejaría de funcionar, ademas funciones de más de 1 parámetro seguirían fallando. La solución para este caso es usar [*args y **kwargs](https://stackoverflow.com/questions/36901/what-does-double-star-asterisk-and-star-asterisk-do-for-parameters) en la función `wrapper` así esta aceptaría un numero arbitrario de parámetros.
+Recordemos que nuestro decorador [my_decorator](#my_decorator) retorna una referencia a `wrapper` y esta es una función que no recibe ningún argumento. Esto se podría arreglar simplemente agregándole un parámetro a `wrapper` pero entonces la primera función `say_whee` dejaría de funcionar, además funciones de más de 1 parámetro seguirían fallando. La solución para este caso es usar [*args y **kwargs](https://stackoverflow.com/questions/36901/what-does-double-star-asterisk-and-star-asterisk-do-for-parameters) en la función `wrapper` así esta aceptaría un numero arbitrario de parámetros.
 
 Esta azúcar sintáctica que permite `Python` se traduce a lo siguiente.
 
@@ -224,7 +224,7 @@ def func_with_args(a, b, c)
 
 #### Decorando Clases
 
-Además de decorar funciones también podemos decorar clases. Las clases pueden ser decoradas de dos maneras. Primero por supuesto puede simplemente decorar los métodos de la clase que quieras, en `Python` los mas comunes que incluso vienen `built-in` son `@classmethod`, `@staticmethod`, `@property`. Aquí les dejamos un ejemplo de uso de estos métodos y documentación sobre ellos.
+Además de decorar funciones también podemos decorar clases. Las clases pueden ser decoradas de dos maneras. Primero por supuesto puede simplemente decorar los métodos de la clase que quieras, en `Python` los más comunes que incluso vienen `built-in` son `@classmethod`, `@staticmethod`, `@property`. Aquí les dejamos un ejemplo de uso de estos métodos y documentación sobre ellos.
 
 Más documentación sobre los métodos <span style="font-weight: bold">built-in</span>.
 
@@ -274,7 +274,7 @@ En esta clase:
 -	`.cylinder_volume()` es un método regular de la clase.
 -	`.radius` es una propiedad mutable. Como se aprecia en el ejemplo se le define un `setter`, por lo cual su valor puede ser alterado. **Es una propiedad** así que debe ser accedida sin paréntesis.
 -	`.area` es una propiedad inmutable, al contrario que le ejemplo anterior no tiene un `setter` definido, así que su valor no puede ser cambiado.
--	`.unit_circle()` es un método de clase. No esta ligado a una instancia en particular de `Circle`. Estos métodos generalmente son usados como métodos de *fabrica*, que pueden crear instancias especificas de una clase.
+-	`.unit_circle()` es un método de clase. No está ligado a una instancia en particular de `Circle`. Estos métodos generalmente son usados como métodos de *fabrica*, que pueden crear instancias específicas de una clase.
 -	`.pi()` un método estático. No depende de la clase `Circle`, excepto por el hecho de estar en su ***namespace***. Estos pueden ser llamados desde una instancia o desde la clase.
 
 ----
@@ -379,7 +379,7 @@ def contract(require, ensure):
     return func_wrapper
 ```
 
-Primero nos aseguramos que lo que se le paso al decorador son funciones u objetos invocables. Luego haciendo uso de las bibliotecas antes mencionadas, guardamos el nombre de los argumentos que se usan en las funciones ***require*** y ***ensure***, para luego buscarlas en el contexto actual esos valores (**Contexto actual dígase, la instancia de la clase de donde se llamo al método decorado, y los argumentos que se pasaron a este método**).
+Primero nos aseguramos que lo que se le paso al decorador son funciones u objetos invocables. Luego haciendo uso de las bibliotecas antes mencionadas, guardamos el nombre de los argumentos que se usan en las funciones ***require*** y ***ensure***, para luego buscarlas en el contexto actual esos valores (**Contexto actual dígase, la instancia de la clase de donde se llamó al método decorado, y los argumentos que se pasaron a este método**).
 
 -----
 
@@ -446,6 +446,6 @@ class Wallet:
 
 ##### Por implementar:
 
-En nuestra solución no se encuentra implementado el ***feature*** de Diseño por Contratos donde se puede tener acceso al valor de una variable antes de la ejecución del método, analicemos primero que para implementar este ***feature*** debemos salvar todas las variables en el ***scope (Dígase en sus parámetros definidos y en la instancia de la cual se llama)*** del método antes de su ejecución, ya que no sabemos cual se usará en el cuerpo de la expresión ***lambda***, esto no es mucho problema, el problema esta en que estas variables nuevas no podemos pasarlas como parámetro a la expresión ***lambda***, así que debemos añadirlas al ***scope*** global para que puedan ser usada y reescribirlas para los próximos usos, además se debe seguir algún tipo de convención de nombres a la hora de definir el contrato, algo como llamar a las variables con un prefijo `old_`, así si se tiene una variable `balance` entonces para referirnos al valor antes de la ejecución del método debería ser como `old_balance`.
+En nuestra solución no se encuentra implementado el ***feature*** de Diseño por Contratos donde se puede tener acceso al valor de una variable antes de la ejecución del método, analicemos primero que para implementar este ***feature*** debemos salvar todas las variables en el ***scope (Dígase en sus parámetros definidos y en la instancia de la cual se llama)*** del método antes de su ejecución, ya que no sabemos cuál se usará en el cuerpo de la expresión ***lambda***, esto no es mucho problema, el problema está en que estas variables nuevas no podemos pasarlas como parámetro a la expresión ***lambda***, así que debemos añadirlas al ***scope*** global para que puedan ser usada y reescribirlas para los próximos usos, además se debe seguir algún tipo de convención de nombres a la hora de definir el contrato, algo como llamar a las variables con un prefijo `old_`, así si se tiene una variable `balance` entonces para referirnos al valor antes de la ejecución del método debería ser como `old_balance`.
 
 Esto aunque quizás no sea muy complicado, creemos que sale fuera de los objetivos de este seminario. 
